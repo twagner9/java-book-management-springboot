@@ -1,20 +1,32 @@
-package com.tests_package;
+package com.twag.book_management_app.book;
 
 import com.twag.book_management_app.model.Book;
 
-import static com.twag.book_management_app.model.Assert.*;
-import static com.tests_package.Tests.errorMessages;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+//import static com.twag.book_management_app.model.Assert.*;
+import static com.twag.book_management_app.tests_package.Tests.errorMessages;
 
 public class BookTests {
-    public static void bookTests() {
-        String testTitle = "Hello", testAuthor = "Me";
-        int testId = 1, testCopies = 20;
-        Book testBook = new Book(testId, testTitle, testAuthor, testCopies);
-        String expectedDetails = "ID #: " + testId + "; " + "Title: " + testTitle + "; " + "Author: " + testAuthor + "; " + "# Copies: " + testCopies;
+    private String testTitle, testAuthor, expectedDetails, returnDetails, updatedTitle, updatedAuthor;
+    private int testId, testCopies, updatedId, updatedNumCopies;
+    private Book testBook;
+
+
+    @Test
+    void testGetters() {
+        testTitle = "Hello";
+        testAuthor = "Me";
+        testId = 1;
+        testCopies = 20;
+        testBook = new Book(testId, testTitle, testAuthor, testCopies);
+        expectedDetails = "ID #: " + testId + "; " + "Title: " + testTitle + "; " + "Author: " + testAuthor + "; " + "# Copies: " + testCopies;
 
         // 1. Test getters
         int returnId = testBook.getBookId(), returnCopies = testBook.getNumCopies();
-        String returnTitle = testBook.getTitle(), returnAuthor = testBook.getAuthor(), returnDetails = testBook.getDetails();
+        String returnTitle = testBook.getTitle(), returnAuthor = testBook.getAuthor();
+        returnDetails = testBook.getDetails();
         try {
             assertEquals(testId, returnId, "Error in main.Book class when getting ID. Expected ID of " + testId + "; actual: " + returnId);
         } catch (AssertionError e) {
@@ -40,10 +52,21 @@ public class BookTests {
         } catch (AssertionError e) {
             errorMessages.add(e.getMessage());
         }
+    }
 
-        // 2. Test setters
-        int updatedId = 2, updatedNumCopies = 5;
-        String updatedTitle = "Goodbye", updatedAuthor = "Them";
+    @Test
+    void testSetters() {
+        testTitle = "Hello";
+        testAuthor = "Me";
+        testId = 1;
+        testCopies = 20;
+        testBook = new Book(testId, testTitle, testAuthor, testCopies);
+        expectedDetails = "ID #: " + testId + "; " + "Title: " + testTitle + "; " + "Author: " + testAuthor + "; " + "# Copies: " + testCopies;
+
+        updatedId = 2;
+        updatedNumCopies = 5;
+        updatedTitle = "Goodbye";
+        updatedAuthor = "Them";
         testBook.setId(updatedId);
         testBook.setTitle(updatedTitle);
         testBook.setAuthor(updatedAuthor);
@@ -59,8 +82,23 @@ public class BookTests {
             errorMessages.add(e.getMessage());
         }
 
-        // 3. Test equals
+    }
+
+    @Test
+    void testEquals() {
+        testTitle = "Hello";
+        testAuthor = "Me";
+        testId = 1;
+        testCopies = 20;
+        testBook = new Book(testId, testTitle, testAuthor, testCopies);
+
+        updatedId = 2;
+        updatedNumCopies = 5;
+        updatedTitle = "Goodbye";
+        updatedAuthor = "Them";
         Book equalsTestBook = new Book(updatedId, updatedTitle, updatedAuthor, updatedNumCopies);
+        testBook = new Book(testId, testTitle, testAuthor, testCopies);
+
         try {
             assertTrue(testBook.equals(equalsTestBook), "Error in main.Book class with Book.equals. main.Book.equals function should have returned true, but returned false.");
         } catch (AssertionError e) {
@@ -76,5 +114,7 @@ public class BookTests {
         } catch (AssertionError e) {
             errorMessages.add(e.getMessage());
         }
+    }
+    public static void bookTests() {
     }
 }

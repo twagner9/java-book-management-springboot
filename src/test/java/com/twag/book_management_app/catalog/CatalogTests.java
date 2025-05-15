@@ -1,24 +1,24 @@
-package com.tests_package;
+package com.twag.book_management_app.catalog;
 
 import com.twag.book_management_app.model.Book;
 import com.twag.book_management_app.model.Catalog;
 
-import static com.twag.book_management_app.model.Assert.*;
-import static com.tests_package.Tests.errorMessages;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+//import static com.twag.book_management_app.model.Assert.*;
+import static com.twag.book_management_app.tests_package.Tests.errorMessages;
 
 
 public class CatalogTests {
+    private final Catalog testCat = new Catalog();
+    private final String testTitle = "Hello", testAuthor = "Me";
+    private final int testId = 1, testCopies = 20;
+    private int testId2, testCopies2;
+    private String expectedList, actualList;
 
-    /**
-     * Test capabilities of the main.Catalog class. All error messages will be
-     * recorded, so that when the test is run, logging is done effectively.
-     */
-    public static void catalogTests() {
-        Catalog testCat = new Catalog();
-        // 1. Test adding a book to the catalog (also a test of the constructor)
-        // a. Adding to empty catalog
-        String testTitle = "Hello", testAuthor = "Me";
-        int testId = 1, testCopies = 20;
+    @Test
+    void testBookAdditions() {
         Book testBook = new Book(testId, testTitle, testAuthor, testCopies);
         try {
             testCat.addBook(testBook);
@@ -28,7 +28,7 @@ public class CatalogTests {
         Book resultBook = testCat.getBookById(1);
 
         try {
-            assertTrue(testBook.equals(resultBook), "Error in Catalog class when adding to an empty catalog. Expected Book " + testBook.getDetails() + "; actual: " + resultBook);
+            assertEquals(testBook, resultBook, "Error in Catalog class when adding to an empty catalog. Expected Book " + testBook.getDetails() + "; actual: " + resultBook);
         } catch (AssertionError e) {
             errorMessages.add(e.getMessage());
         }
@@ -47,10 +47,12 @@ public class CatalogTests {
         }
 
         // c. TODO: Add a book with the same ID number (unhappy case)
+    }
 
-        // 2. Test listing the catalog
-        String expectedList = "ID #: " + testId + "; Title: " + testTitle + "; Author: " + testAuthor + "; # Copies: " + (2 * testCopies);
-        String actualList = testCat.getCatalog();
+    @Test
+    void testListingCatalog() {
+        expectedList = "ID #: " + testId + "; Title: " + testTitle + "; Author: " + testAuthor + "; # Copies: " + (2 * testCopies);
+        actualList = testCat.getCatalog();
         try {
             assertEquals(expectedList, actualList, "Error in Catalog class when listing the Catalog with one book. Expected " + expectedList + " got " + actualList);
         } catch (AssertionError e) {
@@ -59,7 +61,8 @@ public class CatalogTests {
 
         // Check listing catalog with multiple books
         String testTitle2 = "Hehe", testAuthor2 = "Haha";
-        int testId2 = 2, testCopies2 = 80;
+        testId2 = 2;
+        testCopies2 = 80;
         Book testBook2 = new Book(testId2, testTitle2, testAuthor2, testCopies2);
 
         try {
@@ -74,15 +77,20 @@ public class CatalogTests {
         } catch (AssertionError e) {
             errorMessages.add(e.getMessage());
         }
+    }
 
-        // 3. Test returning number of titles.
+    @Test
+    void testReturningNumTitles() {
         int expectedCatalogTitles = 2, actualCatalogTitles = testCat.getNumTitles();
         try {
             assertEquals(expectedCatalogTitles, actualCatalogTitles, "Error in Catalog class when returning number of titles. Expected " + expectedCatalogTitles + " got " + actualCatalogTitles);
         } catch (AssertionError e) {
             System.err.println("Error adding to Catalog in CatalogTests.");
         }
+    }
 
+    @Test
+    void testRemovingBooks() {
         // 4. Check removing books from catalog
         // a. Remove all copies
         try {
@@ -118,5 +126,8 @@ public class CatalogTests {
         } catch (Catalog.CatalogException e) {
             // Here, we want an exception because the user is trying to remove too many books.
         }
+    }
+
+    public static void catalogTests() {
     }
 }

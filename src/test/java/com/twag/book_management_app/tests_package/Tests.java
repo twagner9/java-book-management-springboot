@@ -1,4 +1,9 @@
-package com.tests_package;
+package com.twag.book_management_app.tests_package;
+
+import com.twag.book_management_app.Utils.UtilsTests;
+import com.twag.book_management_app.book.BookTests;
+import com.twag.book_management_app.catalog.CatalogTests;
+import com.twag.book_management_app.database.DatabaseTests;
 
 import java.util.ArrayList;
 import java.util.List;

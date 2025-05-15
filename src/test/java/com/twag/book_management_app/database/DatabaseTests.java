@@ -1,12 +1,15 @@
-package com.tests_package;
+package com.twag.book_management_app.database;
 
 import com.twag.book_management_app.model.Database;
 import com.twag.book_management_app.model.Catalog.CatalogException;
 import com.twag.book_management_app.model.Catalog;
 import com.twag.book_management_app.model.Book;
 
-import static com.tests_package.Tests.errorMessages;
-import static com.twag.book_management_app.model.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import static com.twag.book_management_app.tests_package.Tests.errorMessages;
+//import static com.twag.book_management_app.model.Assert.assertEquals;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,7 +17,21 @@ import java.nio.file.Paths;
 import java.sql.*;
 
 
+// TODO: Restructuring this class will be a bit more involved, and probably kind of annoying --
+// mentions of repository not needed to use SQL how I've used it make it a little more obnoxious
+// This is because of JPA, which apparently simplifies data retrieval by making it so I don't have
+// to write any SQL; it handles the operations under the hood
 public class DatabaseTests {
+
+    @Test
+    void openingDatabase() {
+
+    }
+
+    @Test
+    void savingDatabase() {
+
+    }
     public static void databaseTests() {
         // 1. Test opening a database
         String testUrl = "jdbc:sqlite:sample.db";
@@ -90,7 +107,7 @@ public class DatabaseTests {
         try {
             Files.deleteIfExists(filePath);
         } catch (Exception e) {
-            e.getMessage();
+            System.out.println(e.getMessage());
         }
     }
 }
