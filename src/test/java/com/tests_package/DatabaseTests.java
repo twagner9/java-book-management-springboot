@@ -1,12 +1,12 @@
 package com.tests_package;
 
-import com.main_package.Database;
-import com.main_package.Catalog.CatalogException;
-import com.main_package.Catalog;
-import com.main_package.Book;
+import com.twag.book_management_app.model.Database;
+import com.twag.book_management_app.model.Catalog.CatalogException;
+import com.twag.book_management_app.model.Catalog;
+import com.twag.book_management_app.model.Book;
 
 import static com.tests_package.Tests.errorMessages;
-import static com.main_package.Assert.assertEquals;
+import static com.twag.book_management_app.model.Assert.assertEquals;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

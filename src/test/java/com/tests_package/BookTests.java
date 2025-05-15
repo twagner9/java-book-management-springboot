@@ -1,8 +1,8 @@
 package com.tests_package;
 
-import com.main_package.Book;
+import com.twag.book_management_app.model.Book;
 
-import static com.main_package.Assert.*;
+import static com.twag.book_management_app.model.Assert.*;
 import static com.tests_package.Tests.errorMessages;
 
 public class BookTests {

@@ -1,9 +1,9 @@
 package com.tests_package;
 
-import com.main_package.Book;
-import com.main_package.Catalog;
+import com.twag.book_management_app.model.Book;
+import com.twag.book_management_app.model.Catalog;
 
-import static com.main_package.Assert.*;
+import static com.twag.book_management_app.model.Assert.*;
 import static com.tests_package.Tests.errorMessages;
 
 
