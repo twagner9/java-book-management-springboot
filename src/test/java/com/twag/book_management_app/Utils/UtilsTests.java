@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 //import static com.twag.book_management_app.model.Assert.*;
-import static com.twag.book_management_app.tests_package.Tests.errorMessages;
 
 public class UtilsTests {
     private final String fullSimulatedInput = """
@@ -42,29 +41,17 @@ public class UtilsTests {
         // a. Test getting integer in range
         expectedNum = 8;
         int actualNum = Utils.getIntFromUser("Enter a number from 1 to 10: ", 1, 10, scanner);
-        try {
-            assertEquals(expectedNum, actualNum, "Error in Utils class: expected getIntFromUser to return " + expectedNum +"; got " + actualNum);
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
+        assertEquals(expectedNum, actualNum, "Error in Utils class: expected getIntFromUser to return " + expectedNum +"; got " + actualNum);
 
         // b. Test getting integer below range.
         expectedNum = 1;
         actualNum = Utils.getIntFromUser("Enter a number from 1 to 10: ", 1, 10, scanner);
-        try {
-            assertEquals(expectedNum, actualNum, "Error in Utils class when entering values below lower bound. Expected " + expectedNum + "; got " + actualNum);
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
+        assertEquals(expectedNum, actualNum, "Error in Utils class when entering values below lower bound. Expected " + expectedNum + "; got " + actualNum);
 
         // c. Test getting integer above range.
         expectedNum = 10;
         actualNum = Utils.getIntFromUser("Enter a number from 1 to 10: ", 1, 10, scanner);
-        try {
-            assertEquals(expectedNum, actualNum, "Error in Utils class when entering values below lower bound. Expected " + expectedNum + "; got " + actualNum);
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
+        assertEquals(expectedNum, actualNum, "Error in Utils class when entering values below lower bound. Expected " + expectedNum + "; got " + actualNum);
     }
 
     @Test
@@ -72,11 +59,7 @@ public class UtilsTests {
         // 2. Test getting string from user.
         expectedString = "hello";
         String actualString = Utils.getStringFromUser("Enter a string: ", scanner);
-        try {
-            assertEquals(expectedString, actualString, "Error in Utils class when entering a String value. Expected '" + expectedString + "''; got '" + actualString + "'");
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
+        assertEquals(expectedString, actualString, "Error in Utils class when entering a String value. Expected '" + expectedString + "''; got '" + actualString + "'");
     }
 
     @Test
@@ -84,14 +67,6 @@ public class UtilsTests {
         // 3. Test creating a book from function.
         Book expectedBook = new Book(expectedString, expectedString, expectedNum);
         Book actualBook = Utils.receiveBookInput(scanner);
-        try {
-            assertEquals(expectedBook, actualBook, "Error in Utils class when getting info to make Book. Expected '" + expectedBook.getDetails() + "'; got '" + actualBook + "'");
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
-    }
-
-    public static void utilsTests () {
-
+        assertEquals(expectedBook, actualBook, "Error in Utils class when getting info to make Book. Expected '" + expectedBook.getDetails() + "'; got '" + actualBook + "'");
     }
 }

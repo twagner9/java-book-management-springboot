@@ -8,7 +8,6 @@ import com.twag.book_management_app.model.Book;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import static com.twag.book_management_app.tests_package.Tests.errorMessages;
 //import static com.twag.book_management_app.model.Assert.assertEquals;
 
 import java.nio.file.Files;
@@ -77,11 +76,8 @@ public class DatabaseTests {
         // Let's try listing the catalog:
         String expectedCatalogList = "ID #: 1; Title: Hello; Author: World; # Copies: 10";
         String actualCatalogList = testCat.getCatalog();
-        try {
-            assertEquals(expectedCatalogList, actualCatalogList, "Error reading database from SQL file. Expected catalog list " + expectedCatalogList + "; got " + actualCatalogList);
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
+        assertEquals(expectedCatalogList, actualCatalogList, "Error reading database from SQL file. Expected catalog list " + expectedCatalogList + "; got " + actualCatalogList);
+
         // Have a database containing a single item; let's read it in via the 
         // TODO: 2. Test saving a Catalog to the database
         try {
@@ -97,11 +93,8 @@ public class DatabaseTests {
         testCat = Database.loadDatabase(testUrl);
         expectedCatalogList = "ID #: 1; Title: Hello; Author: World; # Copies: 10\nID #: 2; Title: Test; Author: Book; # Copies: 2";
         actualCatalogList = testCat.getCatalog();
-        try {
-            assertEquals(expectedCatalogList, actualCatalogList, "Error in Database class when saving Catalog to Database. Expected: " + expectedCatalogList + " got " + actualCatalogList);
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
+        assertEquals(expectedCatalogList, actualCatalogList, "Error in Database class when saving Catalog to Database. Expected: " + expectedCatalogList + " got " + actualCatalogList);
+
         // Remove the database from the disk
         Path filePath = Paths.get("sample.db");
         try {

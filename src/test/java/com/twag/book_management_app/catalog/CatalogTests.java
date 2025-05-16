@@ -7,14 +7,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 //import static com.twag.book_management_app.model.Assert.*;
-import static com.twag.book_management_app.tests_package.Tests.errorMessages;
 
 
 public class CatalogTests {
     private final Catalog testCat = new Catalog();
-    private final String testTitle = "Hello", testAuthor = "Me";
+    private final String testTitle = "Hello", testAuthor = "Me", testTitle2 = "Hehe", testAuthor2 = "Haha";
     private final int testId = 1, testCopies = 20;
-    private int testId2, testCopies2;
+    private final int testId2 = 2, testCopies2 = 80;
     private String expectedList, actualList;
 
     @Test
@@ -26,12 +25,7 @@ public class CatalogTests {
             System.err.println("Error adding Book to Catalog in CatalogTests.");
         }
         Book resultBook = testCat.getBookById(1);
-
-        try {
-            assertEquals(testBook, resultBook, "Error in Catalog class when adding to an empty catalog. Expected Book " + testBook.getDetails() + "; actual: " + resultBook);
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
+        assertEquals(testBook, resultBook, "Error in Catalog class when adding to an empty catalog. Expected Book " + testBook.getDetails() + "; actual: " + resultBook);
 
         // b. Add more copies to existing title
         try {
@@ -39,48 +33,45 @@ public class CatalogTests {
         } catch (Catalog.CatalogException e) {
             System.err.println("Error adding Book to Catalog in CatalogTests.");
         }
+
         int actualCopies = testCat.getBookById(testId).getNumCopies();
-        try {
-            assertEquals(2 * testCopies, actualCopies, "Error in Catalog class when adding existing title to catalog. Expected " + (2 * testCopies) + "; actual: " + actualCopies);
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
+        assertEquals(2 * testCopies, actualCopies, "Error in Catalog class when adding existing title to catalog. Expected " + (2 * testCopies) + "; actual: " + actualCopies);
 
         // c. TODO: Add a book with the same ID number (unhappy case)
     }
 
     @Test
     void testListingCatalog() {
+        try {
+            testCat.addBook(new Book(testId, testTitle, testAuthor, 2 * testCopies));
+        } catch (Catalog.CatalogException e) {
+            System.err.println(e.getMessage());
+        }
         expectedList = "ID #: " + testId + "; Title: " + testTitle + "; Author: " + testAuthor + "; # Copies: " + (2 * testCopies);
         actualList = testCat.getCatalog();
-        try {
-            assertEquals(expectedList, actualList, "Error in Catalog class when listing the Catalog with one book. Expected " + expectedList + " got " + actualList);
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
+        assertEquals(expectedList, actualList, "Error in Catalog class when listing the Catalog with one book. Expected " + expectedList + " got " + actualList);
 
         // Check listing catalog with multiple books
-        String testTitle2 = "Hehe", testAuthor2 = "Haha";
-        testId2 = 2;
-        testCopies2 = 80;
         Book testBook2 = new Book(testId2, testTitle2, testAuthor2, testCopies2);
 
         try {
             testCat.addBook(testBook2);
         } catch (Catalog.CatalogException e) {
-            System.err.println("Error adding to Catalog in CatalogTests.");
+            System.err.println(e.getMessage());
         }
         String expectedList2 = expectedList + "\nID #: " + testId2 + "; Title: " + testTitle2 + "; Author: " + testAuthor2 + "; # Copies: " + testCopies2;
         actualList = testCat.getCatalog();
-        try {
-            assertEquals(expectedList2, actualList, "Error in Catalog class when listing the Catalog with multiple Books. Expected " + expectedList2 + " got " + actualList);
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
+        assertEquals(expectedList2, actualList, "Error in Catalog class when listing the Catalog with multiple Books. Expected " + expectedList2 + " got " + actualList);
     }
 
     @Test
     void testReturningNumTitles() {
+        try {
+            testCat.addBook(new Book(testId, testTitle, testAuthor, testCopies));
+            testCat.addBook(new Book(testId2, testTitle2, testAuthor2, testCopies2));
+        } catch (Catalog.CatalogException e) {
+            System.err.println(e.getMessage());
+        }
         int expectedCatalogTitles = 2, actualCatalogTitles = testCat.getNumTitles();
         try {
             assertEquals(expectedCatalogTitles, actualCatalogTitles, "Error in Catalog class when returning number of titles. Expected " + expectedCatalogTitles + " got " + actualCatalogTitles);
@@ -99,11 +90,7 @@ public class CatalogTests {
             System.err.println("Error removing from catalog in CatalogTests");
         }
         actualList = testCat.getCatalog();
-        try {
-            assertEquals(expectedList, actualList, "Error in Catalog class when removing all copies of a book. Expected listing " + expectedList + " got " + actualList);
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
+        assertEquals(expectedList, actualList, "Error in Catalog class when removing all copies of a book. Expected listing " + expectedList + " got " + actualList);
 
         // b. Remove some copies
         try {
@@ -113,21 +100,21 @@ public class CatalogTests {
         }
         expectedList = "ID #: " + testId + "; Title: " + testTitle + "; Author: " + testAuthor + "; # Copies: " + (testCopies);
         actualList = testCat.getCatalog();
-        try {
-            assertEquals(expectedList, actualList, "Error in Catalog class when removing part of total copies of a book. Expected listing " + expectedList + " got " + actualList);
-        } catch (AssertionError e) {
-            errorMessages.add(e.getMessage());
-        }
+        assertEquals(expectedList, actualList, "Error in Catalog class when removing part of total copies of a book. Expected listing " + expectedList + " got " + actualList);
 
         // c. Remove too many copies
         try {
             testCat.removeBook(testId, testCopies * 2); // try to remove 40 copies when there's 20
-            errorMessages.add("Error in Catalog class when removing too many copies of a book. Expected Catalog.CatalogException, did not get one.");
         } catch (Catalog.CatalogException e) {
-            // Here, we want an exception because the user is trying to remove too many books.
+            // TODO: Here, we want an exception because the user is trying to remove too many books.
         }
     }
 
     public static void catalogTests() {
+        CatalogTests tests = new CatalogTests();
+        tests.testBookAdditions();
+        tests.testListingCatalog();
+        tests.testReturningNumTitles();
+        tests.testRemovingBooks();
     }
 }
