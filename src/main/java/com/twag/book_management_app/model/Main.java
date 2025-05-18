@@ -21,7 +21,7 @@ public class Main {
          */
         Scanner scn = new Scanner(System.in);
         String filename = Utils.getStringFromUser("Enter path to catalog: ", scn);
-        String url = "jdbc:sqlite:" + filename;
+        String url = "jdbc:h2:file:./data/" + filename;
         Catalog catalog = Database.loadDatabase(url);
 
         // Ensure that the catalog can never be null

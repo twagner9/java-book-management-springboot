@@ -7,18 +7,12 @@ public class Database {
     /**
      * Create a new database or load an existing one, loading all
      * Books into memory via a main.Catalog object.
-     * @param filename The name of the database to created or loaded.
+     * @param url The name of the database to created or loaded.
      * @return main.Catalog object containing all books loaded into memory.
      */
-    public static Catalog loadDatabase(String filename) {
+    public static Catalog loadDatabase(String url) {
         try {
-            try {
-                Class.forName("org.sqlite.JDBC");
-            } catch (ClassNotFoundException e) {
-                System.err.println("Class org.sqlite.JDBC not found.");
-                e.printStackTrace();
-            }
-            Connection conn = DriverManager.getConnection(filename);
+            Connection conn = DriverManager.getConnection(url);
             if (conn != null) {
                 String tableCreation = "CREATE TABLE IF NOT EXISTS catalog ("
                         + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -58,22 +52,15 @@ public class Database {
                 throw new SQLException();
             }
         } catch (SQLException sqlException) {
-            System.err.println("Error reading/creating " + filename);
+            System.err.println("Error reading/creating " + url);
             sqlException.printStackTrace();
         }
         return null; // Should never get here
     }
 
-    public static boolean saveDatabase(Catalog currentCatalog, String filename) {
+    public static boolean saveDatabase(Catalog currentCatalog, String url) {
         try {
-            try {
-                Class.forName("org.sqlite.JDBC");
-            } catch (ClassNotFoundException e) {
-                System.err.println("Class org.sqlite.JDBC not found.");
-                e.printStackTrace();
-            }
-
-            Connection conn = DriverManager.getConnection(filename);
+            Connection conn = DriverManager.getConnection(url);
             if (conn != null) {
                 // Insert if not existent, replace otherwise; if there is an ID conflict, replace the existing data
                 // with the new data. Realistically I should do everything possible to avoid such an ID conflict, but
@@ -94,7 +81,7 @@ public class Database {
                 }
             }
         } catch (SQLException sqlException) {
-            System.err.println("Error saving database " + filename);
+            System.err.println("Error saving database " + url);
             sqlException.printStackTrace();
             return false;
         }

@@ -34,13 +34,7 @@ public class DatabaseTests {
     public static void databaseTests() {
         // 1. Test opening a database
         String testUrl = "jdbc:sqlite:sample.db";
-        // Create sample database, fill it with test data, then call load database.        
-        try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e) {
-            System.err.println("Class org.sqlite.JDBC not found.");
-            e.printStackTrace();
-        }
+        // Create sample database, fill it with test data, then call load database.
         try {
             Connection conn = DriverManager.getConnection(testUrl);
             if (conn != null) {
