@@ -135,8 +135,6 @@ public class Book {
             return false;
 
         Book that = (Book) o;
-        // NOTE: this may require a fix; the id may not be useful here.
         return this.title.equals(that.title) && this.author.equals(that.author);
-
     }
 }

@@ -50,12 +50,16 @@ public class UtilsTests {
 
     @Test
     void testCreateBook() {
-        String simulatedInput = "hello\nhello\n10\n  ";
+        String simulatedInput = "hello\nhello\n10\n";
         ByteArrayInputStream in = new ByteArrayInputStream(simulatedInput.getBytes());
         Scanner scanner = new Scanner(in);
         // 3. Test creating a book from function.
+        expectedString = "hello";
+        expectedNum = 10;
+
         Book expectedBook = new Book(expectedString, expectedString, expectedNum);
         Book actualBook = Utils.receiveBookInput(scanner);
-        assertEquals(expectedBook, actualBook, "Error in Utils class when getting info to make Book. Expected '" + expectedBook.getDetails() + "'; got '" + actualBook + "'");
+
+        assertTrue(expectedBook.equals(actualBook), "Error in Utils class when getting info to make Book. Expected '" + expectedBook.getDetails() + "'; got '" + actualBook + "'");
     }
 }
