@@ -24,17 +24,17 @@ public class UtilsTests {
         // a. Test getting integer in range
         expectedNum = 8;
         int actualNum = Utils.getIntFromUser("Enter a number from 1 to 10: ", 1, 10, scanner);
-        assertEquals(expectedNum, actualNum, "Error in Utils class: expected getIntFromUser to return " + expectedNum +"; got " + actualNum);
+        assertEquals(expectedNum, actualNum);
 
         // b. Test getting integer below range.
         expectedNum = 1;
         actualNum = Utils.getIntFromUser("Enter a number from 1 to 10: ", 1, 10, scanner);
-        assertEquals(expectedNum, actualNum, "Error in Utils class when entering values below lower bound. Expected " + expectedNum + "; got " + actualNum);
+        assertEquals(expectedNum, actualNum);
 
         // c. Test getting integer above range.
         expectedNum = 10;
         actualNum = Utils.getIntFromUser("Enter a number from 1 to 10: ", 1, 10, scanner);
-        assertEquals(expectedNum, actualNum, "Error in Utils class when entering values below lower bound. Expected " + expectedNum + "; got " + actualNum);
+        assertEquals(expectedNum, actualNum);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class UtilsTests {
         // 2. Test getting string from user.
         expectedString = "hello";
         String actualString = Utils.getStringFromUser("Enter a string: ", scanner);
-        assertEquals(expectedString, actualString, "Error in Utils class when entering a String value. Expected '" + expectedString + "''; got '" + actualString + "'");
+        assertEquals(expectedString, actualString);
     }
 
     @Test
@@ -60,6 +60,6 @@ public class UtilsTests {
         Book expectedBook = new Book(expectedString, expectedString, expectedNum);
         Book actualBook = Utils.receiveBookInput(scanner);
 
-        assertTrue(expectedBook.equals(actualBook), "Error in Utils class when getting info to make Book. Expected '" + expectedBook.getDetails() + "'; got '" + actualBook + "'");
+        assertTrue(expectedBook.equals(actualBook));
     }
 }
