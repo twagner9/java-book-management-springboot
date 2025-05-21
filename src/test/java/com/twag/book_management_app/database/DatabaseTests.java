@@ -21,25 +21,16 @@ import java.sql.*;
 // This is because of JPA, which apparently simplifies data retrieval by making it so I don't have
 // to write any SQL; it handles the operations under the hood
 public class DatabaseTests {
-
     @Test
-    void openingDatabase() {
-
-    }
-
-    @Test
-    void savingDatabase() {
-
-    }
-    public static void databaseTests() {
+    void basicDatabaseTests() {
         // 1. Test opening a database
-        String testUrl = "jdbc:sqlite:sample.db";
+        String testUrl = "jdbc:h2:mem:test";
         // Create sample database, fill it with test data, then call load database.
         try {
             Connection conn = DriverManager.getConnection(testUrl);
             if (conn != null) {
                 String tableCreation = "CREATE TABLE IF NOT EXISTS catalog ("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "id INTEGER PRIMARY KEY AUTO_INCREMENT, "
                 + "title TEXT NOT NULL,"
                 + "author TEXT NOT NULL,"
                 + "copies INTEGER NOT NULL"
@@ -48,11 +39,7 @@ public class DatabaseTests {
                 sqlStatement.execute(tableCreation);
 
                 // Created; now let's insert a new book object
-                String queryToExecute = """
-                                            INSERT OR REPLACE INTO catalog (id, title, author, copies) VALUES(?, ?, ?, ?) \
-                                            ON CONFLICT(id) DO UPDATE SET title = excluded.title, author = excluded.author, \
-                                            copies = excluded.copies;\
-                                        """;
+                String queryToExecute ="MERGE INTO catalog (id, title, author, copies) KEY(id) VALUES(?, ?, ?, ?)";
                 PreparedStatement pstmt = conn.prepareStatement(queryToExecute);
                 pstmt.setInt(1, 1);
                 pstmt.setString(2, "Hello");

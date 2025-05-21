@@ -15,7 +15,7 @@ public class Database {
             Connection conn = DriverManager.getConnection(url);
             if (conn != null) {
                 String tableCreation = "CREATE TABLE IF NOT EXISTS catalog ("
-                        + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                        + "id INTEGER PRIMARY KEY AUTO_INCREMENT, "
                         + "title TEXT NOT NULL,"
                         + "author TEXT NOT NULL,"
                         + "copies INTEGER NOT NULL"
@@ -65,8 +65,7 @@ public class Database {
                 // Insert if not existent, replace otherwise; if there is an ID conflict, replace the existing data
                 // with the new data. Realistically I should do everything possible to avoid such an ID conflict, but
                 // if it should happen, it doesn't seem as though it should be the end of the world?
-                String upsertCommand = "INSERT OR REPLACE INTO catalog (id, title, author, copies) VALUES(?, ?, ?, ?) "
-                        + "ON CONFLICT(id) DO UPDATE SET title = excluded.title, author = excluded.author, copies = excluded.copies";
+                String upsertCommand = "MERGE INTO catalog (id, title, author, copies) KEY(id) VALUES(?, ?, ?, ?)";
                 ArrayList<Book> currentBookList = currentCatalog.returnBookList();
                 for (Book b : currentBookList) {
                     // If we got here, the table already exists.
