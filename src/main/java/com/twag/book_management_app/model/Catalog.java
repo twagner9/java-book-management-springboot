@@ -1,6 +1,7 @@
 package com.twag.book_management_app.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /* FIXME: All get and set classes in the catalog will need a rework
@@ -31,6 +32,12 @@ public class Catalog {
      */
     public Catalog(ArrayList<Book> bookList, int totalBookCount) {
         catalogList = bookList;
+        numTitles = totalBookCount;
+        latestId = catalogList.getLast().getBookId() + 1;
+    }
+
+    public Catalog(List<Book> bookList, int totalBookCount) {
+        catalogList = new ArrayList<>(bookList);
         numTitles = totalBookCount;
         latestId = catalogList.getLast().getBookId() + 1;
     }

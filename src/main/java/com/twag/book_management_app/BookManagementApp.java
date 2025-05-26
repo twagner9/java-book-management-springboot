@@ -1,4 +1,4 @@
-package com.twag.book_management_app.springboot;
+package com.twag.book_management_app;
 
 import java.util.Arrays;
 
@@ -29,13 +29,7 @@ public class BookManagementApp {
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
-			System.out.println("Inspection of beans provided by Spring Boot");
-
-			String[] beanNames = ctx.getBeanDefinitionNames();
-			Arrays.sort(beanNames);
-			for (String name : beanNames) {
-				System.out.println(name);
-			}
+			System.out.println("Main application has started.");
 		};
 	}
 }
