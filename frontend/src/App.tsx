@@ -1,26 +1,29 @@
 import React from 'react';
 import logo from './logo.svg';
+import { EmptyDatabase } from './EmptyDatabase';
+import { ExistingDatabase } from './ExistingDatabase';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+  // Create state variable called "books" to hold the list of books
+  const [books, setBooks] = React.useState([]);
+
+  // Fetch any books from the backend
+  React.useEffect(() => {
+    fetch('/api/books')
+      .then(response => response.json())
+      .then(data => setBooks(data))
+      .catch(error => console.error('Error fetching books:', error));
+    }, []);
+
+  // If books is null, display a loading message
+  if (books === null) {
+    return (<div>Loading...</div>);
+  }
+
+  // Use conditional rendering to display display either the EmptyDatabase or ExistingDatabase component based on whether there are any books
+  return books.length === 0 ? <EmptyDatabase /> : <ExistingDatabase />;
 }
 
 export default App;
