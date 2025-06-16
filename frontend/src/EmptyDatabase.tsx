@@ -1,11 +1,22 @@
 import React from 'react';
-import { BookModal } from './BookInput';
+import { BookModal } from './BookModal';
+import { BookInputs } from './BookInputs';
 
 export function EmptyDatabase() {
     // I see; so this creates a state called modalOpen
     // The state is managed by both the handleClick and closeModal functions so that
     // it is modified to match the necessary state at any given time
     const [modalOpen, setModalOpen] = React.useState(false);
+
+    function getInitialState() {
+        return {
+            title: '',
+            author: '',
+            validTitle: false,
+            validAuthor: false,
+            enableSubmit: false
+        }
+    }
 
     function handleClick() {
         // alert("TODO: add logic for displaying a menu that allows the user to specify book details");
@@ -16,6 +27,7 @@ export function EmptyDatabase() {
         setModalOpen(false);
         // TODO?: add logic for wiping all input fields? 
     }
+
 
 
     return(
@@ -30,14 +42,7 @@ export function EmptyDatabase() {
             <BookModal isOpen={modalOpen} onRequestClose={closeModal}>
                 <h3>Add Book</h3>
                 {
-                    <>
-                        <label htmlFor="bookTitle">Title: </label>
-                        <input id="bookTitle" placeholder="Enter a title..."></input>
-                        <label htmlFor="bookAuthor">Author: </label>
-                        <input id="bookAuthor" placeholder="Enter an author..."></input>
-                        <label htmlFor="bookCopies">Number of Copies: </label>
-                        <input type="number" id="bookCopies" min="1" max="99"></input>
-                    </>
+                    <BookInputs />
                 }
             </BookModal>
         </div>
