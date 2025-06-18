@@ -1,4 +1,6 @@
 import React, {useEffect, useState } from 'react';
+import { BookModal } from './BookModal';
+import { BookInputs } from './BookInputs';
 
 type Book = {
     id: number;
@@ -9,6 +11,8 @@ type Book = {
 
 export function ExistingDatabase() {
     const [books, setBooks] = React.useState<Book[]>([]);
+    const [modalOpen, setModalOpen] = React.useState(false);
+
     useEffect(() => {
         fetch('/api/books')
             .then(response => response.json())
@@ -17,14 +21,25 @@ export function ExistingDatabase() {
     }, []); // This empty "dependency array" in useEffect means this effect runs once after the initial render; if variables are added here,
             // the effect will run again when those variables change.
 
-    function handleClick() {
-        alert("TODO: add logic for displaying a menu that allows the user to specify book details, and then send to backend");
+
+    function closeModal() {
+        setModalOpen(false);
+    }
+
+    function handleAddClick() {
+        setModalOpen(true);
     }
 
     return (
         <div className="main-content">
             <h1 className="main-text">Small Library Management</h1>
-            <button className="add-book-button" onClick={handleClick}>Add a book</button>
+            <button className="add-book-button" onClick={handleAddClick}>Add a book</button>
+            <BookModal isOpen={modalOpen} onRequestClose={closeModal}>
+                <h3>Add Book</h3>
+                {
+                    <BookInputs />
+                }
+            </BookModal>
             <table>
                 <thead>
                     <tr>
