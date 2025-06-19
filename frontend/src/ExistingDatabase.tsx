@@ -2,12 +2,15 @@ import React, {useEffect, useState } from 'react';
 import { BookModal } from './BookModal';
 import { BookInputs } from './BookInputs';
 
-type Book = {
+export type Book = {
     id: number;
     author: string;
     title: string;
     numCopies: number;
 };
+
+// TODO: update to fetch the latest ID number from the database
+let currentId = 1;
 
 export function ExistingDatabase() {
     const [books, setBooks] = React.useState<Book[]>([]);
@@ -30,6 +33,19 @@ export function ExistingDatabase() {
         setModalOpen(true);
     }
 
+    function handleBookAdded(newBook: Book) {
+        newBook.id = currentId;
+        setBooks(prevBooks => [...prevBooks, newBook]);
+        currentId++;
+
+        // DEBUG:
+        console.log("in handleBookAdded");
+        console.log(newBook);
+
+        // TODO: logic for adding the data to the table
+        setModalOpen(false);
+    }
+
     return (
         <div className="main-content">
             <h1 className="main-text">Small Library Management</h1>
@@ -37,7 +53,7 @@ export function ExistingDatabase() {
             <BookModal isOpen={modalOpen} onRequestClose={closeModal}>
                 <h3>Add Book</h3>
                 {
-                    <BookInputs />
+                    <BookInputs onBookAdded={handleBookAdded} />
                 }
             </BookModal>
             <table>
