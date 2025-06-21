@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.twag.book_management_app.repository.BookRepository;
-import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -32,6 +32,7 @@ public class BookController {
 
     @PostMapping
     public Book addNewBook(Book newBook) {
+        System.out.println("Executing addition of newBook...");
         return bookRepository.save(newBook);
     }
     

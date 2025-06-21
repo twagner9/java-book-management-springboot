@@ -1,7 +1,7 @@
 import {useState} from "react";
 import type {Book} from "./ExistingDatabase";
 
-export function BookInputs({onBookAdded}: {onBookAdded?: (book: Book) => void} ) {
+export function BookInputs(props: {currentId: number; onBookAdded: (book: Book) => void}) {
     // UseState sets the initial default value of the state, and ties a hook
     // that change the state when users interact with the frontend
     const [newBook, setBook] = useState<Book>({
@@ -19,22 +19,24 @@ export function BookInputs({onBookAdded}: {onBookAdded?: (book: Book) => void} )
         // Create book
         console.log(newBook);
 
-        // Generate a JSON transmission of the data from the frontend to the /api/books endpoint
-        try {
-            const response = await fetch('/api/books', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(newBook),
-            });
-            if (response.ok) {
-                if (onBookAdded) onBookAdded(newBook);
-            } else {
-                alert("Failed to add book.");
-            }
-        } catch (error) {
-            alert("Error adding book.");
-            return;
-        }
+        newBook.id = props.currentId;
+        props.onBookAdded(newBook);
+        // // Generate a JSON transmission of the data from the frontend to the /api/books endpoint
+        // try {
+        //     const response = await fetch('/api/books', {
+        //         method: 'POST',
+        //         headers: {'Content-Type': 'application/json'},
+        //         body: JSON.stringify(newBook),
+        //     });
+        //     if (response.ok) {
+        //         if (onBookAdded) onBookAdded(newBook);
+        //     } else {
+        //         alert("Failed to add book.");
+        //     }
+        // } catch (error) {
+        //     alert("Error adding book.");
+        //     return;
+        // }
     }
 
     return (    

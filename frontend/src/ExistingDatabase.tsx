@@ -10,7 +10,7 @@ export type Book = {
 };
 
 // TODO: update to fetch the latest ID number from the database
-let currentId = 1;
+let currentId: number = 1;
 
 export function ExistingDatabase() {
     const [books, setBooks] = React.useState<Book[]>([]);
@@ -34,16 +34,27 @@ export function ExistingDatabase() {
     }
 
     function handleBookAdded(newBook: Book) {
-        newBook.id = currentId;
-        setBooks(prevBooks => [...prevBooks, newBook]);
-        currentId++;
-
         // DEBUG:
         console.log("in handleBookAdded");
         console.log(newBook);
 
-        // TODO: logic for adding the data to the table
-        setModalOpen(false);
+        fetch('/api/books', {
+            method: "POST",
+            headers: {'Content-Type': 'application/json' },
+            body: JSON.stringify(newBook),
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("Failed to add book to database.");
+            return response.json();
+        })
+        .then(savedBook => {
+            setBooks(prevBooks => [...prevBooks, newBook]);
+            currentId++;
+            setModalOpen(false);
+        })
+        .catch(error => {
+            alert("Error adding book to the database/GUI");
+        })
     }
 
     return (
@@ -53,7 +64,7 @@ export function ExistingDatabase() {
             <BookModal isOpen={modalOpen} onRequestClose={closeModal}>
                 <h3>Add Book</h3>
                 {
-                    <BookInputs onBookAdded={handleBookAdded} />
+                    <BookInputs currentId={currentId} onBookAdded={handleBookAdded} />
                 }
             </BookModal>
             <table>
