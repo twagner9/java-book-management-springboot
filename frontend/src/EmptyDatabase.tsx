@@ -25,7 +25,7 @@ export function EmptyDatabase() {
         // TODO?: add logic for wiping all input fields? 
     }
 
-    function handleBookAdded(newBook: Book) {
+    function handleBookAdded(newBook: Omit<Book, "id">) {
         // DEBUG:
         console.log("in handleBookAdded");
         console.log(newBook);
@@ -40,8 +40,7 @@ export function EmptyDatabase() {
             return response.json();
         })
         .then(savedBook => {
-            setBooks(prevBooks => [...prevBooks, newBook]);
-            currentId++;
+            setBooks(prevBooks => [...prevBooks, savedBook]);
             setModalOpen(false);
         })
         .catch(error => {

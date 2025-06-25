@@ -33,7 +33,7 @@ export function ExistingDatabase() {
         setModalOpen(true);
     }
 
-    function handleBookAdded(newBook: Book) {
+    function handleBookAdded(newBook: Omit<Book, "id">) {
         // DEBUG:
         console.log("in handleBookAdded");
         console.log(newBook);
@@ -48,8 +48,7 @@ export function ExistingDatabase() {
             return response.json();
         })
         .then(savedBook => {
-            setBooks(prevBooks => [...prevBooks, newBook]);
-            currentId++;
+            setBooks(prevBooks => [...prevBooks, savedBook]);
             setModalOpen(false);
         })
         .catch(error => {

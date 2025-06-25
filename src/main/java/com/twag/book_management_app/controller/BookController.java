@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.twag.book_management_app.repository.BookRepository;
@@ -31,7 +32,7 @@ public class BookController {
     }
 
     @PostMapping
-    public Book addNewBook(Book newBook) {
+    public Book addNewBook(@RequestBody Book newBook) {
         System.out.println("Executing addition of newBook...");
         return bookRepository.save(newBook);
     }

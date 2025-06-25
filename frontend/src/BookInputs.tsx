@@ -1,11 +1,10 @@
 import {useState} from "react";
 import type {Book} from "./ExistingDatabase";
 
-export function BookInputs(props: {currentId: number; onBookAdded: (book: Book) => void}) {
+export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<Book, "id">) => void}) {
     // UseState sets the initial default value of the state, and ties a hook
     // that change the state when users interact with the frontend
-    const [newBook, setBook] = useState<Book>({
-        id: -1,
+    const [newBook, setBook] = useState<Omit<Book, "id">>({
         title: "",
         author: "",
         numCopies: 1,
@@ -18,8 +17,6 @@ export function BookInputs(props: {currentId: number; onBookAdded: (book: Book) 
         console.log("Function executing at least.")
         // Create book
         console.log(newBook);
-
-        newBook.id = props.currentId;
         props.onBookAdded(newBook);
         // // Generate a JSON transmission of the data from the frontend to the /api/books endpoint
         // try {
