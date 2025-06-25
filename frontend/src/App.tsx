@@ -1,7 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
-import { EmptyDatabase } from './EmptyDatabase';
-import { ExistingDatabase } from './ExistingDatabase';
+import { MainPage } from './MainPage';
 import './App.css';
 
 function App() {
@@ -23,7 +22,7 @@ function App() {
   }
 
   // Use conditional rendering to display display either the EmptyDatabase or ExistingDatabase component based on whether there are any books
-  return books.length === 0 ? <EmptyDatabase /> : <ExistingDatabase />;
+  return <MainPage />
 }
 
 export default App;

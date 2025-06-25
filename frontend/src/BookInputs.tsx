@@ -1,5 +1,5 @@
 import {useState} from "react";
-import type {Book} from "./ExistingDatabase";
+import type {Book} from "./MainPage";
 
 export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<Book, "id">) => void}) {
     // UseState sets the initial default value of the state, and ties a hook
