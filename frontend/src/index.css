@@ -13,15 +13,50 @@ code {
 }
 
 .main-content {
-  margin: auto;
-  align-content: center;
+
+  /* align-content: center; */
   text-align: center;
 }
 
 .main-text {
-  width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 10px;
 }
 
 .main-description {
-  text-align: left;
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 10px;
+}
+
+.add-book-button {
+  width: 120px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.book-table {
+  table-layout: fixed;
+  width: 100%;
+  padding: 10px;
+}
+
+.modal-content {
+  height: 20%;
+  width: 20%;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* For spacing the inputs/labels from one another on the modal
+Also to hopefully be used for aligning the modal content better */
+.form-label-and-input {
+  padding: 10px;
 }

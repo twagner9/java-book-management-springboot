@@ -37,14 +37,22 @@ export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<B
     }
 
     return (    
-        <>
-            <label htmlFor="bookTitle">Title: </label>
-            <input id="bookTitle" placeholder="Enter a title..." onChange={e => setBook(b => ({...b, title: e.target.value}))}></input>
-            <label htmlFor="bookAuthor">Author: </label>
-            <input id="bookAuthor" placeholder="Enter an author..." onChange={(e) => setBook(b => ({...b, author: e.target.value}))}></input>
-            <label htmlFor="bookCopies">Number of Copies: </label>
-            <input type="number" id="bookCopies" min="1" max="99" defaultValue="1" onChange={e => setBook(b => ({...b, numCopies: (e.target as HTMLInputElement).valueAsNumber}))}></input>
-            <button onClick={handleSubmitClick} disabled={!(isTitleValid && isAuthorValid && isNumCopiesValid)}>Submit</button>
-        </>
+        <div className="modal-container">
+            <div className="form-container">
+                <div className="form-label-and-input">
+                    <label htmlFor="bookTitle">Title: </label>
+                    <input id="bookTitle" placeholder="Enter a title..." onChange={e => setBook(b => ({...b, title: e.target.value}))}></input>
+                </div>
+                <div className="form-label-and-input">
+                    <label htmlFor="bookAuthor">Author: </label>
+                    <input id="bookAuthor" placeholder="Enter an author..." onChange={(e) => setBook(b => ({...b, author: e.target.value}))}></input>
+                </div>
+                <div className="form-label-and-input">
+                    <label htmlFor="bookCopies">Number of Copies: </label>
+                    <input type="number" id="bookCopies" min="1" max="99" defaultValue="1" onChange={e => setBook(b => ({...b, numCopies: (e.target as HTMLInputElement).valueAsNumber}))}></input>
+                </div>
+                <button onClick={handleSubmitClick} disabled={!(isTitleValid && isAuthorValid && isNumCopiesValid)}>Submit</button>
+            </div>
+        </div>
     )    
 }

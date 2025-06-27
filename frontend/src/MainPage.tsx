@@ -77,7 +77,7 @@ export function MainPage() {
                     <BookInputs currentId={currentId} onBookAdded={handleBookAdded} />
                 }
             </BookModal>
-            <table>
+            <table className="book-table">
                 <thead>
                     <tr>
                         <th>Author</th>
