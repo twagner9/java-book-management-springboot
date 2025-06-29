@@ -17,7 +17,9 @@ public class Database {
                 String tableCreation = "CREATE TABLE IF NOT EXISTS catalog ("
                         + "id INTEGER PRIMARY KEY AUTO_INCREMENT, "
                         + "title TEXT NOT NULL,"
-                        + "author TEXT NOT NULL,"
+                        + "authorLast TEXT NOT NULL,"
+                        + "authorFirst TEXT NOT NULL,"
+                        + "genre TEXT NOT NULL,"
                         + "copies INTEGER NOT NULL"
                         + ");";
                 Statement sqlStatement = conn.createStatement();
@@ -38,13 +40,15 @@ public class Database {
                 while(result.next()) {
                     int currentId = result.getInt("id");
                     String title = result.getString("title");
-                    String author = result.getString("author");
+                    String authorLast = result.getString("authorLast");
+                    String authorFirst = result.getString("authorFirst");
+                    String genre = result.getString("genre");
                     int copies = result.getInt("copies");
 
-                    System.out.println("id: " + currentId + "; title: " + title + "; author: " + author + "; copies: " + copies);
+                    System.out.println("id: " + currentId + "; title: " + title + "; author: " + authorLast + ", " + authorFirst + "; Genre: " + genre +"; copies: " + copies);
 
-                    Book currentBook = new Book(currentId, title, author, copies);
-                    books.add(new Book(currentId, title, author, copies));
+                    Book currentBook = new Book(currentId, title, authorLast, authorFirst, genre, copies);
+                    books.add(new Book(currentId, title, authorLast, authorFirst, genre, copies));
                 }
                 return new Catalog(books, books.size());
                 
@@ -65,7 +69,9 @@ public class Database {
                 // Insert if not existent, replace otherwise; if there is an ID conflict, replace the existing data
                 // with the new data. Realistically I should do everything possible to avoid such an ID conflict, but
                 // if it should happen, it doesn't seem as though it should be the end of the world?
-                String upsertCommand = "MERGE INTO catalog (id, title, author, copies) KEY(id) VALUES(?, ?, ?, ?)";
+                final int AUTHOR_LAST = 0;
+                final int AUTHOR_FIRST = 1;
+                String upsertCommand = "MERGE INTO catalog (id, title, authorLast, authorFirst, genre, copies) KEY(id) VALUES(?, ?, ?, ?, ?, ?)";
                 ArrayList<Book> currentBookList = currentCatalog.returnBookList();
                 for (Book b : currentBookList) {
                     // If we got here, the table already exists.
@@ -73,8 +79,11 @@ public class Database {
                     PreparedStatement preparedStatement = conn.prepareStatement(upsertCommand);
                     preparedStatement.setInt(1, b.getBookId());
                     preparedStatement.setString(2, b.getTitle());
-                    preparedStatement.setString(3, b.getAuthor());
-                    preparedStatement.setInt(4, b.getNumCopies());
+                    String[] authorNames = b.getAuthorFull();
+                    preparedStatement.setString(3, authorNames[AUTHOR_LAST]);
+                    preparedStatement.setString(4, authorNames[AUTHOR_FIRST]);
+                    preparedStatement.setString(5, b.getGenre());
+                    preparedStatement.setInt(6, b.getNumCopies());
 
                     int rowsAffected = preparedStatement.executeUpdate();
                 }

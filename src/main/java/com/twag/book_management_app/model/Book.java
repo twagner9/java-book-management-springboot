@@ -12,7 +12,9 @@ public class Book {
     private int id;
     
     private String title;
-    private String author;
+    private String authorLast;
+    private String authorFirst;
+    private String genre;
     private int numCopies;
 
     /**
@@ -21,7 +23,9 @@ public class Book {
     public Book() {
         id = -1;
         title = "";
-        author = "";
+        authorLast = "";
+        authorFirst= "";
+        genre = "";
         numCopies = -1;
     }
 
@@ -29,20 +33,26 @@ public class Book {
      * Preferred constructor: initialize a new main.Book object that can
      * be added to the main.Catalog.
      * @param book_title Title of new main.Book.
-     * @param book_author Author of new main.Book.
+     * @param authorLast Author last name.
+     * @param authorFirst Author first name.
+     * @param genre Book genre.
      * @param copies Number of new copies.
      */
-    public Book(String book_title, String book_author, int copies) {
+    public Book(String book_title, String authorLast, String authorFirst, String genre, int copies) {
         id = -1;
         title = book_title;
-        author = book_author;
+        this.authorLast = authorLast;
+        this.authorFirst = authorFirst;
+        this.genre = genre;
         numCopies = copies;
     }
 
-    public Book(int currentId, String title, String author, int copies) {
+    public Book(int currentId, String title, String authorLast, String authorFirst, String genre, int copies) {
         id = currentId;
         this.title = title;
-        this.author = author;
+        this.authorLast = authorLast;
+        this.authorFirst = authorFirst;
+        this.genre = genre;
         numCopies = copies;
     }
 
@@ -61,7 +71,7 @@ public class Book {
      * @return String containing values assigned to member variables of this main.Book.
      */
     public String getDetails() {
-        return "ID #: " + id + "; " + "Title: " + title + "; " + "Author: " + author + "; " + "# Copies: " + numCopies;
+        return "ID #: " + id + "; " + "Title: " + title + "; " + "Author: " + authorLast + ", " + authorFirst + "; Genre: " + genre + "; # Copies: " + numCopies;
     }
 
     /**
@@ -73,10 +83,31 @@ public class Book {
     }
 
     /**
-     * Return author of this book.
+     * Return array containing author's last name in index 0, first name in index 1.
      * @return String of the author of the main.Book.
      */
-    public String getAuthor() { return author; }
+    public String[] getAuthorFull() { 
+        String[] tmp = {authorLast, authorFirst};
+        return tmp; 
+    }
+
+    /**
+     * Return author's last name only.
+     * @return String of author's last name.
+     */
+    public String getAuthorLast() { return this.authorLast; }
+
+    /**
+     * Return author's first name only.
+     * @return String of author's first name.
+     */
+    public String getAuthorFirst() { return this.authorFirst; }
+
+    /**
+     * Return the Book's genre.
+     * @return String of the Book's genre.
+     */
+    public String getGenre() { return genre; }
 
     /**
      * Return number of copies of this main.Book.
@@ -104,10 +135,20 @@ public class Book {
 
     /**
      * Assign main.Book an author.
-     * @param authorName String of main.Book's author.
+     * @param authorLast String of main.Book's author's last name.
+     * @param authorFirst String of main.Book's author's first name.
      */
-    public void setAuthor(String authorName) {
-        author = authorName;
+    public void setAuthor(String authorLast, String authorFirst) {
+        this.authorLast = authorLast;
+        this.authorFirst = authorFirst;
+    }
+
+    /**
+     * Change the genre of a Book object
+     * @param newGenre The newly selected genre.
+     */
+    public void setGenre(String newGenre) {
+        this.genre = newGenre;
     }
 
     /**
@@ -144,6 +185,6 @@ public class Book {
             return false;
 
         Book that = (Book) o;
-        return this.title.equals(that.title) && this.author.equals(that.author);
+        return this.title.equals(that.title) && this.authorLast.equals(that.authorLast) && this.authorFirst.equals(that.authorFirst);
     }
 }

@@ -11,14 +11,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CatalogTests {
     private final Catalog testCat = new Catalog();
-    private final String testTitle = "Hello", testAuthor = "Me", testTitle2 = "Hehe", testAuthor2 = "Haha";
+    private final String testTitle = "Hello", testAuthorLast = "Wagner", testAuthorFirst = "Me", testGenre = "Autobiography";
+    private final String testTitle2 = "Hehe", testAuthorLast2 = "Johns", testAuthorFirst2 = "Haha", testGenre2 = "Mystery";
     private final int testId = 1, testCopies = 20;
     private final int testId2 = 2, testCopies2 = 80;
     private String expectedList, actualList;
 
     @Test
     void testBookAdditions() {
-        Book testBook = new Book(testId, testTitle, testAuthor, testCopies);
+        Book testBook = new Book(testId, testTitle, testAuthorLast, testAuthorFirst, testGenre, testCopies);
         try {
             testCat.addBook(testBook);
         } catch (Catalog.CatalogException e) {
@@ -43,23 +44,23 @@ public class CatalogTests {
     @Test
     void testListingCatalog() {
         try {
-            testCat.addBook(new Book(testId, testTitle, testAuthor, 2 * testCopies));
+            testCat.addBook(new Book(testId, testTitle, testAuthorLast, testAuthorFirst, testGenre, 2 * testCopies));
         } catch (Catalog.CatalogException e) {
             System.err.println(e.getMessage());
         }
-        expectedList = "ID #: " + testId + "; Title: " + testTitle + "; Author: " + testAuthor + "; # Copies: " + (2 * testCopies);
+        expectedList = "ID #: " + testId + "; Title: " + testTitle + "; Author: " + testAuthorLast +", " + testAuthorFirst + "; Genre: " + testGenre + "; # Copies: " + (2 * testCopies);
         actualList = testCat.getCatalog();
         assertEquals(expectedList, actualList);
 
         // Check listing catalog with multiple books
-        Book testBook2 = new Book(testId2, testTitle2, testAuthor2, testCopies2);
+        Book testBook2 = new Book(testId2, testTitle2, testAuthorLast2, testAuthorFirst2, testGenre2 , testCopies2);
 
         try {
             testCat.addBook(testBook2);
         } catch (Catalog.CatalogException e) {
             System.err.println(e.getMessage());
         }
-        String expectedList2 = expectedList + "\nID #: " + testId2 + "; Title: " + testTitle2 + "; Author: " + testAuthor2 + "; # Copies: " + testCopies2;
+        String expectedList2 = expectedList + "\nID #: " + testId2 + "; Title: " + testTitle2 + "; Author: " + testAuthorLast2 + ", " + testAuthorFirst2 + "; Genre: " + testGenre2 + "; # Copies: " + testCopies2;
         actualList = testCat.getCatalog();
         assertEquals(expectedList2, actualList);
     }
@@ -67,8 +68,8 @@ public class CatalogTests {
     @Test
     void testReturningNumTitles() {
         try {
-            testCat.addBook(new Book(testId, testTitle, testAuthor, testCopies));
-            testCat.addBook(new Book(testId2, testTitle2, testAuthor2, testCopies2));
+            testCat.addBook(new Book(testId, testTitle, testAuthorLast, testAuthorFirst, testGenre, testCopies));
+            testCat.addBook(new Book(testId2, testTitle2, testAuthorLast2, testAuthorFirst2, testGenre2, testCopies2));
         } catch (Catalog.CatalogException e) {
             System.err.println(e.getMessage());
         }
@@ -85,8 +86,8 @@ public class CatalogTests {
         // 4. Check removing books from catalog
         // a. Remove all copies
         try {
-            testCat.addBook(new Book(testId, testTitle, testAuthor, testCopies * 2));
-            testCat.addBook(new Book(testId2, testTitle2, testAuthor2, testCopies2));
+            testCat.addBook(new Book(testId, testTitle, testAuthorLast, testAuthorFirst, testGenre, testCopies * 2));
+            testCat.addBook(new Book(testId2, testTitle2, testAuthorLast2, testAuthorFirst2, testGenre, testCopies2));
         } catch (Catalog.CatalogException e) {
             System.err.println("Error adding books to catalog before removal test: " + e.getMessage());
         }
@@ -96,7 +97,7 @@ public class CatalogTests {
             System.err.println("Error removing from catalog in CatalogTests");
         }
 
-        expectedList = "ID #: " + testId + "; Title: " + testTitle + "; Author: " + testAuthor + "; # Copies: " + (testCopies * 2);
+        expectedList = "ID #: " + testId + "; Title: " + testTitle + "; Author: " + testAuthorLast + ", " + testAuthorFirst + "; Genre: " + testGenre + "; # Copies: " + (testCopies * 2);
         actualList = testCat.getCatalog();
         assertEquals(expectedList, actualList);
 
@@ -106,7 +107,7 @@ public class CatalogTests {
         } catch (Catalog.CatalogException e) {
             System.err.println("Error removing from catalog in CatalogTests");
         }
-        expectedList = "ID #: " + testId + "; Title: " + testTitle + "; Author: " + testAuthor + "; # Copies: " + (testCopies);
+        expectedList = "ID #: " + testId + "; Title: " + testTitle + "; Author: " + testAuthorLast + ", " + testAuthorFirst + "; Genre: " + testGenre + "; # Copies: " + (testCopies);
         actualList = testCat.getCatalog();
         assertEquals(expectedList, actualList);
 

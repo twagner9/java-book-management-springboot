@@ -106,8 +106,9 @@ public class Main {
                     }
                     break;
                 case 'u':
-                    String sAuthor = Utils.getStringFromUser("Enter the name of the author :", scn);
-                    ArrayList<Book> authorResult = catalog.authorSearch(sAuthor);
+                    String authLast = Utils.getStringFromUser("Enter the last name of the author: ", scn);
+                    String authFirst = Utils.getStringFromUser("Enter the first name of the author: ", scn);
+                    ArrayList<Book> authorResult = catalog.authorSearch(authLast, authFirst);
                     if (authorResult.isEmpty())
                         System.out.println("No titles from this author found.");
                     else

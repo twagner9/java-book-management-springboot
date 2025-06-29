@@ -13,10 +13,12 @@ public class Utils {
     public static Book receiveBookInput(Scanner scanner) {
         // FIXME: instead of passing the inputStream, pass a Scanner containing the inputStream
         String title = getStringFromUser("Enter a title: ", scanner);
-        String author = getStringFromUser("Enter author name: ", scanner);
+        String authLast = getStringFromUser("Enter author last name: ", scanner);
+        String authFirst = getStringFromUser("Enter author first name: ", scanner);
+        String genre = getStringFromUser("Enter book genre: ", scanner);
         int numCopies = getIntFromUser("Enter number of copies: ", 1, 9999, scanner);
         scanner.close();
-        return new Book(title, author, numCopies);
+        return new Book(title, authLast, authFirst, genre, numCopies);
     }
 
     /**
@@ -109,9 +111,9 @@ public class Utils {
         try (BufferedReader reader = new BufferedReader(new FileReader(catalogFileName))) {
             String line;
             while((line = reader.readLine()) != null) {
-                String title = null, author = null;
+                String title = null, authorLast = null, authorFirst = null, genre = null;
                 int numCopies = -1;
-                boolean hasTitle = false, hasAuthor = false, hasCopies = false;
+                boolean hasTitle = false, hasAuthor = false, hasGenre = false, hasCopies = false;
                 String[] tokens = line.split(";");
                 for (String token : tokens) {
                     String[] keyValue = token.split(":", 2);
@@ -124,10 +126,17 @@ public class Utils {
                                 title = value;
                                 hasTitle = true;
                                 break;
-                            case "Author":
-                                author = value;
+                            case "Author Last":
+                                authorLast = value;
                                 hasAuthor = true;
                                 break;
+                            case "Author First":
+                                authorFirst = value;
+                                hasAuthor = true;
+                                break;
+                            case "Genre":
+                                genre = value;
+                                hasGenre = true;
                             case "# Copies":
                                 try {
                                     numCopies = Integer.parseInt(value);
@@ -141,8 +150,8 @@ public class Utils {
                         }
                     }
                 }
-                if (hasTitle && hasAuthor && hasCopies) {
-                    Book tmpBook = new Book(title, author, numCopies);
+                if (hasTitle && hasAuthor && hasCopies && hasGenre) {
+                    Book tmpBook = new Book(title, authorLast, authorFirst, genre, numCopies);
                     try {
                         readCatalog.addBook(tmpBook);
                     } catch (Catalog.CatalogException e) {

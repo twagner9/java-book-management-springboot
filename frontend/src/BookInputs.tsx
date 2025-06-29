@@ -6,11 +6,13 @@ export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<B
     // that change the state when users interact with the frontend
     const [newBook, setBook] = useState<Omit<Book, "id">>({
         title: "",
-        author: "",
+        authorLast: "",
+        authorFirst: "",
+        genre: "",
         numCopies: 1,
     });
     const isTitleValid = newBook.title.length >= 1 && newBook.title.length <= 99;
-    const isAuthorValid = newBook.author.length > 1 && newBook.author.length <= 20;
+    const isAuthorValid = (newBook.authorLast.length > 1 && newBook.authorLast.length <= 20) && (newBook.authorFirst.length > 1 && newBook.authorFirst.length <= 20);
     const isNumCopiesValid = newBook.numCopies >= 1 && newBook.numCopies <= 99;
 
     async function handleSubmitClick() {
@@ -44,8 +46,55 @@ export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<B
                     <input id="bookTitle" placeholder="Enter a title..." onChange={e => setBook(b => ({...b, title: e.target.value}))}></input>
                 </div>
                 <div className="form-label-and-input">
-                    <label htmlFor="bookAuthor">Author: </label>
-                    <input id="bookAuthor" placeholder="Enter an author..." onChange={(e) => setBook(b => ({...b, author: e.target.value}))}></input>
+                    <label htmlFor="bookAuthorLast">Author last: </label>
+                    <input id="bookAuthorLast" placeholder="Enter author last name..." onChange={(e) => setBook(b => ({...b, authorLast: e.target.value}))}></input>
+                </div>
+                <div className="form-label-and-input">
+                    <label htmlFor="bookAuthorFirst">Author first: </label>
+                    <input id="bookAuthorFirst" placeholder="Enter author first name..." onChange={(e) => setBook(b => ({...b, authorFirst: e.target.value}))}></input>
+                </div>
+                <div className="form-label-and-input">
+                    <label htmlFor="bookGenre">Genre: </label>
+                    <select name="genres" onChange={(e) => setBook(b => ({...b, genre: e.target.value}))}>
+                        <option value="Action">Action</option>
+                        <option value="Adventure">Adventure</option>
+                        <option value="Autobiography">Autobiography</option>
+                        <option value="Biography">Biography</option>
+                        <option value="Children's">Children's</option>
+                        <option value="Comic">Comic</option>
+                        <option value="Cookbook">Cookbook</option>
+                        <option value="Crime">Crime</option>
+                        <option value="Dark fantasy">Dark Fantasy</option>
+                        <option value="Dystopian">Dystopian</option>
+                        <option value="Drama">Drama</option>
+                        <option value="Erotica">Erotica</option>
+                        <option value="Essay">Essay</option>
+                        <option value="Fairy tale">Fairy Tale</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Graphic novel">Graphic Novel</option>
+                        <option value="Historical fiction">Historical Fiction</option>
+                        <option value="Horror">Horror</option>
+                        <option value="Lgbtq+">LGBTQ+</option>
+                        <option value="Manga">Manga</option>
+                        <option value="Memoir">Memoir</option>
+                        <option value="Military fiction">Military Fiction</option>
+                        <option value="Mystery">Mystery</option>
+                        <option value="Mythology">Mythology</option>
+                        <option value="Non-fiction">Non-ficiton</option>
+                        <option value="Philosophy">Philosophy</option>
+                        <option value="Picture book">Picture Book</option>
+                        <option value="Poetry">Poetry</option>
+                        <option value="Religious">Religious</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Satire">Satire</option>
+                        <option value="Science fiction">Science Fiction</option>
+                        <option value="Self-help">Self-Help</option>
+                        <option value="Short story">Short Story</option>"
+                        <option value="Sports">Sports</option>
+                        <option value="Tragedy">Tragedy</option>
+                        <option value="Western">Western</option>
+                        <option value="Young adult">Young Adult</option>
+                    </select>
                 </div>
                 <div className="form-label-and-input">
                     <label htmlFor="bookCopies">Number of Copies: </label>

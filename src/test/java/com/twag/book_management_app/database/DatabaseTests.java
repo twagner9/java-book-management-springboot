@@ -32,19 +32,23 @@ public class DatabaseTests {
                 String tableCreation = "CREATE TABLE IF NOT EXISTS catalog ("
                 + "id INTEGER PRIMARY KEY AUTO_INCREMENT, "
                 + "title TEXT NOT NULL,"
-                + "author TEXT NOT NULL,"
+                + "authorLast TEXT NOT NULL,"
+                + "authorFirst TEXT NOT NULL,"
+                + "genre TEXT NOT NULL,"
                 + "copies INTEGER NOT NULL"
                 + ");";
                 Statement sqlStatement = conn.createStatement();
                 sqlStatement.execute(tableCreation);
 
                 // Created; now let's insert a new book object
-                String queryToExecute ="MERGE INTO catalog (id, title, author, copies) KEY(id) VALUES(?, ?, ?, ?)";
+                String queryToExecute ="MERGE INTO catalog (id, title, authorLast, authorFirst, genre, copies) KEY(id) VALUES(?, ?, ?, ?, ?, ?)";
                 PreparedStatement pstmt = conn.prepareStatement(queryToExecute);
                 pstmt.setInt(1, 1);
-                pstmt.setString(2, "Hello");
+                pstmt.setString(2, "What");
                 pstmt.setString(3, "World");
-                pstmt.setInt(4, 10);
+                pstmt.setString(4, "Hello");
+                pstmt.setString(5, "Mystery");
+                pstmt.setInt(6, 10);
 
                 pstmt.executeUpdate();
             }
@@ -55,14 +59,14 @@ public class DatabaseTests {
 
         Catalog testCat = Database.loadDatabase(testUrl);
         // Let's try listing the catalog:
-        String expectedCatalogList = "ID #: 1; Title: Hello; Author: World; # Copies: 10";
+        String expectedCatalogList = "ID #: 1; Title: What; Author: World, Hello; Genre: Mystery; # Copies: 10";
         String actualCatalogList = testCat.getCatalog();
         assertEquals(expectedCatalogList, actualCatalogList, "Error reading database from SQL file. Expected catalog list " + expectedCatalogList + "; got " + actualCatalogList);
 
         // Have a database containing a single item; let's read it in via the 
         // TODO: 2. Test saving a Catalog to the database
         try {
-            testCat.addBook(new Book(2, "Test", "Book", 2));
+            testCat.addBook(new Book(2, "Test", "Last", "First", "Sample", 2));
         } catch (CatalogException e) {
             System.err.println("In DatabaseTests, error adding second sample book to database. Write will be invalid.\n" + e.getMessage());
         }
@@ -72,7 +76,7 @@ public class DatabaseTests {
 
         // Now check the saved form:
         testCat = Database.loadDatabase(testUrl);
-        expectedCatalogList = "ID #: 1; Title: Hello; Author: World; # Copies: 10\nID #: 2; Title: Test; Author: Book; # Copies: 2";
+        expectedCatalogList = "ID #: 1; Title: What; Author: World, Hello; Genre: Mystery; # Copies: 10\nID #: 2; Title: Test; Author: Last, First; Genre: Sample; # Copies: 2";
         actualCatalogList = testCat.getCatalog();
         assertEquals(expectedCatalogList, actualCatalogList, "Error in Database class when saving Catalog to Database. Expected: " + expectedCatalogList + " got " + actualCatalogList);
 

@@ -4,8 +4,10 @@ import { BookInputs } from './BookInputs';
 
 export type Book = {
     id: number;
-    author: string;
+    authorLast: string;
+    authorFirst: string;
     title: string;
+    genre: string;
     numCopies: number;
 };
 
@@ -71,8 +73,8 @@ export function MainPage() {
                 </div>
             )}
             <button className="add-book-button" onClick={handleAddClick}>Add a book</button>
-            <BookModal isOpen={modalOpen} onRequestClose={closeModal}>
-                <h3>Add Book</h3>
+            <BookModal isOpen={modalOpen} onRequestClose={closeModal} className="prop-modal-content" overlayClassName="modal-overlay">
+                <h3 className='modal-heading'>Add Book</h3>
                 {
                     <BookInputs currentId={currentId} onBookAdded={handleBookAdded} />
                 }
@@ -80,16 +82,20 @@ export function MainPage() {
             <table className="book-table">
                 <thead>
                     <tr>
-                        <th>Author</th>
                         <th>Title</th>
+                        <th>Last</th>
+                        <th>First</th>
+                        <th>Genre</th>
                         <th>Number of Copies</th>
                     </tr>
                 </thead>
                 <tbody>
                     {books.map((book) => (
                         <tr key={book.id}>
-                            <td>{book.author}</td>
                             <td>{book.title}</td>
+                            <td>{book.authorLast}</td>
+                            <td>{book.authorFirst}</td>
+                            <td>{book.genre}</td>
                             <td>{book.numCopies}</td>
                         </tr>
                     ))}

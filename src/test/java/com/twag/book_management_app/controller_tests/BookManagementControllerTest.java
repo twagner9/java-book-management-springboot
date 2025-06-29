@@ -26,8 +26,6 @@ public class BookManagementControllerTest {
     @LocalServerPort
     private int port;
 
-
-
     // Converts HTML code to String that can have its contents parsed to find identifying characteristics, guaranteeing that the
     // correct page is being returned by this controller
     @Test

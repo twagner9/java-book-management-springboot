@@ -95,23 +95,27 @@ public class Catalog {
 
     /**
      * Search for main.Book objects by author.
-     * @param authorName The name of the author being searched.
+     * @param authorLast The last name of the author being searched.
+     * @param authorFirst The first name of the author being searched.
      * @return ArrayList containing all main.Book objects by that author.
      */
-    public ArrayList<Book> authorSearch(String authorName) {
+    public ArrayList<Book> authorSearch(String authorLast, String authorFirst) {
         if (numTitles < 1) {
             System.err.println("Cannot search for authors in empty main.Catalog!");
         }
 
         ArrayList<Book> booksByAuthor = new ArrayList<>();
+        final int AUTHOR_LAST = 0;
+        final int AUTHOR_FIRST = 1;
         for (Book b : catalogList) {
-            if (b.getAuthor().equals(authorName))
+            // For now, return any matches, even if it's only first or last name
+            if (b.getAuthorFull()[AUTHOR_LAST].equals(authorLast) || b.getAuthorFull()[AUTHOR_FIRST].equals(authorFirst))
                 booksByAuthor.addLast(b);
         }
 
         // TODO: this may need to go wherever this function is called rather than here.
         if (booksByAuthor.isEmpty())
-            System.out.println("No books by " + authorName + " found.");
+            System.out.println("No books by " + authorLast + ", " + authorFirst + " found.");
 
         return booksByAuthor;
     }
