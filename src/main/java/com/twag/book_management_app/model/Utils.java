@@ -64,114 +64,114 @@ public class Utils {
      * @param curCatalog The current catalog that needs to be saved.
      * @return True on successful save, false otherwise.
      */
-    public static boolean writeCatalogToFile(Catalog curCatalog, String filename) {
-        if (! (curCatalog.getNumTitles() > 0)) {
-            System.out.println("Cannot write an empty catalog.");
-            return false;
-        }
+    // public static boolean writeCatalogToFile(Catalog curCatalog, String filename) {
+    //     if (! (curCatalog.getNumTitles() > 0)) {
+    //         System.out.println("Cannot write an empty catalog.");
+    //         return false;
+    //     }
 
-        boolean fileExisted;
-        try {
-            File catalogFile = new File(filename);
-            // TODO: clear and write the contents of the catalog?
-            fileExisted = !catalogFile.createNewFile();
-        } catch (IOException e) {
-            System.err.println("Error opening file!");
-            e.printStackTrace();
-            return false;
-        }
+    //     boolean fileExisted;
+    //     try {
+    //         File catalogFile = new File(filename);
+    //         // TODO: clear and write the contents of the catalog?
+    //         fileExisted = !catalogFile.createNewFile();
+    //     } catch (IOException e) {
+    //         System.err.println("Error opening file!");
+    //         e.printStackTrace();
+    //         return false;
+    //     }
 
-        // This is a try-with-resource, so it will only proceed if the file exists.
-        try (FileWriter writer = new FileWriter(filename)) {
+    //     // This is a try-with-resource, so it will only proceed if the file exists.
+    //     try (FileWriter writer = new FileWriter(filename)) {
 
-            // Clear the file if it exists already
-            if (fileExisted)
-                writer.write("");
-            String catalogString = curCatalog.getCatalog();
-            writer.write(catalogString);
-        } catch (IOException e) {
-            System.err.println("FileWriter Error!");
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
+    //         // Clear the file if it exists already
+    //         if (fileExisted)
+    //             writer.write("");
+    //         String catalogString = curCatalog.getCatalog();
+    //         writer.write(catalogString);
+    //     } catch (IOException e) {
+    //         System.err.println("FileWriter Error!");
+    //         e.printStackTrace();
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     // FIXME: this is earmarked for changing to be consistent with using SQLite db.
     /**
      * Read in the file containing a previously made catalog.
      * @return Filled main.Catalog if successful, null otherwise.
      */
-    public static Catalog readCatalogFile() {
-        // NOTE: only making this to temporarily make this compile and run.
-        Scanner scanner = new Scanner(System.in);
-        String catalogFileName = getStringFromUser("Enter the name of the catalog: ", scanner);
-        Catalog readCatalog = new Catalog();
+    // public static Catalog readCatalogFile() {
+    //     // NOTE: only making this to temporarily make this compile and run.
+    //     Scanner scanner = new Scanner(System.in);
+    //     String catalogFileName = getStringFromUser("Enter the name of the catalog: ", scanner);
+    //     Catalog readCatalog = new Catalog();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(catalogFileName))) {
-            String line;
-            while((line = reader.readLine()) != null) {
-                String title = null, authorLast = null, authorFirst = null, genre = null;
-                int numCopies = -1;
-                boolean hasTitle = false, hasAuthor = false, hasGenre = false, hasCopies = false;
-                String[] tokens = line.split(";");
-                for (String token : tokens) {
-                    String[] keyValue = token.split(":", 2);
-                    if (keyValue.length == 2) {
-                        String key = keyValue[0].trim();
-                        String value = keyValue[1].trim();
+    //     try (BufferedReader reader = new BufferedReader(new FileReader(catalogFileName))) {
+    //         String line;
+    //         while((line = reader.readLine()) != null) {
+    //             String title = null, authorLast = null, authorFirst = null, genre = null;
+    //             int numCopies = -1;
+    //             boolean hasTitle = false, hasAuthor = false, hasGenre = false, hasCopies = false;
+    //             String[] tokens = line.split(";");
+    //             for (String token : tokens) {
+    //                 String[] keyValue = token.split(":", 2);
+    //                 if (keyValue.length == 2) {
+    //                     String key = keyValue[0].trim();
+    //                     String value = keyValue[1].trim();
 
-                        switch (key) {
-                            case "Title":
-                                title = value;
-                                hasTitle = true;
-                                break;
-                            case "Author Last":
-                                authorLast = value;
-                                hasAuthor = true;
-                                break;
-                            case "Author First":
-                                authorFirst = value;
-                                hasAuthor = true;
-                                break;
-                            case "Genre":
-                                genre = value;
-                                hasGenre = true;
-                            case "# Copies":
-                                try {
-                                    numCopies = Integer.parseInt(value);
-                                    hasCopies = true;
-                                } catch (NumberFormatException numFormEx) {
-                                    System.out.println("Invalid number format for # Copies: " + value);
-                                    numFormEx.printStackTrace();
-                                    return null;
-                                }
-                                break;
-                        }
-                    }
-                }
-                if (hasTitle && hasAuthor && hasCopies && hasGenre) {
-                    Book tmpBook = new Book(title, authorLast, authorFirst, genre, numCopies);
-                    try {
-                        readCatalog.addBook(tmpBook);
-                    } catch (Catalog.CatalogException e) {
-                        System.out.println(e.getMessage());
-                    }
-                } else {
-                    throw new IOException("Invalid file format.");
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error finding the file!");
-            e.printStackTrace();
-            return null;
-        }
-        return readCatalog;
-    }
+    //                     switch (key) {
+    //                         case "Title":
+    //                             title = value;
+    //                             hasTitle = true;
+    //                             break;
+    //                         case "Author Last":
+    //                             authorLast = value;
+    //                             hasAuthor = true;
+    //                             break;
+    //                         case "Author First":
+    //                             authorFirst = value;
+    //                             hasAuthor = true;
+    //                             break;
+    //                         case "Genre":
+    //                             genre = value;
+    //                             hasGenre = true;
+    //                         case "# Copies":
+    //                             try {
+    //                                 numCopies = Integer.parseInt(value);
+    //                                 hasCopies = true;
+    //                             } catch (NumberFormatException numFormEx) {
+    //                                 System.out.println("Invalid number format for # Copies: " + value);
+    //                                 numFormEx.printStackTrace();
+    //                                 return null;
+    //                             }
+    //                             break;
+    //                     }
+    //                 }
+    //             }
+    //             if (hasTitle && hasAuthor && hasCopies && hasGenre) {
+    //                 Book tmpBook = new Book(title, authorLast, authorFirst, genre, numCopies);
+    //                 try {
+    //                     readCatalog.addBook(tmpBook);
+    //                 } catch (Catalog.CatalogException e) {
+    //                     System.out.println(e.getMessage());
+    //                 }
+    //             } else {
+    //                 throw new IOException("Invalid file format.");
+    //             }
+    //         }
+    //     } catch (IOException e) {
+    //         System.out.println("Error finding the file!");
+    //         e.printStackTrace();
+    //         return null;
+    //     }
+    //     return readCatalog;
+    // }
 
-    public static class InputException extends Exception {
-        InputException(String message) {
-            super(message);
-        }
-    }
+    // public static class InputException extends Exception {
+    //     InputException(String message) {
+    //         super(message);
+    //     }
+    // }
 }
