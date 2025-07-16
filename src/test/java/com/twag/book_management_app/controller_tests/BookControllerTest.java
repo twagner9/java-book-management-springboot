@@ -1,7 +1,5 @@
 package com.twag.book_management_app.controller_tests;
 
-import com.twag.book_management_app.model.Book;
-import com.twag.book_management_app.repository.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,9 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BookControllerTest {
     @Autowired
     private MockMvc mockMvc;
-    
-    @Autowired
-    private BookRepository bookRepo;
 
     @Test
     public void testAddAndGetBooks() throws Exception {
