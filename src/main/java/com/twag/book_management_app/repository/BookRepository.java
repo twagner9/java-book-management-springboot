@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BookRepository extends JpaRepository<Book, Integer> {
     public List<Book> findAllByOrderByTitleAsc();
     public List<Book> findAllByOrderByTitleDesc();
-    public List<Book> findAllByOrderByAuthorAsc();
-    public List<Book> findAllByOrderByAuthorDesc();
+    public List<Book> findAllByOrderByAuthorLastAsc();
+    public List<Book> findAllByOrderByAuthorLastDesc();
     public List<Book> findAllByOrderByGenreAsc();
     public List<Book> findAllByOrderByGenreDesc();
 }
