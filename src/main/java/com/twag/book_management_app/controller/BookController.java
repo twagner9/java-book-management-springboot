@@ -4,9 +4,12 @@ import java.util.List;
 import com.twag.book_management_app.model.Book;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 // import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,9 +35,17 @@ public class BookController {
     }
 
     @PostMapping
-    public Book addNewBook(@RequestBody Book newBook) {
+    public ResponseEntity<Book> addNewBook(@RequestBody Book newBook) {
         System.out.println("Executing addition of newBook...");
-        return bookRepository.save(newBook);
+        return ResponseEntity.ok(bookRepository.save(newBook));
     }
-    
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable int bookId) {
+        if (!bookRepository.existsById(bookId)) {
+            return ResponseEntity.notFound().build();
+        }
+        bookRepository.deleteById(bookId);
+        return ResponseEntity.noContent().build();
+    }
 }

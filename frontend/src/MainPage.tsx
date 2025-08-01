@@ -60,6 +60,25 @@ export function MainPage() {
         })
     }
 
+    
+    // TODO: more yet to do on this function
+    function handleDeleteClick(bookId: number) {
+        fetch(`/api/books/${bookId}`, {
+            method: "DELETE"
+        })
+        .then(response => {
+            if (response.ok) {
+                setBooks(prevBooks => prevBooks.filter(book => book.id !== bookId));
+            }
+            else {
+                console.error("Failed to delete book: ", response.status);
+            }
+        })
+        .catch(error => {
+            console.error("Network or server error during delete.", error);
+        })
+    }
+
     return (
         <div className="main-content">
             <h1 className="main-text">Small Library Management</h1>
@@ -97,6 +116,9 @@ export function MainPage() {
                             <td>{book.authorFirst}</td>
                             <td>{book.genre}</td>
                             <td>{book.numCopies}</td>
+                            <td>
+                                <button className="tableDeleteButton" onClick={() => handleDeleteClick(book.id)}>Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
