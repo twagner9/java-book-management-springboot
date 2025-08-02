@@ -27,7 +27,7 @@ public class BookTests {
         expectedDetails = "ID #: " + testId + "; " + "Title: " + testTitle + "; " + "Author: " + testAuthorLast + ", " + testAuthorFirst + "; Genre: " + testGenre + "; # Copies: " + testCopies;
 
         // 1. Test getters
-        int returnId = testBook.getBookId(), returnCopies = testBook.getNumCopies();
+        int returnId = testBook.getId(), returnCopies = testBook.getNumCopies();
         String returnTitle = testBook.getTitle();
         String[] authorNames = testBook.getAuthorFull();
         returnDetails = testBook.getDetails();

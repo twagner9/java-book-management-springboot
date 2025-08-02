@@ -62,7 +62,7 @@ public class Book {
      * Return book ID number
      * @return main.Book ID number in database.
      */
-    public int getBookId() {
+    public int getId() {
         return id;
     }
 

@@ -37,7 +37,7 @@ public class BookControllerTest {
         }
         """;
 
-    private int testBookId;
+    private int id;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -50,8 +50,8 @@ public class BookControllerTest {
         String responseContent = result.getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode root = objectMapper.readTree(responseContent);
-        testBookId = root.path("id").asInt();
-        System.out.println("testBookId == " + testBookId + "\n");
+        id = root.path("id").asInt();
+        System.out.println("id == " + id + "\n");
     }
 
     @Test
@@ -62,7 +62,11 @@ public class BookControllerTest {
     }
 
     @Test public void testBookDeletion() throws Exception {
-        mockMvc.perform(delete("/api/books/" + testBookId))
+        // DEBUGGING TEST:
+        mockMvc.perform(get("/api/books"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].id").value(id));
+        mockMvc.perform(delete("/api/books/" + id))
             .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/api/books"))
