@@ -41,11 +41,11 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable int bookId) {
-        if (!bookRepository.existsById(bookId)) {
+    public ResponseEntity<Void> deleteBook(@PathVariable int id) {
+        if (!bookRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        bookRepository.deleteById(bookId);
+        bookRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }
