@@ -48,4 +48,22 @@ public class BookController {
         bookRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/titleSortAsc") 
+    public List<Book> getTitleSortedBooksAsc(@RequestBody String order) { return bookRepository.findAllByOrderByTitleAsc(); }
+
+    @GetMapping("/titleSortDesc")
+    public List<Book> getTitleSortedBooksDesc(@RequestBody String order) { return bookRepository.findAllByOrderByTitleDesc(); }
+        
+    @GetMapping("/authorLastSortAsc") 
+    public List<Book> getAuthorLastSortedBooksAsc(@RequestBody String order) { return bookRepository.findAllByOrderByAuthorLastAsc(); }
+
+    @GetMapping("/authorLastSortDesc") 
+    public List<Book> getAuthorLastSortedBooksDesc(@RequestBody String order) { return bookRepository.findAllByOrderByAuthorLastDesc(); }
+
+    @GetMapping("/genreSortAsc") 
+    public List<Book> getGenreSortedBooksAsc(@RequestBody String order) { return bookRepository.findAllByOrderByGenreAsc(); }
+
+    @GetMapping("/genreSortDesc") 
+    public List<Book> getGenreSortedBooksDesc(@RequestBody String order) { return bookRepository.findAllByOrderByGenreDesc(); }
 }

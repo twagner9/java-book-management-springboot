@@ -18,6 +18,10 @@ export function MainPage() {
     const [books, setBooks] = React.useState<Book[]>([]);
     const [modalOpen, setModalOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
+    const [sortState, setSortState] = React.useState({
+        column: "title",
+        order: "asc",
+    });
 
     useEffect(() => {
         fetch('/api/books')
@@ -37,11 +41,24 @@ export function MainPage() {
         setModalOpen(true);
     }
 
-    function handleBookAdded(newBook: Omit<Book, "id">) {
-        // DEBUG:
-        console.log("in handleBookAdded");
-        console.log(newBook);
+    useEffect(() => {
+        let url = '';
+        if (sortState.column === 'title') url = '/api/books/titleSort';
+        else if (sortState.column === 'authorLast') url = '/api/books/authorLastSort';
+        else if (sortState.column === 'genre') url = '/api/books/genreSort';
 
+        fetch(url +'?order=' + sortState.order)
+            .then(response => {
+                if (!response.ok) throw new Error("Failed to return title sorted Book list.")
+                return response.json();
+            })
+            .then((sortedList) => setBooks(sortedList))
+            .catch(error => {
+                console.error("Error sorting list.", error);
+            });
+    }, [sortState]);
+
+    function handleBookAdded(newBook: Omit<Book, "id">) {
         fetch('/api/books', {
             method: "POST",
             headers: {'Content-Type': 'application/json' },
@@ -79,6 +96,13 @@ export function MainPage() {
         })
     }
 
+    function handleSort(column: string) {
+        setSortState(prev => ({
+            column,
+            order: prev.column === column && prev.order === 'asc' ? 'desc' : 'asc'
+        }));
+    }
+
     return (
         <div className="main-content">
             <h1 className="main-text">Small Library Management</h1>
@@ -101,10 +125,10 @@ export function MainPage() {
             <table className="book-table">
                 <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>Last</th>
+                        <th onClick={() => handleSort('title')}>Title</th>
+                        <th onClick={() => handleSort('authorLast')}>Last</th>
                         <th>First</th>
-                        <th>Genre</th>
+                        <th onClick={() => handleSort('genre')}>Genre</th>
                         <th>Number of Copies</th>
                     </tr>
                 </thead>
