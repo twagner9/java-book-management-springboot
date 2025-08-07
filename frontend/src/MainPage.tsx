@@ -43,13 +43,13 @@ export function MainPage() {
 
     useEffect(() => {
         let url = '';
-        if (sortState.column === 'title') url = '/api/books/titleSort';
-        else if (sortState.column === 'authorLast') url = '/api/books/authorLastSort';
-        else if (sortState.column === 'genre') url = '/api/books/genreSort';
+        if (sortState.column === 'title') url = sortState.order === 'asc' ? '/api/books/titleSortAsc' : '/api/books/titleSortDesc';
+        else if (sortState.column === 'authorLast') url = sortState.order === 'asc' ? '/api/books/authorLastSortAsc' : '/api/books/authorLastSortDesc';
+        else if (sortState.column === 'genre') url = sortState.order === 'asc' ? '/api/books/genreSortAsc' : '/api/books/genreSortDesc';
 
-        fetch(url +'?order=' + sortState.order)
+        fetch(url)
             .then(response => {
-                if (!response.ok) throw new Error("Failed to return title sorted Book list.")
+                if (!response.ok) throw new Error("Failed to return title sorted Book list.");
                 return response.json();
             })
             .then((sortedList) => setBooks(sortedList))
@@ -125,10 +125,10 @@ export function MainPage() {
             <table className="book-table">
                 <thead>
                     <tr>
-                        <th onClick={() => handleSort('title')}>Title</th>
-                        <th onClick={() => handleSort('authorLast')}>Last</th>
+                        <th className="sortHeader" onClick={() => handleSort('title')}>Title</th>
+                        <th className="sortHeader" onClick={() => handleSort('authorLast')}>Last</th>
                         <th>First</th>
-                        <th onClick={() => handleSort('genre')}>Genre</th>
+                        <th className="sortHeader" onClick={() => handleSort('genre')}>Genre</th>
                         <th>Number of Copies</th>
                     </tr>
                 </thead>

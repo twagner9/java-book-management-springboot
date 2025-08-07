@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 // import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,20 +51,20 @@ public class BookController {
     }
 
     @GetMapping("/titleSortAsc") 
-    public List<Book> getTitleSortedBooksAsc(@RequestBody String order) { return bookRepository.findAllByOrderByTitleAsc(); }
+    public List<Book> getTitleSortedBooksAsc() { return bookRepository.findAllByOrderByTitleAsc(); }
 
     @GetMapping("/titleSortDesc")
-    public List<Book> getTitleSortedBooksDesc(@RequestBody String order) { return bookRepository.findAllByOrderByTitleDesc(); }
+    public List<Book> getTitleSortedBooksDesc() { return bookRepository.findAllByOrderByTitleDesc(); }
         
     @GetMapping("/authorLastSortAsc") 
-    public List<Book> getAuthorLastSortedBooksAsc(@RequestBody String order) { return bookRepository.findAllByOrderByAuthorLastAsc(); }
+    public List<Book> getAuthorLastSortedBooksAsc() { return bookRepository.findAllByOrderByAuthorLastAsc(); }
 
     @GetMapping("/authorLastSortDesc") 
-    public List<Book> getAuthorLastSortedBooksDesc(@RequestBody String order) { return bookRepository.findAllByOrderByAuthorLastDesc(); }
+    public List<Book> getAuthorLastSortedBooksDesc() { return bookRepository.findAllByOrderByAuthorLastDesc(); }
 
     @GetMapping("/genreSortAsc") 
-    public List<Book> getGenreSortedBooksAsc(@RequestBody String order) { return bookRepository.findAllByOrderByGenreAsc(); }
+    public List<Book> getGenreSortedBooksAsc() { return bookRepository.findAllByOrderByGenreAsc(); }
 
     @GetMapping("/genreSortDesc") 
-    public List<Book> getGenreSortedBooksDesc(@RequestBody String order) { return bookRepository.findAllByOrderByGenreDesc(); }
+    public List<Book> getGenreSortedBooksDesc() { return bookRepository.findAllByOrderByGenreDesc(); }
 }
