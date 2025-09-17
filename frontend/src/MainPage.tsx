@@ -1,6 +1,8 @@
 import React, {useEffect, useState } from 'react';
 import { BookModal } from './BookModal';
 import { BookInputs } from './BookInputs';
+import { ImageUpload } from './ImageUpload';
+
 
 export type Book = {
     id: number;
@@ -125,6 +127,7 @@ export function MainPage() {
             <table className="book-table">
                 <thead>
                     <tr>
+                        <th>Image</th>
                         <th className="sortHeader" onClick={() => handleSort('title')}>Title</th>
                         <th className="sortHeader" onClick={() => handleSort('authorLast')}>Last</th>
                         <th>First</th>
@@ -135,6 +138,7 @@ export function MainPage() {
                 <tbody>
                     {books.map((book) => (
                         <tr key={book.id}>
+                            {/* TODO: Need to determine how to add the image to its own column */}
                             <td>{book.title}</td>
                             <td>{book.authorLast}</td>
                             <td>{book.authorFirst}</td>

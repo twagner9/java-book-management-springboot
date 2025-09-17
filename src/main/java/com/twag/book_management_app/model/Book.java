@@ -11,6 +11,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     
+    private String imagePath;
     private String title;
     private String authorLast;
     private String authorFirst;
@@ -64,6 +65,14 @@ public class Book {
      */
     public int getId() {
         return id;
+    }
+
+    /**
+     * Return book image path.
+     * @return main.Book image path in database.
+     */
+    public String getImagePath() {
+        return imagePath;
     }
 
     /**

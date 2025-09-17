@@ -4,7 +4,6 @@ import { MainPage } from './MainPage';
 import './App.css';
 
 function App() {
-
   // Create state variable called "books" to hold the list of books
   const [books, setBooks] = React.useState([]);
 
@@ -20,8 +19,7 @@ function App() {
   if (books === null) {
     return (<div>Loading...</div>);
   }
-
-  // Use conditional rendering to display display either the EmptyDatabase or ExistingDatabase component based on whether there are any books
+  
   return <MainPage />
 }
 

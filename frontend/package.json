@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "main": "dist/electron/main.js",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -19,10 +20,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "build-and-copy": "react-scripts build && rm -rf ../src/main/resources/static/* && cp -r build/* ../src/main/resources/static/",
+    "build:react": "react-scripts build",
+    "build:electron": "tsc -p electron/tsconfig.json",
+    "build-and-copy": "npm run build:electron && npm run build:react && rm -rf ../src/main/resources/static/* && cp -r build/* ../src/main/resources/static/",
     "copy-build-win": "rimraf ../src/main/resources/static/* && xcopy /E /Y /I build\\* ..\\src\\main\\resources\\static\\",
-    "build-and-copy-win": "npm run build && npm run copy-build-win",
+    "build-and-copy-win": "npm run build:electron && npm run build:react && npm run copy-build-win",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -45,7 +47,9 @@
     ]
   },
   "devDependencies": {
+    "@types/electron": "^1.6.12",
     "@types/react": "^19.1.6",
-    "@types/react-modal": "^3.16.3"
+    "@types/react-modal": "^3.16.3",
+    "electron": "^38.1.0"
   }
 }

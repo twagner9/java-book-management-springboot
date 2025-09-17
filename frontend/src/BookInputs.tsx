@@ -1,5 +1,6 @@
 import {useState} from "react";
 import type {Book} from "./MainPage";
+import { ImageUpload } from "./ImageUpload";
 
 export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<Book, "id">) => void}) {
     // UseState sets the initial default value of the state, and ties a hook
@@ -99,6 +100,9 @@ export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<B
                 <div className="form-label-and-input">
                     <label htmlFor="bookCopies">Number of Copies: </label>
                     <input type="number" id="bookCopies" min="1" max="99" defaultValue="1" onChange={e => setBook(b => ({...b, numCopies: (e.target as HTMLInputElement).valueAsNumber}))}></input>
+                </div>
+                <div className="form-label-and-input">
+                    <ImageUpload />
                 </div>
                 <button onClick={handleSubmitClick} disabled={!(isTitleValid && isAuthorValid && isNumCopiesValid)}>Submit</button>
             </div>

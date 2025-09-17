@@ -74,6 +74,15 @@ code {
     text-align: center;
 }
 
+.modalButton {
+  display: block;
+  margin: 0 auto;
+}
+
+.filename {
+  text-align: center;
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
@@ -99,4 +108,19 @@ th {
 td {
   border: 1px solid;
   padding: 15px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    color: #333;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    text-align: center;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
