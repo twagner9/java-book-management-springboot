@@ -3,9 +3,11 @@ import type {Book} from "./MainPage";
 import { ImageUpload } from "./ImageUpload";
 
 export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<Book, "id">) => void}) {
+
     // UseState sets the initial default value of the state, and ties a hook
     // that change the state when users interact with the frontend
     const [newBook, setBook] = useState<Omit<Book, "id">>({
+        imagePath: "",
         title: "",
         authorLast: "",
         authorFirst: "",
@@ -16,8 +18,12 @@ export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<B
     const isAuthorValid = (newBook.authorLast.length > 1 && newBook.authorLast.length <= 20) && (newBook.authorFirst.length > 1 && newBook.authorFirst.length <= 20);
     const isNumCopiesValid = newBook.numCopies >= 1 && newBook.numCopies <= 99;
 
+    const setImagePath = (imagePath: string) => {
+        setBook(prev => ({...prev, imagePath}));
+    }
+
     async function handleSubmitClick() {
-        console.log("Function executing at least.")
+        // First get the image name, then 
         // Create book
         console.log(newBook);
         props.onBookAdded(newBook);
@@ -102,7 +108,7 @@ export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<B
                     <input type="number" id="bookCopies" min="1" max="99" defaultValue="1" onChange={e => setBook(b => ({...b, numCopies: (e.target as HTMLInputElement).valueAsNumber}))}></input>
                 </div>
                 <div className="form-label-and-input">
-                    <ImageUpload />
+                    <ImageUpload setImagePath={setImagePath} imagePath={newBook.imagePath} />
                 </div>
                 <button onClick={handleSubmitClick} disabled={!(isTitleValid && isAuthorValid && isNumCopiesValid)}>Submit</button>
             </div>

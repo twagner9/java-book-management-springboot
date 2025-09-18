@@ -10,7 +10,7 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    
+
     private String imagePath;
     private String title;
     private String authorLast;
@@ -23,9 +23,10 @@ public class Book {
      */
     public Book() {
         id = -1;
+        imagePath = "";
         title = "";
         authorLast = "";
-        authorFirst= "";
+        authorFirst = "";
         genre = "";
         numCopies = -1;
     }
@@ -33,11 +34,12 @@ public class Book {
     /**
      * Preferred constructor: initialize a new main.Book object that can
      * be added to the main.Catalog.
-     * @param book_title Title of new main.Book.
-     * @param authorLast Author last name.
+     * 
+     * @param book_title  Title of new main.Book.
+     * @param authorLast  Author last name.
      * @param authorFirst Author first name.
-     * @param genre Book genre.
-     * @param copies Number of new copies.
+     * @param genre       Book genre.
+     * @param copies      Number of new copies.
      */
     public Book(String book_title, String authorLast, String authorFirst, String genre, int copies) {
         id = -1;
@@ -61,6 +63,7 @@ public class Book {
 
     /**
      * Return book ID number
+     * 
      * @return main.Book ID number in database.
      */
     public int getId() {
@@ -69,6 +72,7 @@ public class Book {
 
     /**
      * Return book image path.
+     * 
      * @return main.Book image path in database.
      */
     public String getImagePath() {
@@ -77,14 +81,18 @@ public class Book {
 
     /**
      * Return book details in pre-specified format.
-     * @return String containing values assigned to member variables of this main.Book.
+     * 
+     * @return String containing values assigned to member variables of this
+     *         main.Book.
      */
     public String getDetails() {
-        return "ID #: " + id + "; " + "Title: " + title + "; " + "Author: " + authorLast + ", " + authorFirst + "; Genre: " + genre + "; # Copies: " + numCopies;
+        return "ID #: " + id + "; " + "Title: " + title + "; " + "Author: " + authorLast + ", " + authorFirst
+                + "; Genre: " + genre + "; # Copies: " + numCopies;
     }
 
     /**
      * Return title of this main.Book.
+     * 
      * @return String of the title of the main.Book.
      */
     public String getTitle() {
@@ -93,33 +101,44 @@ public class Book {
 
     /**
      * Return array containing author's last name in index 0, first name in index 1.
+     * 
      * @return String of the author of the main.Book.
      */
-    public String[] getAuthorFull() { 
-        String[] tmp = {authorLast, authorFirst};
-        return tmp; 
+    public String[] getAuthorFull() {
+        String[] tmp = { authorLast, authorFirst };
+        return tmp;
     }
 
     /**
      * Return author's last name only.
+     * 
      * @return String of author's last name.
      */
-    public String getAuthorLast() { return this.authorLast; }
+    public String getAuthorLast() {
+        return this.authorLast;
+    }
 
     /**
      * Return author's first name only.
+     * 
      * @return String of author's first name.
      */
-    public String getAuthorFirst() { return this.authorFirst; }
+    public String getAuthorFirst() {
+        return this.authorFirst;
+    }
 
     /**
      * Return the Book's genre.
+     * 
      * @return String of the Book's genre.
      */
-    public String getGenre() { return genre; }
+    public String getGenre() {
+        return genre;
+    }
 
     /**
      * Return number of copies of this main.Book.
+     * 
      * @return Number of copies of this main.Book.
      */
     public int getNumCopies() {
@@ -128,6 +147,7 @@ public class Book {
 
     /**
      * Set the ID number of this main.Book.
+     * 
      * @param idNum new ID number
      */
     public void setId(int idNum) {
@@ -136,6 +156,7 @@ public class Book {
 
     /**
      * Assign main.Book a title.
+     * 
      * @param newTitle String of book's title.
      */
     public void setTitle(String newTitle) {
@@ -144,7 +165,8 @@ public class Book {
 
     /**
      * Assign main.Book an author.
-     * @param authorLast String of main.Book's author's last name.
+     * 
+     * @param authorLast  String of main.Book's author's last name.
      * @param authorFirst String of main.Book's author's first name.
      */
     public void setAuthor(String authorLast, String authorFirst) {
@@ -154,6 +176,7 @@ public class Book {
 
     /**
      * Change the genre of a Book object
+     * 
      * @param newGenre The newly selected genre.
      */
     public void setGenre(String newGenre) {
@@ -162,6 +185,7 @@ public class Book {
 
     /**
      * Set number of copies of the main.Book.
+     * 
      * @param nCopies integer of the number of copies.
      */
     public void setNumCopies(int nCopies) {
@@ -170,30 +194,38 @@ public class Book {
 
     /**
      * Increase number of book copies.
+     * 
      * @param numToAdd Amount by which to increase copies.
      */
-    public void increaseCount(int numToAdd) { numCopies += numToAdd; }
-
+    public void increaseCount(int numToAdd) {
+        numCopies += numToAdd;
+    }
 
     /**
      * Remove number of book copies.
+     * 
      * @param numToRemove Amount by which to decrease copies.
      */
-    public void decreaseCount(int numToRemove) { numCopies -= numToRemove; }
+    public void decreaseCount(int numToRemove) {
+        numCopies -= numToRemove;
+    }
 
     /**
      *
      * @param o main.Book object to be compared with current main.Book object.
-     * @return true if same object, or if both main.Book objects and parameters match.
+     * @return true if same object, or if both main.Book objects and parameters
+     *         match.
      */
     @Override
     public boolean equals(Object o) {
         // This is standard comparison of
-        if (this == o) return true;
+        if (this == o)
+            return true;
         if (o == null || this.getClass() != o.getClass())
             return false;
 
         Book that = (Book) o;
-        return this.title.equals(that.title) && this.authorLast.equals(that.authorLast) && this.authorFirst.equals(that.authorFirst);
+        return this.title.equals(that.title) && this.authorLast.equals(that.authorLast)
+                && this.authorFirst.equals(that.authorFirst);
     }
 }

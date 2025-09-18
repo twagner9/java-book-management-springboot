@@ -6,6 +6,7 @@ import { ImageUpload } from './ImageUpload';
 
 export type Book = {
     id: number;
+    imagePath: string,
     authorLast: string;
     authorFirst: string;
     title: string;
@@ -139,6 +140,7 @@ export function MainPage() {
                     {books.map((book) => (
                         <tr key={book.id}>
                             {/* TODO: Need to determine how to add the image to its own column */}
+                            <td>{book.imagePath}</td>
                             <td>{book.title}</td>
                             <td>{book.authorLast}</td>
                             <td>{book.authorFirst}</td>
