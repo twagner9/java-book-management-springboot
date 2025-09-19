@@ -5,9 +5,17 @@
   access to the full path. By creating a function connected to the electron API that returns
   the absolute path that I want, this will allow me to use this API from the GUI to grab
   the full path. 
+
+  The main reason to avoid giving complete access to the path this way to prevent embedding
+  potentially sensitive info directly into the DOM (contextIsolation) and to prevent
+  malicious actors from executing scripts that run commands via require("child_process").exec(...).
  */
 
-import { contextBridge, ipcRenderer } from 'electron';
+const { contextBridge, ipcRenderer } = require('electron');
+const url = require('url');
+
+console.log("✅ Preload script loaded");
+console.log("typeof pathToFileURL:", typeof url.pathToFileURL);
 
 contextBridge.exposeInMainWorld('electronAPI', {
   isDarkMode: () => ipcRenderer.invoke("theme:get"),
@@ -15,4 +23,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('theme:updated', (_, isDark) => callback(isDark));
   },
   openFileDialog: () => ipcRenderer.invoke("dialog:openFile"),
+  toFileUrl: (path: string) => url.pathToFileURL(path).href,
 });

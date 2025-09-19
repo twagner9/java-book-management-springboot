@@ -58,6 +58,7 @@ build/
 # Node.js/React frontend
 frontend/node_modules/
 frontend/build/
+data/
 frontend/.env
 frontend/.env.local
 frontend/.env.development.local

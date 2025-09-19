@@ -8,6 +8,7 @@ declare global {
   interface Window {
     electronAPI: {
       openFileDialog: () => Promise<string | null>;
+      toFileUrl: (path: string) => string;
     };
   }
 }

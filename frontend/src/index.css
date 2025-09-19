@@ -83,6 +83,10 @@ code {
   text-align: center;
 }
 
+.uploadError {
+    color: red;
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
@@ -123,4 +127,9 @@ table {
     margin: auto;
     margin-top: 50px;
     margin-bottom: 50px;
+}
+
+.tableImage {
+    width: 10%;
+    height: 10%;
 }

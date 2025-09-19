@@ -3,6 +3,7 @@ import { BookModal } from './BookModal';
 import { BookInputs } from './BookInputs';
 import { ImageUpload } from './ImageUpload';
 
+console.log(window.electronAPI);
 
 export type Book = {
     id: number;
@@ -140,7 +141,13 @@ export function MainPage() {
                     {books.map((book) => (
                         <tr key={book.id}>
                             {/* TODO: Need to determine how to add the image to its own column */}
-                            <td>{book.imagePath}</td>
+                            <td>
+                                {book.imagePath ? (<img 
+                                                    className="tableImage" 
+                                                    src={window.electronAPI.toFileUrl(book.imagePath)} 
+                                                    alt={`Book cover to: ${book.imagePath}`}>
+                                                </img>) : (<p>No image uploaded</p>)}
+                            </td>
                             <td>{book.title}</td>
                             <td>{book.authorLast}</td>
                             <td>{book.authorFirst}</td>

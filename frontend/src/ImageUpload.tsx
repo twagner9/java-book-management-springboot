@@ -11,12 +11,15 @@ export function ImageUpload({imagePath, setImagePath}: {imagePath: string; setIm
         if (filePath) {
             if (!filePath.endsWith(".jpg") && !filePath.endsWith(".jpeg") && !filePath.endsWith(".png")) {
                 setUploadError("Must upload an image as .jpg, .jpeg, or .png.");
+                setFilename("");
             } else {
                 setFilename(filePath);
                 setImagePath(filePath);
+                setUploadError("");
             }
         } else {
             setUploadError("The image could not be uploaded; try again.");
+            setFilename("");
         }
         // TODO: now have to manually check the file extension and type
         console.log("Select file path: ", filePath);
@@ -25,8 +28,8 @@ export function ImageUpload({imagePath, setImagePath}: {imagePath: string; setIm
     return (
         <>
             <button type="button" className="modalButton" onClick={handleSelectFile}>Upload Image</button>
-            {uploadError ? <p className="filename">{uploadError}</p> : null}
-            {filename ? <p>{filename}</p> : null}
+            {uploadError ? <p className="uploadError">{uploadError}</p> : null}
+            {filename ? <p className="filename">{filename}</p> : null}
         </>
     );
 }
