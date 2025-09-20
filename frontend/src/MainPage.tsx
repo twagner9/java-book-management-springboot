@@ -145,7 +145,7 @@ export function MainPage() {
                                 {book.imagePath ? (<img 
                                                     className="tableImage" 
                                                     src={window.electronAPI.toFileUrl(book.imagePath)} 
-                                                    alt={`Book cover to: ${book.imagePath}`}>
+                                                    alt={`Book cover to: ${window.electronAPI.toFileUrl(book.imagePath)}`}>
                                                 </img>) : (<p>No image uploaded</p>)}
                             </td>
                             <td>{book.title}</td>

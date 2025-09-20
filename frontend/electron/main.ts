@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog, protocol, net} = require('electron');
 const path = require('path');
 const {fileURLToPath} = require('url');
 const {dirname} = require('path');
@@ -33,7 +33,28 @@ ipcMain.handle('dialog:openFile', async () => {
   return result.filePaths[0];
 });
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  /* Use this protocol to prevent disabling webSecurity, which includes CORS and other
+    protections that would open the possibility of the app being hijacked by malicious
+    scripts or other content. safe-file is essentially a whitelisted protocol that 
+    only I control, so anything lacking that won't be used. I am still not sure if there
+    are ways around this, but it's better than fully disabling security features that are
+    built in for a reason.
+  */
+  protocol.handle('safe-file', async (request) => {
+    const url = request.url.replace('safe-file://', '');
+    const resolvedPath = path.normalize(url);
+
+    try {
+      return net.fetch(`file://${resolvedPath}`);
+    } catch (error) {
+      console.log('Error loading image file: ' + error);
+      return new Response('File not found', {status: 404});
+    }
+  });
+
+  createWindow();
+});
 
 // app.on('window-all-closed', function() {
 //     if (process.platform !== 'darwin') app.quit();
