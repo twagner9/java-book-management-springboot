@@ -26,6 +26,7 @@ export function MainPage() {
         column: "title",
         order: "asc",
     });
+    const [safeImages, setSafeImages] = useState<Record<string, string>>({});
 
     useEffect(() => {
         fetch('/api/books')
@@ -36,7 +37,16 @@ export function MainPage() {
     }, []); // This empty "dependency array" in useEffect means this effect runs once after the initial render; if variables are added here,
             // the effect will run again when those variables change.
 
-
+    useEffect(() => {
+        async function loadSafeImages() {
+            const mapping: Record<string, string> = {};
+            for (const book of books) {
+                mapping[book.id] = await window.electronAPI.toSafeFile(book.imagePath);
+            }
+            setSafeImages(mapping);
+        }
+        loadSafeImages();
+    }, [books]);
     function closeModal() {
         setModalOpen(false);
     }
@@ -140,12 +150,12 @@ export function MainPage() {
                 <tbody>
                     {books.map((book) => (
                         <tr key={book.id}>
-                            {/* TODO: Need to determine how to add the image to its own column */}
                             <td>
                                 {book.imagePath ? (<img 
                                                     className="tableImage" 
-                                                    src={window.electronAPI.toFileUrl(book.imagePath)} 
-                                                    alt={`Book cover to: ${window.electronAPI.toFileUrl(book.imagePath)}`}>
+                                                    key={book.id}
+                                                    src={safeImages[book.id]} 
+                                                    alt={`Book cover to: ${window.electronAPI.toSafeFile(book.imagePath)}`}>
                                                 </img>) : (<p>No image uploaded</p>)}
                             </td>
                             <td>{book.title}</td>

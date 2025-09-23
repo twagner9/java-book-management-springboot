@@ -12,15 +12,7 @@
  */
 
 const { contextBridge, ipcRenderer } = require('electron');
-
-/**
- * 
- * @param path Absolute path to the image.
- * @returns The safe-file format of the path for processing in main.ts
- */
-function toFileUrl(path: string): string {
-  return `safe-file://${encodeURI(path)}`;
-}
+const { pathToFileURL } =  require('node:url');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   isDarkMode: () => ipcRenderer.invoke("theme:get"),
@@ -28,5 +20,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('theme:updated', (_: any, isDark: boolean) => callback(isDark));
   },
   openFileDialog: () => ipcRenderer.invoke("dialog:openFile"),
-  toFileUrl,
+  toSafeFile: async (path: string) =>  {
+    return await ipcRenderer.invoke("toSafeFile", path);
+  }
 });
