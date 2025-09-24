@@ -38,9 +38,11 @@ ipcMain.handle('dialog:openFile', async () => {
 
 ipcMain.handle("toSafeFile", (_, path) => {
   const {pathToFileURL} = require('url');
+
+  if (!path) return;
   const fileUrl = pathToFileURL(path).href;
-  return fileUrl.replace('file://', "safeFile://");
-})
+  return fileUrl.replace('file://', "safe-file://");
+});
 
 app.whenReady().then(() => {
   /* Use this protocol to prevent disabling webSecurity, which includes CORS and other
@@ -55,19 +57,6 @@ app.whenReady().then(() => {
       const fileUrl = request.url.replace("safe-file://", "file://");
       console.log("intercepted:", fileUrl);
       return net.fetch(fileUrl);
-      
-      // // Decoded the URI will remove encoded characters for Windows so that they are a proper path that
-      // // the code can actually use (i.e., using '/' instead of '\', and with the proper filename)
-      // let decodedPath = decodeURIComponent(url.pathname);
-      // // const resolvedPath = path.normalize(url);
-      // // Strip leading slash if present in Windows:
-      // if (process.platform === "win32" && decodedPath.startsWith("/"))
-      //   decodedPath.slice(1);
-
-      // const resolvedPath = path.normalize(decodedPath);
-      // console.log("resolvedPath === " + resolvedPath);
-
-      // return net.fetch(`file://${resolvedPath}`);
     } catch (error) {
       console.log('Error loading image file: ' + error);
       return new Response('File not found', {status: 404});

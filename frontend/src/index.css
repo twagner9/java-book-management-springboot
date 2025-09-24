@@ -133,3 +133,25 @@ table {
     width: 10%;
     height: 10%;
 }
+
+.modal {
+  position: fixed; /* ensure modal is positioned */
+  top: 0;
+  left: 0;
+  width: 100vw; /* full viewport width */
+  height: 100vh; /* full viewport height */
+  background: rgba(0, 0, 0, 0.7); /* darker background with some transparency */
+  display: flex; /* center the image */
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* sit above everything else */
+  cursor: pointer;
+}
+
+.modal img {
+  max-width: 90vw; /* never exceed viewport width */
+  max-height: 90vh; /* never exceed viewport height */
+  object-fit: contain; /* preserve aspect ratio */
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+}

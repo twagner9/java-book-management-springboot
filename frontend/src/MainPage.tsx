@@ -3,8 +3,6 @@ import { BookModal } from './BookModal';
 import { BookInputs } from './BookInputs';
 import { ImageUpload } from './ImageUpload';
 
-console.log(window.electronAPI);
-
 export type Book = {
     id: number;
     imagePath: string,
@@ -19,14 +17,16 @@ export type Book = {
 let currentId: number = 1;
 
 export function MainPage() {
-    const [books, setBooks] = React.useState<Book[]>([]);
-    const [modalOpen, setModalOpen] = React.useState(false);
-    const [loading, setLoading] = React.useState(true);
-    const [sortState, setSortState] = React.useState({
+    const [books, setBooks] = React.useState<Book[]>([]); // tracks Book objects
+    const [modalOpen, setModalOpen] = React.useState(false); // tracks input modal state
+    const [loading, setLoading] = React.useState(true); // tracks the loading state of the application
+    const [sortState, setSortState] = React.useState({ // tracks the current sorted state of the books in the table
         column: "title",
         order: "asc",
     });
-    const [safeImages, setSafeImages] = useState<Record<string, string>>({});
+    // Record<T, T> is akin to specifying a type of std::unordered_map in C++
+    const [safeImages, setSafeImages] = useState<Record<string, string>>({}); // loads image URLs asynchronously so they can be used in JSX
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     useEffect(() => {
         fetch('/api/books')
@@ -36,17 +36,24 @@ export function MainPage() {
             .finally(() => setLoading(false));
     }, []); // This empty "dependency array" in useEffect means this effect runs once after the initial render; if variables are added here,
             // the effect will run again when those variables change.
-
+    
+    /**
+     * Supposed to load images in safely by mapping the safe-file URLs to a React state so that it can be done async, which is required
+     * when using the ipcMain handle method for the custom toSafeFile function in the exposed electron API. 
+     */
     useEffect(() => {
         async function loadSafeImages() {
+            // Creates hashmap associating the book ID with the safe URL; then, in JSX below, I can directly access the correct
+            // image path based on the book ID number
             const mapping: Record<string, string> = {};
             for (const book of books) {
-                mapping[book.id] = await window.electronAPI.toSafeFile(book.imagePath);
+                if (book.imagePath !== "")
+                    mapping[book.id] = await window.electronAPI.toSafeFile(book.imagePath);
             }
             setSafeImages(mapping);
         }
         loadSafeImages();
-    }, [books]);
+    }, [books]); // the books state is in the dependency array, so this effect will execute each time books is updated
     function closeModal() {
         setModalOpen(false);
     }
@@ -154,8 +161,9 @@ export function MainPage() {
                                 {book.imagePath ? (<img 
                                                     className="tableImage" 
                                                     key={book.id}
-                                                    src={safeImages[book.id]} 
-                                                    alt={`Book cover to: ${window.electronAPI.toSafeFile(book.imagePath)}`}>
+                                                    src={(safeImages[book.id]) ? safeImages[book.id] : ""} 
+                                                    alt={`Book cover to: ${window.electronAPI.toSafeFile(book.imagePath)}`}
+                                                    onClick={() => setSelectedImage(safeImages[book.id])}>
                                                 </img>) : (<p>No image uploaded</p>)}
                             </td>
                             <td>{book.title}</td>
@@ -170,6 +178,11 @@ export function MainPage() {
                     ))}
                 </tbody>
             </table>
+            {selectedImage && (
+                <div className="modal" onClick={() => setSelectedImage(null)}>
+                    <img src={selectedImage}></img>
+                </div>
+            )}
         </div>
     );
 }
