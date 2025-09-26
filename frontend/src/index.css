@@ -1,10 +1,21 @@
+
 body {
+  --color-background: #fafafa;
+  --color-foreground: #1f2023;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    --color-background: #1f2023;
+    --color-foreground: #efefef;
+    --color--border: #efefef;
+  }
 }
 
 code {
@@ -16,6 +27,8 @@ code {
 
   /* align-content: center; */
   text-align: center;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }
 
 .main-text {
@@ -35,12 +48,18 @@ code {
   width: 120px;
   height: 40px;
   border-radius: 10px;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  border-color: var(--color--border);
 }
 
 .book-table {
   table-layout: fixed;
   width: 100%;
   padding: 10px;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  border-color: var(--color--border);
 }
 
 .modal-overlay {
@@ -68,6 +87,8 @@ code {
     position: relative;
     display: flex;
     flex-direction: column;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
 }
 
 .modal-heading {
@@ -79,12 +100,31 @@ code {
   margin: 0 auto;
 }
 
+.modalInputContent {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  border-color: var(--color--border);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Custom styling for the number input arrows */
+.valueControl {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  padding: 3px;
+}
+
 .filename {
   text-align: center;
 }
 
 .uploadError {
-    color: red;
+  color: red;
 }
 
 .form-container {
@@ -127,6 +167,18 @@ table {
     margin: auto;
     margin-top: 50px;
     margin-bottom: 50px;
+}
+
+.tableDeleteButton {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  border-color: var(--color--border);
+}
+
+.imageUploadButton {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  border-color: var(--color--border);
 }
 
 .tableImage {

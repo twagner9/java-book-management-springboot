@@ -27,7 +27,7 @@ export function ImageUpload({imagePath, setImagePath}: {imagePath: string; setIm
 
     return (
         <>
-            <button type="button" className="modalButton" onClick={handleSelectFile}>Upload Image</button>
+            <button type="button" className="imageUploadButton" onClick={handleSelectFile}>Upload Image</button>
             {uploadError ? <p className="uploadError">{uploadError}</p> : null}
             {filename ? <p className="filename">{filename}</p> : null}
         </>

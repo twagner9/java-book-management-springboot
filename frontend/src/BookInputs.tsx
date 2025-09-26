@@ -14,12 +14,22 @@ export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<B
         genre: "",
         numCopies: 1,
     });
+    const [value, setValue] = useState(1);
+
     const isTitleValid = newBook.title.length >= 1 && newBook.title.length <= 99;
     const isAuthorValid = (newBook.authorLast.length > 1 && newBook.authorLast.length <= 20) && (newBook.authorFirst.length > 1 && newBook.authorFirst.length <= 20);
     const isNumCopiesValid = newBook.numCopies >= 1 && newBook.numCopies <= 99;
 
     const setImagePath = (imagePath: string) => {
         setBook(prev => ({...prev, imagePath}));
+    }
+
+    const increment = () => {
+        setValue(prevValue => Math.min(prevValue + 1, 99));
+    }
+    
+    const decrement = () => {
+        setValue(prevValue => Math.max(prevValue - 1, 1));
     }
 
     async function handleSubmitClick() {
@@ -49,20 +59,20 @@ export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<B
         <div className="modal-container">
             <div className="form-container">
                 <div className="form-label-and-input">
-                    <label htmlFor="bookTitle">Title: </label>
-                    <input id="bookTitle" placeholder="Enter a title..." onChange={e => setBook(b => ({...b, title: e.target.value}))}></input>
+                    <label className="modalInputContent" htmlFor="bookTitle">Title: </label>
+                    <input className="modalInputContent" id="bookTitle" placeholder="Enter a title..." onChange={e => setBook(b => ({...b, title: e.target.value}))}></input>
                 </div>
                 <div className="form-label-and-input">
-                    <label htmlFor="bookAuthorLast">Author last: </label>
-                    <input id="bookAuthorLast" placeholder="Enter author last name..." onChange={(e) => setBook(b => ({...b, authorLast: e.target.value}))}></input>
+                    <label className="modalInputContent" htmlFor="bookAuthorLast">Author last: </label>
+                    <input className="modalInputContent" id="bookAuthorLast" placeholder="Enter author last name..." onChange={(e) => setBook(b => ({...b, authorLast: e.target.value}))}></input>
                 </div>
                 <div className="form-label-and-input">
-                    <label htmlFor="bookAuthorFirst">Author first: </label>
-                    <input id="bookAuthorFirst" placeholder="Enter author first name..." onChange={(e) => setBook(b => ({...b, authorFirst: e.target.value}))}></input>
+                    <label className="modalInputContent" htmlFor="bookAuthorFirst">Author first: </label>
+                    <input className="modalInputContent" id="bookAuthorFirst" placeholder="Enter author first name..." onChange={(e) => setBook(b => ({...b, authorFirst: e.target.value}))}></input>
                 </div>
                 <div className="form-label-and-input">
-                    <label htmlFor="bookGenre">Genre: </label>
-                    <select name="genres" onChange={(e) => setBook(b => ({...b, genre: e.target.value}))}>
+                    <label className="modalInputContent" htmlFor="bookGenre">Genre: </label>
+                    <select className="modalInputContent" name="genres" onChange={(e) => setBook(b => ({...b, genre: e.target.value}))}>
                         <option value="Action">Action</option>
                         <option value="Adventure">Adventure</option>
                         <option value="Autobiography">Autobiography</option>
@@ -104,13 +114,41 @@ export function BookInputs(props: {currentId: number; onBookAdded: (book: Omit<B
                     </select>
                 </div>
                 <div className="form-label-and-input">
-                    <label htmlFor="bookCopies">Number of Copies: </label>
-                    <input type="number" id="bookCopies" min="1" max="99" defaultValue="1" onChange={e => setBook(b => ({...b, numCopies: (e.target as HTMLInputElement).valueAsNumber}))}></input>
+                    <label className="modalInputContent" htmlFor="bookCopies">Number of Copies: </label>
+                    <button className="valueControl" 
+                            onClick={decrement} 
+                            title="Decrease value" 
+                            aria-label="Decrease value">
+                                -
+                    </button>
+                    <input 
+                        className="modalInputContent" 
+                        type="number" 
+                        id="bookCopiesInput" 
+                        name="bookCopiesInput" 
+                        min="1" 
+                        max="99" 
+                        value={value} 
+                        onChange={e => {
+                            const newValue = e.target.valueAsNumber;
+                            if (!isNaN(newValue) && newValue >= 1 && newValue <= 99) {
+                                setBook(b => ({...b, numCopies: (e.target as HTMLInputElement).valueAsNumber}));
+                            } else if (e.target.value === '') {
+                                setBook(b => ({...b, numCopies: 1}));
+                            }
+                        }}>
+                    </input>
+                    <button className="valueControl" 
+                            onClick={increment} 
+                            title="Decrease value" 
+                            aria-label="Decrease value">
+                                +
+                    </button>
                 </div>
                 <div className="form-label-and-input">
                     <ImageUpload setImagePath={setImagePath} imagePath={newBook.imagePath} />
                 </div>
-                <button onClick={handleSubmitClick} disabled={!(isTitleValid && isAuthorValid && isNumCopiesValid)}>Submit</button>
+                <button className="modalInputContent" onClick={handleSubmitClick} disabled={!(isTitleValid && isAuthorValid && isNumCopiesValid)}>Submit</button>
             </div>
         </div>
     )    
