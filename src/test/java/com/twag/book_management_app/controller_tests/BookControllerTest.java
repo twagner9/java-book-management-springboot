@@ -8,13 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.twag.book_management_app.model.Book;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -54,7 +51,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void testAddAndGetBooks() throws Exception {
+    public void testBookRetrieval() throws Exception {
         mockMvc.perform(get("/api/books"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].title").value("Test Book"));

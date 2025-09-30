@@ -49,9 +49,20 @@ public class Book {
         this.genre = genre;
         numCopies = copies;
     }
+    
+    public Book(String imagePath, String title, String authorLast, String authorFirst, String genre, int copies) {
+        id = -1;
+        this.imagePath = imagePath;
+        this.title = title;
+        this.authorLast = authorLast;
+        this.authorFirst = authorFirst;
+        this.genre = genre;
+        numCopies = copies;
+    }
 
-    public Book(int currentId, String title, String authorLast, String authorFirst, String genre, int copies) {
+    public Book(int currentId, String imagePath, String title, String authorLast, String authorFirst, String genre, int copies) {
         id = currentId;
+        this.imagePath = imagePath;
         this.title = title;
         this.authorLast = authorLast;
         this.authorFirst = authorFirst;
@@ -87,7 +98,7 @@ public class Book {
      */
     public String getDetails() {
         return "ID #: " + id + "; " + "Title: " + title + "; " + "Author: " + authorLast + ", " + authorFirst
-                + "; Genre: " + genre + "; # Copies: " + numCopies;
+                + "; Genre: " + genre + "; # Copies: " + numCopies + "; Image path: " + imagePath;
     }
 
     /**
@@ -161,6 +172,10 @@ public class Book {
      */
     public void setTitle(String newTitle) {
         title = newTitle;
+    }
+
+    public void setImagePath(String newImgPath) {
+        imagePath = newImgPath;
     }
 
     /**
