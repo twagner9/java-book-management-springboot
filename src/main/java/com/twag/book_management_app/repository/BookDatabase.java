@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 
+import org.springframework.stereotype.Repository;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
 
 import com.twag.book_management_app.model.Book;
-
+@Repository
 public class BookDatabase {
     final private String url = "jdbc:postgresql://192.168.0.1:5432/postgres";
     final private Properties props = new Properties();
@@ -29,7 +31,7 @@ public class BookDatabase {
      * Inserts the Book object into the database.
      * @param bookToAdd The Book object to be stored in the database.
      */
-    public void insertBook(Book bookToAdd) {
+    public void insert(Book bookToAdd) {
         try (Connection conn = DriverManager.getConnection(url, props)) {
             Statement st = conn.createStatement();
             st.execute("CREATE TABLE IF NOT EXISTS all_books(" +
@@ -58,7 +60,7 @@ public class BookDatabase {
      * originally added.
      * @return ArrayList containing all books.
      */
-    public ArrayList<Book> getAllBooks() {
+    public ArrayList<Book> getAll() {
         ArrayList<Book> res = new ArrayList<Book>();
         try (Connection conn = DriverManager.getConnection(url, props)) {
             Statement st = conn.createStatement();
@@ -80,6 +82,13 @@ public class BookDatabase {
         return res;
     }
 
+	/**
+	 * Delete Book object from Database
+	 */
+	public void delete(int id) {
+
+	}
+
     /**
      * Check if a table with  
      * @param tableName String containing the name of the table being looked up.
@@ -94,5 +103,17 @@ public class BookDatabase {
             return rs.next();
         }
     }
+
+	public boolean existsById(final int id) {
+		try (Connection conn = DriverManager.getConnection(url)) {
+			"SELECT * FROM all_books WHERE "
+			System.out.println("Book with ID " + id + " not found.");
+		} catch (SQLException e) {
+			System.err.println("Error checking if Book object exists:");
+			e.printStackTrace();
+		}
+
+		return true;
+	}
 }
 

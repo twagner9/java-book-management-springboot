@@ -14,56 +14,59 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.twag.book_management_app.repository.BookRepository;
+// import com.twag.book_management_app.repository.BookRepository;
+import com.twag.book_management_app.repository.BookDatabase;
 // import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
-    private final BookRepository bookRepository;
+    private final BookDatabase bookDb;
     @Autowired
-    public BookController(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    public BookController(BookDatabase bookRepository) {
+        this.bookDb = bookRepository;
     }
 
     @GetMapping
-    public List<Book> getAllBooks() {
+    public List<Book> getAll() {
         // This method would typically return a view or a list of books.
         // For simplicity, we are returning a string here.
-        return bookRepository.findAll();
+        return bookDb.getAll();
     }
 
     @PostMapping
-    public ResponseEntity<Book> addNewBook(@RequestBody Book newBook) {
+    public ResponseEntity<Book> insert(@RequestBody Book newBook) {
         System.out.println("Executing addition of newBook...");
-        return ResponseEntity.ok(bookRepository.save(newBook));
+        return ResponseEntity.ok(bookDb.insert(newBook));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable int id) {
-        if (!bookRepository.existsById(id)) {
+    public ResponseEntity<Void> delete(@PathVariable int id) {
+		// TODO: update this book existence check before the deletion operation
+        if (!bookDb.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        bookRepository.deleteById(id);
+        bookDb.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+	// TODO: create each of these functions in the BookDatabase class
     @GetMapping("/titleSortAsc") 
-    public List<Book> getTitleSortedBooksAsc() { return bookRepository.findAllByOrderByTitleAsc(); }
+    public List<Book> getTitleSortedBooksAsc() { return bookDb.findAllByOrderByTitleAsc(); }
 
     @GetMapping("/titleSortDesc")
-    public List<Book> getTitleSortedBooksDesc() { return bookRepository.findAllByOrderByTitleDesc(); }
+    public List<Book> getTitleSortedBooksDesc() { return bookDb.findAllByOrderByTitleDesc(); }
         
     @GetMapping("/authorLastSortAsc") 
-    public List<Book> getAuthorLastSortedBooksAsc() { return bookRepository.findAllByOrderByAuthorLastAsc(); }
+    public List<Book> getAuthorLastSortedBooksAsc() { return bookDb.findAllByOrderByAuthorLastAsc(); }
 
     @GetMapping("/authorLastSortDesc") 
-    public List<Book> getAuthorLastSortedBooksDesc() { return bookRepository.findAllByOrderByAuthorLastDesc(); }
+    public List<Book> getAuthorLastSortedBooksDesc() { return bookDb.findAllByOrderByAuthorLastDesc(); }
 
     @GetMapping("/genreSortAsc") 
-    public List<Book> getGenreSortedBooksAsc() { return bookRepository.findAllByOrderByGenreAsc(); }
+    public List<Book> getGenreSortedBooksAsc() { return bookDb.findAllByOrderByGenreAsc(); }
 
     @GetMapping("/genreSortDesc") 
-    public List<Book> getGenreSortedBooksDesc() { return bookRepository.findAllByOrderByGenreDesc(); }
+    public List<Book> getGenreSortedBooksDesc() { return bookDb.findAllByOrderByGenreDesc(); }
 }
