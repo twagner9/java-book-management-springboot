@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -55,15 +54,24 @@ public class BookDatabaseTests {
     @Test
     boolean testDatabaseInsertion() {
         db = new BookDatabase();
-        db.insertBook(sampleBook1);
-        db.insertBook(sampleBook2);
-        db.insertBook(sampleBook3);
+        db.insert(sampleBook1);
+        db.insert(sampleBook2);
+        db.insert(sampleBook3);
 
         // Execute test fetch command
-        ArrayList<Book> dbContents = db.getAllBooks();
+        ArrayList<Book> dbContents = db.getAll();
         assertEquals(sampleBook1, dbContents.get(0));
         assertEquals(sampleBook2, dbContents.get(1));
         assertEquals(sampleBook3, dbContents.get(2));
         return true;
     }
+
+	@Test
+	boolean testDatabaseDeletion() {
+		db.delete(1);
+		ArrayList<Book> dbContents = db.getAll();
+		assertEquals(sampleBook2, dbContents.get(0));
+		assertEquals(sampleBook3, dbContents.get(1));
+		return true;
+	}
 }

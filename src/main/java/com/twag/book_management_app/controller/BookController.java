@@ -36,14 +36,14 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<Book> insert(@RequestBody Book newBook) {
+    public ResponseEntity<Boolean> insert(@RequestBody Book newBook) {
         System.out.println("Executing addition of newBook...");
         return ResponseEntity.ok(bookDb.insert(newBook));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
-		// TODO: update this book existence check before the deletion operation
+		// FIXME: check if this check is necessary, or if deletion can automatically be attempted
         if (!bookDb.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
@@ -51,22 +51,21 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
-	// TODO: create each of these functions in the BookDatabase class
     @GetMapping("/titleSortAsc") 
-    public List<Book> getTitleSortedBooksAsc() { return bookDb.findAllByOrderByTitleAsc(); }
+    public List<Book> getTitleSortedBooksAsc() { return bookDb.getAllBooksOrderAsc("title"); }
 
     @GetMapping("/titleSortDesc")
-    public List<Book> getTitleSortedBooksDesc() { return bookDb.findAllByOrderByTitleDesc(); }
+    public List<Book> getTitleSortedBooksDesc() { return bookDb.getAllBooksOrderDesc("title"); }
         
     @GetMapping("/authorLastSortAsc") 
-    public List<Book> getAuthorLastSortedBooksAsc() { return bookDb.findAllByOrderByAuthorLastAsc(); }
+    public List<Book> getAuthorLastSortedBooksAsc() { return bookDb.getAllBooksOrderAsc("author_last"); }
 
     @GetMapping("/authorLastSortDesc") 
-    public List<Book> getAuthorLastSortedBooksDesc() { return bookDb.findAllByOrderByAuthorLastDesc(); }
+    public List<Book> getAuthorLastSortedBooksDesc() { return bookDb.getAllBooksOrderDesc("author_last"); }
 
     @GetMapping("/genreSortAsc") 
-    public List<Book> getGenreSortedBooksAsc() { return bookDb.findAllByOrderByGenreAsc(); }
+    public List<Book> getGenreSortedBooksAsc() { return bookDb.getAllBooksOrderAsc("genre"); }
 
     @GetMapping("/genreSortDesc") 
-    public List<Book> getGenreSortedBooksDesc() { return bookDb.findAllByOrderByGenreDesc(); }
+    public List<Book> getGenreSortedBooksDesc() { return bookDb.getAllBooksOrderDesc("genre"); }
 }
