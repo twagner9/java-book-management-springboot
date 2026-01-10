@@ -3,7 +3,10 @@ package com.twag.book_management_app.controller;
 import java.util.List;
 import com.twag.book_management_app.model.Book;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 // import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-// import com.twag.book_management_app.repository.BookRepository;
 import com.twag.book_management_app.repository.BookDatabase;
-// import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/api/books")
@@ -47,8 +47,12 @@ public class BookController {
         if (!bookDb.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        bookDb.delete(id);
-        return ResponseEntity.noContent().build();
+        boolean deleted = bookDb.delete(id);
+
+        // Return no content on success, but return an internal server error if the deletion was not performed
+        // This is okay because the user should never be at a point where they can be deleting a book with an ID
+        // that is present.
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @GetMapping("/titleSortAsc") 
