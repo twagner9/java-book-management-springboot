@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ActiveProfiles("test")
+// @ActiveProfiles("test")
 @SpringBootTest
 public class BookDatabaseTests {
     @Value("${spring.datasource.url")

@@ -3,9 +3,7 @@ package com.twag.book_management_app.controller;
 import java.util.List;
 import com.twag.book_management_app.model.Book;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 // import org.springframework.stereotype.Controller;
@@ -28,14 +26,14 @@ public class BookController {
         this.bookDb = bookRepository;
     }
 
-    @GetMapping
+    @GetMapping("/api/books")
     public List<Book> getAll() {
         // This method would typically return a view or a list of books.
         // For simplicity, we are returning a string here.
         return bookDb.getAll();
     }
 
-    @PostMapping
+    @PostMapping("/api/books")
     public ResponseEntity<Boolean> insert(@RequestBody Book newBook) {
         System.out.println("Executing addition of newBook...");
         return ResponseEntity.ok(bookDb.insert(newBook));

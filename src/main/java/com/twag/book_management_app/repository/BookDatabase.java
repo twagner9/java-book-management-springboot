@@ -21,7 +21,8 @@ public class BookDatabase {
     final private Properties props = new Properties();
 
     public BookDatabase() {
-        props.setProperty("user", "icpostgresql");
+        // props.setProperty("user", "icpostgresql");
+		props.setProperty("user", "bookuser");
         props.setProperty("password", "testpassword");
 
         try (Connection conn = DriverManager.getConnection(url, props)) {
@@ -75,7 +76,7 @@ public class BookDatabase {
 				return false;
 			}
 		} catch (SQLException e) {
-			System.err.println("Error checking if Book object exists:");
+			System.err.println("Error deleting book object if Book object exists:");
 			e.printStackTrace();
 		}
 
@@ -99,6 +100,24 @@ public class BookDatabase {
         }
         return res;
     }
+
+	// public Book getBookById(int idVal) {
+	// 	Book result = null;
+	// 	try (Connection conn = DriverManager.getConnection(url, props)) {
+	// 		ResultSet rs = connectAndExecuteQuery("SELECT * FROM all_books WHERE id = " + idVal);
+
+	// 		result = new Book(rs.getString("title"),
+	// 							rs.getString("author_last"), 
+	// 							rs.getString("author_first"), 
+	// 							rs.getString("genre"), 
+	// 							rs.getInt("num_copies"));
+	// 	} catch (SQLException e) {
+	// 		System.err.println("Retrieval of the book with idVal " + idVal + " failed:");
+	// 		System.err.println(e.getStackTrace());
+	// 	}
+
+	// 	return result;
+	// }
 
     /**
      * Check if a table with  
