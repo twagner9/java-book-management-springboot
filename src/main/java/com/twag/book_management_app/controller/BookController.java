@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.twag.book_management_app.repository.BookDatabase;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/api")
 public class BookController {
     private final BookDatabase bookDb;
     @Autowired
@@ -26,14 +26,14 @@ public class BookController {
         this.bookDb = bookRepository;
     }
 
-    @GetMapping("/api/books")
+    @GetMapping("/books")
     public List<Book> getAll() {
         // This method would typically return a view or a list of books.
         // For simplicity, we are returning a string here.
         return bookDb.getAll();
     }
 
-    @PostMapping("/api/books")
+    @PostMapping("/books")
     public ResponseEntity<Boolean> insert(@RequestBody Book newBook) {
         System.out.println("Executing addition of newBook...");
         return ResponseEntity.ok(bookDb.insert(newBook));

@@ -114,7 +114,7 @@ public class BookControllerTest {
     }
 
     @Test 
-	@Sql("/insert_books.sql") 
+	// @Sql("/insert_books.sql") 
 	public void testBookDeletion() throws Exception {
         // mockMvc.perform(delete("/api/books/" + id))
             // .andExpect(status().isNoContent());
@@ -129,7 +129,7 @@ public class BookControllerTest {
 			.when()
 			.delete("/api/books/1")
 			.then()
-			.statusCode(200)
+			.statusCode(204)
 			.body(".", hasSize(2));
         // mockMvc.perform(get("/api/books"))
             // .andExpect(status().isOk())
