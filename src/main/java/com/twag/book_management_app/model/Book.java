@@ -45,6 +45,7 @@ public class Book {
      */
     public Book(String book_title, String authorLast, String authorFirst, String genre, int copies) {
         id = -1;
+        imagePath = "";
         title = book_title;
         this.authorLast = authorLast;
         this.authorFirst = authorFirst;

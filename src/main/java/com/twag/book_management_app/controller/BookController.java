@@ -34,23 +34,30 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public ResponseEntity<Boolean> insert(@RequestBody Book newBook) {
+    public ResponseEntity<Integer> insert(@RequestBody Book newBook) {
         System.out.println("Executing addition of newBook...");
-        return ResponseEntity.ok(bookDb.insert(newBook));
+        int id = bookDb.insertAndReturnId(newBook);
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
-		// FIXME: check if this check is necessary, or if deletion can automatically be attempted
-        if (!bookDb.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        boolean deleted = bookDb.delete(id);
+    @DeleteMapping("/books/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+		// // FIXME: check if this check is necessary, or if deletion can automatically be attempted
+        // if (!bookDb.existsById(id)) {
+        //     return ResponseEntity.notFound().build();
+        // }
+        // boolean deleted = bookDb.delete(id);
 
-        // Return no content on success, but return an internal server error if the deletion was not performed
-        // This is okay because the user should never be at a point where they can be deleting a book with an ID
-        // that is present.
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        // // Return no content on success, but return an internal server error if the deletion was not performed
+        // // This is okay because the user should never be at a point where they can be deleting a book with an ID
+        // // that is present.
+        // return deleted ? ResponseEntity.noContent().build() : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        int rowsAffected = bookDb.delete(id.intValue());
+        if (rowsAffected == 0) {
+            return ResponseEntity.notFound().build(); // return 404
+        }
+        
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/titleSortAsc") 

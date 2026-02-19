@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -25,6 +26,8 @@ import com.twag.book_management_app.repository.BookRepository;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+
+import java.util.ArrayList;
 
 // import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 // import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -68,14 +71,29 @@ public class BookControllerTest {
 		registry.add("spring.datasource.password", postgres::getPassword);
 	}
 
-	@Autowired
-	BookRepository bookRepo;
+    
 
 	@BeforeEach
 	void setup() {
 		RestAssured.baseURI = "http://localhost:" + port;
-		bookRepo.deleteAll(); // Clear out the db before each set of tests
 	}
+
+    ArrayList<Integer> loadBooksForTest(List<Book> bookList) {
+        ArrayList<Integer> ids = new ArrayList<>();
+        bookList.forEach(book -> 
+            ids.add(
+                RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(book)
+                .post("/api/books")
+                .then()
+                .statusCode(201)
+                .extract()
+                .as(Integer.class)
+            )
+        );
+        return ids;
+    }
 
     // @BeforeEach
     // public void setup() throws Exception {
@@ -91,6 +109,14 @@ public class BookControllerTest {
     //     id = root.path("id").asInt();
     // }
 
+    @Autowired
+    private JdbcTemplate jdbc;
+
+    @BeforeEach
+    void resetDatabase() {
+        jdbc.execute("DELETE FROM all_books");
+    }
+
     @Test
 	// @Sql("/insert_books.sql")
     public void testBookRetrieval() throws Exception {
@@ -102,7 +128,8 @@ public class BookControllerTest {
 			new Book("Test Book", "lastname", "firstname", "Fantasy", 3),
 			new Book("Test Two", "last", "first", "Fable", 1)
 		);
-		bookRepo.saveAll(bookList);
+
+        loadBooksForTest(bookList);
 
 		RestAssured.given()
 			.contentType(ContentType.JSON)
@@ -122,15 +149,19 @@ public class BookControllerTest {
 			new Book("Test Book", "lastname", "firstname", "Fantasy", 3),
 			new Book("Test Two", "last", "first", "Fable", 1)
 		);
-		bookRepo.saveAll(bookList);
+
+        ArrayList<Integer> ids = loadBooksForTest(bookList);
 
 		RestAssured.given()
 			.contentType(ContentType.JSON)
 			.when()
-			.delete("/api/books/1")
-			.then()
-			.statusCode(204)
-			.body(".", hasSize(2));
+			.delete("/api/books/{id}", ids.get(0));
+
+        RestAssured.given()
+            .get("/api/books")
+            .then()
+            .statusCode(200)
+            .body(".", hasSize(1));
         // mockMvc.perform(get("/api/books"))
             // .andExpect(status().isOk())
             // .andExpect(jsonPath("$").isEmpty());

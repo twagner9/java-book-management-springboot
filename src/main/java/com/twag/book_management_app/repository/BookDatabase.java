@@ -5,14 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.DatabaseMetaData;
-
 import com.twag.book_management_app.model.Book;
-@Repository
+@Component
 public class BookDatabase {
 	/* TODO: many of the statements for error logging and such are using simple prints
 	   but in reality this may need to switch to propagating messages up to the 
@@ -20,67 +21,60 @@ public class BookDatabase {
     final private String url = "jdbc:postgresql://192.168.0.1:5432/postgres";
     final private Properties props = new Properties();
 
-    public BookDatabase() {
-        // props.setProperty("user", "icpostgresql");
-		props.setProperty("user", "bookuser");
-        props.setProperty("password", "testpassword");
+    private final JdbcTemplate jdbc;
+    private static final RowMapper<Book> rowMapper = (rs, rowNum) ->
+    new Book(
+        rs.getInt("id"),
+        rs.getString("image"),
+        rs.getString("title"),
+        rs.getString("author_last"),
+        rs.getString("author_first"),
+        rs.getString("genre"),
+        rs.getInt("num_copies")
+    );
 
-        try (Connection conn = DriverManager.getConnection(url, props)) {
-            System.out.println(conn.getMetaData().getDatabaseProductVersion());
-        } catch (SQLException e) {
-            System.out.println("Error connecting to the database " + Arrays.toString(e.getStackTrace()));
-        }
+    public BookDatabase(DataSource dataSource) {
+        this.jdbc = new JdbcTemplate(dataSource);
     }
 
     /**
      * Inserts the Book object into the database.
      * @param bookToAdd The Book object to be stored in the database.
      */
-    public boolean insert(Book bookToAdd) {
-        try (Connection conn = DriverManager.getConnection(url, props)) {
-            Statement st = conn.createStatement();
-            st.execute("CREATE TABLE IF NOT EXISTS all_books(" +
-                "id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, image STRING, title TEXT, author_last TEXT, author_first TEXT, genre TEXT, num_copies INTEGER)"
-            );
-            
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO all_books(image, title, author_last, author_first, author_last, genre, num_copies) " +
-                "VALUES(?, ?, ?, ?, ?, ?)"
-            );
-
-            ps.setString(1, bookToAdd.getImagePath());
-            ps.setString(2, bookToAdd.getTitle());
-            ps.setString(3, bookToAdd.getAuthorLast());
-            ps.setString(4, bookToAdd.getAuthorFirst());
-            ps.setString(5, bookToAdd.getGenre());
-            ps.setInt(6, bookToAdd.getNumCopies());
-			st.close();
-			ps.close();
-
-        } catch (SQLException e) {
-            System.err.println("Error inserting Book object into database:");
-            e.printStackTrace();
-			return false;
-        }
-		return true;
+    public Integer insertAndReturnId(Book bookToAdd) {
+        return jdbc.queryForObject("""
+                    INSERT INTO all_books (image, title, author_last, author_first, genre, num_copies)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    RETURNING id
+                    """,
+                    Integer.class,
+                    bookToAdd.getImagePath(),
+                    bookToAdd.getTitle(),
+                    bookToAdd.getAuthorLast(),
+                    bookToAdd.getAuthorFull(),
+                    bookToAdd.getGenre(),
+                    bookToAdd.getNumCopies()
+                );
     }
 
 	/**
 	 * Delete Book object from Database
 	 */
-	public boolean delete(int id) {
-		try (Connection conn = DriverManager.getConnection(url)) {
-			Statement st = conn.createStatement();
-			ResultSet rs = st.executeQuery("DELETE * FROM all_books WHERE id = " + id);
-			if (!rs.next()) {
-				System.out.println("Book with ID " + id + " not found.");
-				return false;
-			}
-		} catch (SQLException e) {
-			System.err.println("Error deleting book object if Book object exists:");
-			e.printStackTrace();
-		}
+	public int delete(int id) {
+		// try (Connection conn = DriverManager.getConnection(url)) {
+		// 	Statement st = conn.createStatement();
+		// 	ResultSet rs = st.executeQuery("DELETE * FROM all_books WHERE id = " + id);
+		// 	if (!rs.next()) {
+		// 		System.out.println("Book with ID " + id + " not found.");
+		// 		return false;
+		// 	}
+		// } catch (SQLException e) {
+		// 	System.err.println("Error deleting book object if Book object exists:");
+		// 	e.printStackTrace();
+		// }
 
-		return true;
+		// return true;
+        return jdbc.update("DELETE FROM all_books WHERE id = ?", id);
 	}
 
     /**
@@ -88,17 +82,8 @@ public class BookDatabase {
      * originally added.
      * @return ArrayList containing all books.
      */
-    public ArrayList<Book> getAll() {
-        ArrayList<Book> res = new ArrayList<Book>();
-        try (Connection conn = DriverManager.getConnection(url, props)) {
-			ResultSet rs = connectAndExecuteQuery("SELECT * FROM all_books");
-			res = processResultSetFromSelectAllBooks(rs);
-			rs.close();
-        } catch (SQLException e) {
-            System.err.println("Error retrieving list of all Book objects from the database:");
-            e.printStackTrace();
-        }
-        return res;
+    public List<Book> getAll() {
+        return jdbc.query("SELECT * FROM all_books", rowMapper);
     }
 
 	// public Book getBookById(int idVal) {
@@ -163,17 +148,19 @@ public class BookDatabase {
 	 * @return ArrayList containing all Book objects.
 	 */
 	public List<Book> getAllBooksOrderAsc(String columnName) {
-		ArrayList<Book> res = new ArrayList<Book>();
-		try {
-			String query = "SELECT * FROM all_books ORDER by " + columnName + " ASC";
-			ResultSet rs = connectAndExecuteQuery(query);
-			res = processResultSetFromSelectAllBooks(rs);
-			rs.close();
-		} catch (SQLException e) {
-			System.err.println("Error returning books sorted in ascending order:");
-			e.printStackTrace();
-		}
-		return res;
+		// ArrayList<Book> res = new ArrayList<Book>();
+		// try {
+		// 	String query = "SELECT * FROM all_books ORDER by " + columnName + " ASC";
+		// 	ResultSet rs = connectAndExecuteQuery(query);
+		// 	res = processResultSetFromSelectAllBooks(rs);
+		// 	rs.close();
+		// } catch (SQLException e) {
+		// 	System.err.println("Error returning books sorted in ascending order:");
+		// 	e.printStackTrace();
+		// }
+		// return res;
+        String query = "SELECT * FROM all_books ORDER BY " + columnName + " ASC";
+        return jdbc.query(query, rowMapper);
 	}
 
 	/**
@@ -182,18 +169,22 @@ public class BookDatabase {
 	 * @return ArrayList containing all Book objects.
 	 */
 	public List<Book> getAllBooksOrderDesc(String columnName) {
-		ArrayList<Book> res = new ArrayList<Book>();
-		try {
-			String query = "SELECT * FROM all_books ORDER by " + columnName + " DESC";
-			ResultSet rs = connectAndExecuteQuery(query);
-			res = processResultSetFromSelectAllBooks(rs);
-			rs.close();
-		} catch (SQLException e) {
-			System.err.println("Error returning books sorted in descending order:");
-			e.printStackTrace();
-		}
-		return res;
-	}
+		// ArrayList<Book> res = new ArrayList<Book>();
+		// try {
+		// 	String query = "SELECT * FROM all_books ORDER by " + columnName + " DESC";
+		// 	ResultSet rs = connectAndExecuteQuery(query);
+		// 	res = processResultSetFromSelectAllBooks(rs);
+		// 	rs.close();
+		// } catch (SQLException e) {
+		// 	System.err.println("Error returning books sorted in descending order:");
+		// 	e.printStackTrace();
+		// }
+		// return res;
+        String query = "SELECT * FROM all_books ORDER by " + columnName + " DESC";
+
+        return jdbc.query(query, rowMapper);
+    }
+	
 
 	/**
 	 * Execute the passed SQL query on the database.
@@ -208,24 +199,24 @@ public class BookDatabase {
 		return rs;
 	}
 
-	/**
-	 * Process the ResultSet when making a query that selects all books.
-	 * @param rs The ResultSet object that will be processed.
-	 * @return ArrayList of the Book objects.
-	 * @throws SQLException
-	 */
-	private ArrayList<Book> processResultSetFromSelectAllBooks(ResultSet rs) throws SQLException{
-		ArrayList<Book> res = new ArrayList<Book>();
-		while (rs.next()) {
-			res.add(new Book(rs.getString("title"),
-							 rs.getString("author_last"), 
-							 rs.getString("author_first"), 
-						 	 rs.getString("genre"), 
-							 rs.getInt("num_copies")
-						)
-					);
-			}		
-		return res;
-	}
+	// /**
+	//  * Process the ResultSet when making a query that selects all books.
+	//  * @param rs The ResultSet object that will be processed.
+	//  * @return ArrayList of the Book objects.
+	//  * @throws SQLException
+	//  */
+	// private ArrayList<Book> processResultSetFromSelectAllBooks(ResultSet rs) throws SQLException{
+	// 	ArrayList<Book> res = new ArrayList<Book>();
+	// 	while (rs.next()) {
+	// 		res.add(new Book(rs.getString("title"),
+	// 						 rs.getString("author_last"), 
+	// 						 rs.getString("author_first"), 
+	// 					 	 rs.getString("genre"), 
+	// 						 rs.getInt("num_copies")
+	// 					)
+	// 				);
+	// 		}		
+	// 	return res;
+	// }
 }
 
