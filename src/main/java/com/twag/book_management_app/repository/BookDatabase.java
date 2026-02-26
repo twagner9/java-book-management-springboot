@@ -1,16 +1,12 @@
 package com.twag.book_management_app.repository;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import com.twag.book_management_app.model.Book;
 @Component
@@ -19,7 +15,7 @@ public class BookDatabase {
 	   but in reality this may need to switch to propagating messages up to the 
 	   Electron GUI so that they are readable. */
     final private String url = "jdbc:postgresql://192.168.0.1:5432/postgres";
-    final private Properties props = new Properties();
+    // final private Properties props = new Properties();
 
     private final JdbcTemplate jdbc;
     private static final RowMapper<Book> rowMapper = (rs, rowNum) ->
@@ -51,7 +47,7 @@ public class BookDatabase {
                     bookToAdd.getImagePath(),
                     bookToAdd.getTitle(),
                     bookToAdd.getAuthorLast(),
-                    bookToAdd.getAuthorFull(),
+                    bookToAdd.getAuthorFirst(),
                     bookToAdd.getGenre(),
                     bookToAdd.getNumCopies()
                 );
@@ -186,18 +182,18 @@ public class BookDatabase {
     }
 	
 
-	/**
-	 * Execute the passed SQL query on the database.
-	 * @param query The query to be executed.
-	 * @return ResultSet containing the stored data.
-	 * @throws SQLException
-	 */
-	private ResultSet connectAndExecuteQuery(String query) throws SQLException{
-		Connection conn = DriverManager.getConnection(url);
-		Statement st = conn.createStatement();
-		ResultSet rs = st.executeQuery(query);
-		return rs;
-	}
+	// /**
+	//  * Execute the passed SQL query on the database.
+	//  * @param query The query to be executed.
+	//  * @return ResultSet containing the stored data.
+	//  * @throws SQLException
+	//  */
+	// private ResultSet connectAndExecuteQuery(String query) throws SQLException{
+	// 	Connection conn = DriverManager.getConnection(url);
+	// 	Statement st = conn.createStatement();
+	// 	ResultSet rs = st.executeQuery(query);
+	// 	return rs;
+	// }
 
 	// /**
 	//  * Process the ResultSet when making a query that selects all books.

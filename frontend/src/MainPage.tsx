@@ -62,6 +62,9 @@ export function MainPage() {
         setModalOpen(true);
     }
 
+	/**
+	 * Determine the current sort state of the table. Default is title sort.
+	 */
     useEffect(() => {
         let url = '';
         if (sortState.column === 'title') url = sortState.order === 'asc' ? '/api/books/titleSortAsc' : '/api/books/titleSortDesc';
@@ -79,7 +82,11 @@ export function MainPage() {
             });
     }, [sortState]);
 
-    function handleBookAdded(newBook: Omit<Book, "id">) {
+	/**
+	 * POST book to the SQL database.
+	 * @param newBook The Book object that will be added to the database.
+	 */
+    function handleBookAdded(newBook: Book) {
         fetch('/api/books', {
             method: "POST",
             headers: {'Content-Type': 'application/json' },
@@ -89,8 +96,9 @@ export function MainPage() {
             if (!response.ok) throw new Error("Failed to add book to database.");
             return response.json();
         })
-        .then(savedBook => {
-            setBooks(prevBooks => [...prevBooks, savedBook]);
+        .then(idNum => {
+			newBook.id = idNum;
+            setBooks(prevBooks => [...prevBooks, newBook]);
             setModalOpen(false);
         })
         .catch(error => {

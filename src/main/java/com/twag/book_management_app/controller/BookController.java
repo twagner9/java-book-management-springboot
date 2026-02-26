@@ -60,21 +60,21 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/titleSortAsc") 
+    @GetMapping("/books/titleSortAsc") 
     public List<Book> getTitleSortedBooksAsc() { return bookDb.getAllBooksOrderAsc("title"); }
 
-    @GetMapping("/titleSortDesc")
+    @GetMapping("/books/titleSortDesc")
     public List<Book> getTitleSortedBooksDesc() { return bookDb.getAllBooksOrderDesc("title"); }
         
-    @GetMapping("/authorLastSortAsc") 
+    @GetMapping("/books/authorLastSortAsc") 
     public List<Book> getAuthorLastSortedBooksAsc() { return bookDb.getAllBooksOrderAsc("author_last"); }
 
-    @GetMapping("/authorLastSortDesc") 
+    @GetMapping("/books/authorLastSortDesc") 
     public List<Book> getAuthorLastSortedBooksDesc() { return bookDb.getAllBooksOrderDesc("author_last"); }
 
-    @GetMapping("/genreSortAsc") 
+    @GetMapping("/books/genreSortAsc") 
     public List<Book> getGenreSortedBooksAsc() { return bookDb.getAllBooksOrderAsc("genre"); }
 
-    @GetMapping("/genreSortDesc") 
+    @GetMapping("/books/genreSortDesc") 
     public List<Book> getGenreSortedBooksDesc() { return bookDb.getAllBooksOrderDesc("genre"); }
 }

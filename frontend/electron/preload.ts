@@ -10,7 +10,7 @@
   potentially sensitive info directly into the DOM (contextIsolation) and to prevent
   malicious actors from executing scripts that run commands via require("child_process").exec(...).
  */
-
+export{}
 const { contextBridge, ipcRenderer } = require('electron');
 const { pathToFileURL } =  require('node:url');
 

@@ -1,0 +1,2 @@
+PostgreSQL commands to know:
+psql -U bookuser -d bookdb -- Access the project database as bookuser, who should be the owner of the database, and is the user the application uses for CRUD.

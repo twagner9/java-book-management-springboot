@@ -14,7 +14,6 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 // import org.springframework.test.web.servlet.MockMvc;
 // import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -22,7 +21,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.twag.book_management_app.model.Book;
-import com.twag.book_management_app.repository.BookRepository;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -52,7 +50,7 @@ public class BookControllerTest {
 	@ServiceConnection
 	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine");
 
-    private int id;
+    // private int id;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -138,6 +136,8 @@ public class BookControllerTest {
 			.then()
 			.statusCode(200)
 			.body(".", hasSize(2));
+
+		// TODO: test the sorted orders
     }
 
     @Test 
