@@ -3,6 +3,7 @@ package com.twag.book_management_app.controller;
 import java.util.List;
 import com.twag.book_management_app.model.Book;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -77,4 +79,13 @@ public class BookController {
 
     @GetMapping("/books/genreSortDesc") 
     public List<Book> getGenreSortedBooksDesc() { return bookDb.getAllBooksOrderDesc("genre"); }
+
+	@PutMapping("/books/update_book/{id}")
+	public ResponseEntity<Integer> updateBook(int id, String columnName, String columnUpdate) {
+		int rowsAffected = bookDb.update(id, columnName, columnUpdate);
+		if (rowsAffected == 0) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(id);
+	}
 }

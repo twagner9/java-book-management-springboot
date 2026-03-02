@@ -89,4 +89,16 @@ public class BookDatabaseTests {
 		assertEquals(sampleBook3, dbContents.get(1));
 		return true;
 	}
+
+	@Test
+	boolean testDatabaseUpdate() {
+		db.insertAndReturnId(sampleBook1);
+		// 1. Test title column
+		
+		// 2. Test author_last column
+
+		// 3. Test author_first column
+
+		return true;
+	}
 }

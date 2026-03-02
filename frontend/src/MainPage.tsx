@@ -62,6 +62,17 @@ export function MainPage() {
         setModalOpen(true);
     }
 
+	function updateDatabase(column: string) {
+		// TODO: update the appropriate column based on the name passed
+		if (column == "title") {
+
+		} else if (column === "author_last") {
+
+		} else if (column === "author_first") {
+
+		}
+	}
+
 	/**
 	 * Determine the current sort state of the table. Default is title sort.
 	 */

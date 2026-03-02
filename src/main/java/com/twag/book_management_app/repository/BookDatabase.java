@@ -180,6 +180,17 @@ public class BookDatabase {
 
         return jdbc.query(query, rowMapper);
     }
+
+	/**
+	 * Update the database's stored value at the given ID
+	 * @param id
+	 * @param columnName
+	 * @param updatedText
+	 * @return
+	 */
+	public int update(int id, String columnName, String updatedText) {
+		return jdbc.update("UPDATE all_books SET ? = ? WHERE id = ?", columnName, id, updatedText);
+	}
 	
 
 	// /**

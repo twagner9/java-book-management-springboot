@@ -166,4 +166,26 @@ public class BookControllerTest {
             // .andExpect(status().isOk())
             // .andExpect(jsonPath("$").isEmpty());
     }
+
+	@Test
+	public void testBookUpdate() throws Exception {
+		List<Book> bookList = List.of(
+			new Book("Test Book", "lastname", "firstname", "Fantasy", 3),
+			new Book("Test Two", "last", "first", "Fable", 1)
+		);
+
+		ArrayList<Integer> ids = loadBooksForTest(bookList);
+
+		RestAssured.given()
+			.contentType(ContentType.JSON)
+			.when()
+			.put("/api/books/update_book/{id}", ids.get(0), "title", "updatedContent");
+
+		// FIXME: this isn't actually checking the update, this is just doing a full get
+		RestAssured.given()
+			.get("/api/books")
+			.then()
+			.statusCode(200)
+			.body(".", hasSize(2));
+	}
 }
