@@ -120,7 +120,7 @@ export function MainPage() {
     
     // TODO: more yet to do on this function
     function handleDeleteClick(bookId: number) {
-        fetch(`/api/books/${bookId}`, {
+        fetch(`/api/books/delete/${bookId}`, {
             method: "DELETE"
         })
         .then(response => {

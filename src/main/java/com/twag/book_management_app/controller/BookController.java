@@ -37,6 +37,11 @@ public class BookController {
         return bookDb.getAll();
     }
 
+    @GetMapping("/books/get/{id}")
+    public Book getBookById(@PathVariable Integer id) {
+        return bookDb.getBookById(id);
+    }
+
     @PostMapping("/books")
     public ResponseEntity<Integer> insert(@RequestBody Book newBook) {
         System.out.println("Executing addition of newBook...");
@@ -48,25 +53,25 @@ public class BookController {
     @PutMapping("/books/updateTitle/{id}")
     public ResponseEntity<Integer> updateTitle(@PathVariable Integer id, @RequestParam String newTitle) {
         System.out.println("Updating book title to: " + newTitle);
-        int updatedId = bookDb.update(id, "title", newTitle);
+        int updatedId = bookDb.updateTitle(id, newTitle);
         return ResponseEntity.status(HttpStatus.OK).body(updatedId);
     }
 
     @PutMapping("/books/updateAuthorLast/{id}")
     public ResponseEntity<Integer> updateAuthorLast(@PathVariable Integer id, @RequestParam String newLast) {
-        System.out.println("Updating book title to: " + newLast);
-        int updatedId = bookDb.update(id, "author_last", newLast);
+        System.out.println("Updating book author_last to: " + newLast);
+        int updatedId = bookDb.updateAuthorLast(id, newLast);
         return ResponseEntity.status(HttpStatus.OK).body(updatedId);
     }
 
     @PutMapping("/books/updateAuthorFirst/{id}")
     public ResponseEntity<Integer> updateFirstName(@PathVariable Integer id, @RequestParam String newFirst) {
-        System.out.println("Updating book title to: " + newFirst);
-        int updatedId = bookDb.update(id, "author_first", newFirst);
+        System.out.println("Updating book author_first to: " + newFirst);
+        int updatedId = bookDb.updateauthorFirst(id, newFirst);
         return ResponseEntity.status(HttpStatus.OK).body(updatedId);
     }
 
-    @DeleteMapping("/books/{id}")
+    @DeleteMapping("/books/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         // // FIXME: check if this check is necessary, or if deletion can automatically
         // be attempted
@@ -89,6 +94,7 @@ public class BookController {
 
         return ResponseEntity.noContent().build();
     }
+    
 
     @GetMapping("/books/titleSortAsc")
     public List<Book> getTitleSortedBooksAsc() {

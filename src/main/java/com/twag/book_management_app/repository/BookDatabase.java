@@ -187,6 +187,39 @@ public class BookDatabase {
 		return jdbc.update("UPDATE all_books SET ? = ? WHERE id = ?", columnName, id, updatedText);
 	}
 
+    	/**
+	 * Update the database's stored value at the given ID
+	 * 
+	 * @param id
+	 * @param updatedText
+	 * @return
+	 */
+	public int updateTitle(int id, String updatedTitle) {
+		return jdbc.update("UPDATE all_books SET title = ? WHERE id = ?", updatedTitle, id);
+	}
+
+    	/**
+	 * Update the database's stored value at the given ID
+	 * 
+	 * @param id
+	 * @param updatedText
+	 * @return
+	 */
+	public int updateAuthorLast(int id, String updatedAuthorLast) {
+		return jdbc.update("UPDATE all_books SET author_last = ? WHERE id = ?", updatedAuthorLast, id);
+	}
+
+    	/**
+	 * Update the database's stored value at the given ID
+	 * 
+	 * @param id
+	 * @param updatedText
+	 * @return
+	 */
+	public int updateauthorFirst(int id, String updatedAuthorFirst) {
+		return jdbc.update("UPDATE all_books SET author_first = ? WHERE id = ?", updatedAuthorFirst, id);
+	}
+
 	// /**
 	// * Execute the passed SQL query on the database.
 	// * @param query The query to be executed.

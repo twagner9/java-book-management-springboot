@@ -152,7 +152,7 @@ public class BookControllerTest {
 		RestAssured.given()
 				.contentType(ContentType.JSON)
 				.when()
-				.delete("/api/books/{id}", ids.get(0));
+				.delete("/api/books/delete/{id}", ids.get(0));
 
 		RestAssured.given()
 				.get("/api/books")
@@ -171,23 +171,61 @@ public class BookControllerTest {
 				new Book("Test Two", "last", "first", "Fable", 1));
 
 		ArrayList<Integer> ids = loadBooksForTest(bookList);
-		int idToUpdate = ids.get(0);
 
+        // Test updating title
+        final String newTitle = "Updated Title";
 		RestAssured.given()
 				.contentType(ContentType.JSON)
-				.queryParam("newTitle", "Updated Title")
+				.queryParam("newTitle", newTitle)
 				.when()
-				.put("/api/books/updateTitle/{id}", idToUpdate)
+				.put("/api/books/updateTitle/{id}", ids.get(0))
 				.then()
 				.statusCode(200);
 
-		Book returnedBook = RestAssured.given()
+		String titleToCheck = RestAssured.given()
 				.contentType(ContentType.JSON)
-				.get("/api/books/{id}")
+				.get("/api/books/get/{id}", ids.get(0))
 				.then()
 				.statusCode(200)
 				.extract()
-				.as(Book.class);
-		assertEquals("Updated Title", returnedBook.getTitle());
+				.path("title");
+		assertEquals(newTitle, titleToCheck);
+
+        // Test updating author last name
+        final String newLastName = "UpdatedLastName";
+        RestAssured.given()
+            .contentType(ContentType.JSON)
+            .queryParam("newLast", newLastName)
+            .when()
+            .put("/api/books/updateAuthorLast/{id}", ids.get(1))
+            .then()
+            .statusCode(200);
+
+        String authorLastToCheck = RestAssured.given()
+            .contentType(ContentType.JSON)
+            .get("/api/books/get/{id}", ids.get(1))
+            .then()
+            .statusCode(200)
+            .extract()
+            .path("authorLast");
+		assertEquals(newLastName, authorLastToCheck);
+
+        final String newFirstName = "UpdatedFirstName";
+        RestAssured.given()
+            .contentType(ContentType.JSON)
+            .queryParam("newFirst", newFirstName)
+            .when()
+            .put("/api/books/updateAuthorFirst/{id}", ids.get(1))
+            .then()
+            .statusCode(200);
+
+        String authorFirstToCheck = RestAssured.given()
+            .contentType(ContentType.JSON)
+            .get("/api/books/get/{id}", ids.get(1))
+            .then()
+            .statusCode(200)
+            .extract()
+            .path("authorFirst");
+		assertEquals(newFirstName, authorFirstToCheck);
 	}
 }
