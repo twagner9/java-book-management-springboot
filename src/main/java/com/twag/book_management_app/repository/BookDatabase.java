@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import com.twag.book_management_app.model.Book;
@@ -23,6 +24,8 @@ public class BookDatabase {
 	// final private Properties props = new Properties();
 
 	private final JdbcTemplate jdbc;
+    
+    @NonNull
 	private static final RowMapper<Book> rowMapper = (rs, rowNum) -> new Book(
 			rs.getInt("id"),
 			rs.getString("image"),
@@ -32,7 +35,7 @@ public class BookDatabase {
 			rs.getString("genre"),
 			rs.getInt("num_copies"));
 
-	public BookDatabase(DataSource dataSource) {
+	public BookDatabase(@NonNull DataSource dataSource) {
 		this.jdbc = new JdbcTemplate(dataSource);
 	}
 
