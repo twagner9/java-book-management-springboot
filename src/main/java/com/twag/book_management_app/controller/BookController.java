@@ -3,8 +3,8 @@ package com.twag.book_management_app.controller;
 import java.util.List;
 import com.twag.book_management_app.model.Book;
 
-import org.apache.catalina.connector.Response;
-import org.springframework.beans.factory.annotation.Autowired;
+// import org.apache.catalina.connector.Response;
+// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 // import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ import com.twag.book_management_app.repository.BookDatabase;
 public class BookController {
     private final BookDatabase bookDb;
 
-    @Autowired
+    // @Autowired
     public BookController(BookDatabase bookRepository) {
         this.bookDb = bookRepository;
     }
