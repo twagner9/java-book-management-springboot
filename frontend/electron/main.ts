@@ -1,9 +1,9 @@
 import { decode } from "punycode";
 
-const {app, BrowserWindow, ipcMain, dialog, protocol, net} = require('electron');
-const path = require('path');
-const {fileURLToPath} = require('url');
-const {dirname} = require('path');
+import { app, BrowserWindow, ipcMain, dialog, protocol, net } from 'electron';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 
 let mainWindow: Electron.BrowserWindow | null = null;

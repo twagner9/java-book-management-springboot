@@ -11,8 +11,8 @@
   malicious actors from executing scripts that run commands via require("child_process").exec(...).
  */
 export{}
-const { contextBridge, ipcRenderer } = require('electron');
-const { pathToFileURL } =  require('node:url');
+import { contextBridge, ipcRenderer } from 'electron';
+import { pathToFileURL } from 'node:url';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   isDarkMode: () => ipcRenderer.invoke("theme:get"),
