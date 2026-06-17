@@ -28,9 +28,6 @@ public class BookDatabaseTests {
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine");
 
-    
-
-
     @Value("${spring.datasource.url")
     String url = "jdbc:postgresql://localhost:5432/testdb";
 

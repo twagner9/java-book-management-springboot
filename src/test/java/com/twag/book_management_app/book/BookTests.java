@@ -8,10 +8,27 @@ import static org.junit.jupiter.api.Assertions.*;
 //import static com.twag.book_management_app.model.Assert.*;
 
 public class BookTests {
-    private String testImgPath, testTitle, testAuthorLast, testAuthorFirst, testGenre, expectedDetails, returnDetails, updatedTitle, updatedAuthorLast;
-    private String updatedAuthorFirst, updatedGenre, updatedImagePath;
-    private int testId, testCopies, updatedId, updatedNumCopies;
-    private final int AUTHOR_LAST = 0, AUTHOR_FIRST = 1;
+    private String testTitle;
+	private String testAuthorLast;
+	private String testAuthorFirst;
+	private String testGenre;
+	private String testImgPath;
+	private int testId;
+	private int testCopies;
+
+	private String updatedTitle; 
+	private String updatedAuthorLast; 
+	private String updatedAuthorFirst;
+	private String updatedGenre;
+	private String updatedImagePath;
+	private int updatedId; 
+	private int updatedNumCopies;
+
+	private String expectedDetails;
+	private String returnDetails;
+
+    private final int AUTHOR_LAST = 0;
+	private final int AUTHOR_FIRST = 1;
     private Book testBook;
 
 

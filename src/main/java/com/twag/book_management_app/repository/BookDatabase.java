@@ -12,6 +12,17 @@ import org.springframework.stereotype.Component;
 
 import com.twag.book_management_app.model.Book;
 
+/**************************************************************************************************************
+ * Why JDBC over JPA?
+ * Realistically, for this simple of a CRUD application, I would likely opt to use JPA and let Spring manage
+ * the creation of SQL queries for me. However, I want to familiarize myself with writing these queries, and
+ * using the option that gives lower level control, so I chose to use JDBC to force myself to get in the habit
+ * of writing the queries to properly account for efficiency, security, etc. Additionally, this lower level of
+ * control is what I'm used to in my day job with SQLite3, so determining how I might translate that knowledge
+ * to web-based applications is useful.
+ **************************************************************************************************************
+ */
+
 @Component
 public class BookDatabase {
 	/*
@@ -25,6 +36,7 @@ public class BookDatabase {
 
 	private final JdbcTemplate jdbc;
     
+
     @NonNull
 	private static final RowMapper<Book> rowMapper = (rs, rowNum) -> new Book(
 			rs.getInt("id"),
