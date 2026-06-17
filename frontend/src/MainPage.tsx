@@ -62,7 +62,11 @@ export function MainPage() {
         setModalOpen(true);
     }
 
-	function updateDatabase(column: string) {
+    function editText(selectedText: string): void {
+
+    }
+
+	function updateDatabase(column: string): void {
 		// TODO: update the appropriate column based on the name passed
 		if (column == "title") {
 
