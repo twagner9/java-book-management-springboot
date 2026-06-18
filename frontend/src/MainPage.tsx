@@ -1,43 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { BookModal } from "./BookModal";
 import { BookInputs } from "./BookInputs";
+import { useTableData } from "./useTableData";
+import { BookTable } from "./BookTable";
 import { ImageUpload } from "./ImageUpload";
 import { EditableText } from "./EditableText";
 
-export type Book = {
-  id: number;
-  imagePath: string;
-  authorLast: string;
-  authorFirst: string;
-  title: string;
-  genre: string;
-  numCopies: number;
-};
+// export type Book = {
+//   id: number;
+//   imagePath: string;
+//   authorLast: string;
+//   authorFirst: string;
+//   title: string;
+//   genre: string;
+//   numCopies: number;
+// };
 
 // TODO: update to fetch the latest ID number from the database
 let currentId: number = 1;
 
 export function MainPage() {
-  const [books, setBooks] = React.useState<Book[]>([]); // tracks Book objects
+  const { books, loading } = useTableData();
   const [modalOpen, setModalOpen] = React.useState(false); // tracks input modal state
-  const [loading, setLoading] = React.useState(true); // tracks the loading state of the application
-  const [sortState, setSortState] = React.useState({
-    // tracks the current sorted state of the books in the table
-    column: "title",
-    order: "asc",
-  });
-  // Record<T, T> is akin to specifying a type of std::unordered_map in C++
-  const [safeImages, setSafeImages] = useState<Record<string, string>>({}); // loads image URLs asynchronously so they can be used in JSX
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  // const [loading, setLoading] = React.useState(true); // tracks the loading state of the application
 
-  useEffect(() => {
-    fetch("/api/books")
-      .then((response) => response.json())
-      .then((data) => setBooks(data))
-      .catch((error) => console.error("Error fetching books:", error))
-      .finally(() => setLoading(false));
-  }, []); // This empty "dependency array" in useEffect means this effect runs once after the initial render; if variables are added here,
-  // the effect will run again when those variables change.
+  // Record<T, T> is akin to specifying a type of std::unordered_map in C++
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   /**
    * Supposed to load images in safely by mapping the safe-file URLs to a React state so that it can be done async, which is required
@@ -132,23 +120,15 @@ export function MainPage() {
       });
   }
 
-  // TODO: more yet to do on this function
-  function handleDeleteClick(bookId: number) {
-    fetch(`/api/books/delete/${bookId}`, {
-      method: "DELETE",
-    })
-      .then((response) => {
-        if (response.ok) {
-          setBooks((prevBooks) =>
-            prevBooks.filter((book) => book.id !== bookId),
-          );
-        } else {
-          console.error("Failed to delete book: ", response.status);
-        }
-      })
-      .catch((error) => {
-        console.error("Network or server error during delete.", error);
-      });
+  function handleBookEdited(id: number, updatedText: string) {
+    fetch("/api/books", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedText),
+    }).then((response) => {
+      if (!response.ok) throw new Error("Failed to update book.");
+      return response.json();
+    });
   }
 
   function handleSort(column: string) {
@@ -185,56 +165,7 @@ export function MainPage() {
         <h3 className="modal-heading">Add Book</h3>
         {<BookInputs currentId={currentId} onBookAdded={handleBookAdded} />}
       </BookModal>
-      <table className="book-table">
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th className="sortHeader" onClick={() => handleSort("title")}>
-              Title
-            </th>
-            <th className="sortHeader" onClick={() => handleSort("authorLast")}>
-              Last
-            </th>
-            <th>First</th>
-            <th className="sortHeader" onClick={() => handleSort("genre")}>
-              Genre
-            </th>
-            <th>Number of Copies</th>
-          </tr>
-        </thead>
-        <tbody>
-          {books.map((book) => (
-            <tr key={book.id}>
-              <td>
-                {book.imagePath ? (
-                  <img
-                    className="tableImage"
-                    key={book.id}
-                    src={safeImages[book.id] ? safeImages[book.id] : ""}
-                    alt={`Book cover to: ${window.electronAPI.toSafeFile(book.imagePath)}`}
-                    onClick={() => setSelectedImage(safeImages[book.id])}
-                  ></img>
-                ) : (
-                  <p>No image uploaded</p>
-                )}
-              </td>
-              <td>{book.title}</td>
-              <td>{book.authorLast}</td>
-              <td>{book.authorFirst}</td>
-              <td>{book.genre}</td>
-              <td>{book.numCopies}</td>
-              <td>
-                <button
-                  className="tableDeleteButton"
-                  onClick={() => handleDeleteClick(book.id)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <BookTable bookData={books}></BookTable>
       {selectedImage && (
         <div className="modal" onClick={() => setSelectedImage(null)}>
           <img src={selectedImage}></img>

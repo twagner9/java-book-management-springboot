@@ -44,7 +44,7 @@ export function EditableText({ className }: EditableTextProps) {
   function triggerSaveAndUpdateDatabase() {
     setSavedText(currentText);
     setEditing(false);
-    // TODO: trigger DB update
+    // TODO: trigger DB update -- this should be passed from the parent as a prop, and triggered when save occurs
   }
 
   return (
