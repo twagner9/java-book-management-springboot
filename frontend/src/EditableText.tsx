@@ -7,7 +7,8 @@ type EditableTextProps = {
 
 export function EditableText({ className }: EditableTextProps) {
   const [editing, setEditing] = useState<boolean>(false);
-  const [currentText, setCurrentText] = useState<string>("");
+  const [savedText, setSavedText] = useState<string>("hello");
+  const [currentText, setCurrentText] = useState<string>(savedText);
   const inputRef = useRef<HTMLInputElement>(null); // Converting <p> to input, so need to have a way to reference the <input>
 
   let tempValue: string = "";
@@ -22,14 +23,46 @@ export function EditableText({ className }: EditableTextProps) {
   // For now just fuck around. Make A button. Convert it into an input. Then just log that input. Literally just one step at a time
   // to get back into the frontend bullshit.
 
-  function onEditableButtonClick() {
-    console.log("Hello there.");
+  const keyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key == "Enter") {
+      triggerSaveAndUpdateDatabase();
+    }
+    if (e.key == "Escape") {
+      setCurrentText(savedText);
+      setEditing(false);
+    }
+  };
+
+  const handleInputLosesFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    triggerSaveAndUpdateDatabase();
+  };
+
+  const onEditableTextClick = () => {
+    setEditing(true);
+  };
+
+  function triggerSaveAndUpdateDatabase() {
+    setSavedText(currentText);
+    setEditing(false);
+    // TODO: trigger DB update
   }
 
-  // First, make the button
   return (
     <div>
-      <button onClick={onEditableButtonClick}>Hello</button>
+      {editing ? (
+        <input
+          autoFocus
+          type="text"
+          value={currentText}
+          onChange={(e) => setCurrentText(e.target.value)}
+          onKeyDown={keyPress}
+          onBlur={handleInputLosesFocus}
+        ></input>
+      ) : (
+        <p style={{ cursor: "pointer" }} onClick={onEditableTextClick}>
+          {savedText}
+        </p>
+      )}
     </div>
   );
 }

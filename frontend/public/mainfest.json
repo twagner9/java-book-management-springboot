@@ -1,0 +1,6 @@
+{
+  "name": "Book Management",
+  "short_name": "Books",
+  "start_url": ".",
+  "display": "standalone"
+}

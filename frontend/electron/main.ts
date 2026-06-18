@@ -1,7 +1,7 @@
 import { decode } from "punycode";
 
 import { app, BrowserWindow, ipcMain, dialog, protocol, net } from "electron";
-import path from "path";
+import * as path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
@@ -35,11 +35,11 @@ ipcMain.handle("dialog:openFile", async () => {
   return result.filePaths[0];
 });
 
-ipcMain.handle("toSafeFile", (_, path) => {
+ipcMain.handle("toSafeFile", (_, passedPath) => {
   const { pathToFileURL } = require("url");
 
-  if (!path) return;
-  const fileUrl = pathToFileURL(path).href;
+  if (!passedPath) return;
+  const fileUrl = pathToFileURL(passedPath).href;
   return fileUrl.replace("file://", "safe-file://");
 });
 
