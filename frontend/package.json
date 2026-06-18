@@ -9,24 +9,26 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.126",
+    "@types/node": "^20.0.0",
     "@types/react-dom": "^19.1.5",
     "node": "^25.7.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-modal": "^3.16.3",
-    "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build:react": "react-scripts build",
+    "dev": "vite",
+    "vite": "vite",
+    "electron": "electron",
+    "start": "concurrently \"npm run vite\" \"wait-on http://localhost:5173 && electron .\"  ",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:react": "vite build",
     "build:electron": "tsc -p electron/tsconfig.json",
     "build-and-copy": "npm run build:electron && npm run build:react && rm -rf ../src/main/resources/static/* && cp -r build/* ../src/main/resources/static/",
     "copy-build-win": "rimraf ../src/main/resources/static/* && xcopy /E /Y /I build\\* ..\\src\\main\\resources\\static\\",
-    "build-and-copy-win": "npm run build:electron && npm run build:react && npm run copy-build-win",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build-and-copy-win": "npm run build:electron && npm run build:react && npm run copy-build-win"
   },
   "eslintConfig": {
     "extends": [
@@ -50,6 +52,11 @@
     "@types/electron": "^1.6.12",
     "@types/react": "^19.1.6",
     "@types/react-modal": "^3.16.3",
-    "electron": "^38.1.2"
+    "@vitejs/plugin-react": "^4.7.0",
+    "concurrently": "^9.2.1",
+    "electron": "^41.7.1",
+    "typescript": "^6.0.3",
+    "vite": "^6.4.3",
+    "wait-on": "^8.0.5"
   }
 }

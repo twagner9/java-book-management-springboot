@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 
 type EditableTextProps = {
-  onUpdateText: () => string;
+  // onUpdateText: () => string;
   className?: string;
 };
 
-export function EditableText({ onUpdateText, className }: EditableTextProps) {
+export function EditableText({ className }: EditableTextProps) {
   const [editing, setEditing] = useState<boolean>(false);
   const [currentText, setCurrentText] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null); // Converting <p> to input, so need to have a way to reference the <input>
@@ -21,4 +21,15 @@ export function EditableText({ onUpdateText, className }: EditableTextProps) {
 
   // For now just fuck around. Make A button. Convert it into an input. Then just log that input. Literally just one step at a time
   // to get back into the frontend bullshit.
+
+  function onEditableButtonClick() {
+    console.log("Hello there.");
+  }
+
+  // First, make the button
+  return (
+    <div>
+      <button onClick={onEditableButtonClick}>Hello</button>
+    </div>
+  );
 }

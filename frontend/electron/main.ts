@@ -1,32 +1,31 @@
 import { decode } from "punycode";
 
-import { app, BrowserWindow, ipcMain, dialog, protocol, net } from 'electron';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
+import { app, BrowserWindow, ipcMain, dialog, protocol, net } from "electron";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 let mainWindow: Electron.BrowserWindow | null = null;
-function createWindow () {
-    mainWindow = new BrowserWindow({
+function createWindow() {
+  mainWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
       contextIsolation: true,
       sandbox: true,
     },
   });
-    if (mainWindow) {
-            mainWindow.loadURL('http://localhost:8080');
-            mainWindow.on('closed', function () {
-            mainWindow = null;
-        });
-    }
+  if (mainWindow) {
+    mainWindow.loadURL("http://localhost:5173");
+    mainWindow.on("closed", function () {
+      mainWindow = null;
+    });
+  }
 }
 
-ipcMain.handle('dialog:openFile', async () => {
+ipcMain.handle("dialog:openFile", async () => {
   const result = await dialog.showOpenDialog({
     properties: ["openFile"],
   });
@@ -37,11 +36,11 @@ ipcMain.handle('dialog:openFile', async () => {
 });
 
 ipcMain.handle("toSafeFile", (_, path) => {
-  const {pathToFileURL} = require('url');
+  const { pathToFileURL } = require("url");
 
   if (!path) return;
   const fileUrl = pathToFileURL(path).href;
-  return fileUrl.replace('file://', "safe-file://");
+  return fileUrl.replace("file://", "safe-file://");
 });
 
 app.whenReady().then(() => {
@@ -52,14 +51,14 @@ app.whenReady().then(() => {
     are ways around this, but it's better than fully disabling security features that are
     built in for a reason.
   */
-  protocol.handle('safe-file', (request) => {
+  protocol.handle("safe-file", (request) => {
     try {
       const fileUrl = request.url.replace("safe-file://", "file://");
       console.log("intercepted:", fileUrl);
       return net.fetch(fileUrl);
     } catch (error) {
-      console.log('Error loading image file: ' + error);
-      return new Response('File not found', {status: 404});
+      console.log("Error loading image file: " + error);
+      return new Response("File not found", { status: 404 });
     }
   });
 
