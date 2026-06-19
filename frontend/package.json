@@ -27,7 +27,7 @@
     "build:react": "vite build",
     "build:electron": "tsc -p electron/tsconfig.json",
     "build-and-copy": "npm run build:electron && npm run build:react && rm -rf ../src/main/resources/static/* && cp -r build/* ../src/main/resources/static/",
-    "copy-build-win": "rimraf ../src/main/resources/static/* && xcopy /E /Y /I build\\* ..\\src\\main\\resources\\static\\",
+    "copy-build-win": "rimraf --glob ../src/main/resources/static/* && xcopy /E /Y /I build\\* ..\\src\\main\\resources\\static\\",
     "build-and-copy-win": "npm run build:electron && npm run build:react && npm run copy-build-win"
   },
   "eslintConfig": {
