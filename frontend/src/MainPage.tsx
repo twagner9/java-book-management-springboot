@@ -6,24 +6,34 @@ import { BookTable } from "./BookTable";
 import { ImageUpload } from "./ImageUpload";
 import { EditableText } from "./EditableText";
 
-// export type Book = {
-//   id: number;
-//   imagePath: string;
-//   authorLast: string;
-//   authorFirst: string;
-//   title: string;
-//   genre: string;
-//   numCopies: number;
-// };
+export type Book = {
+  id: number;
+  imagePath: string;
+  authorLast: string;
+  authorFirst: string;
+  title: string;
+  genre: string;
+  numCopies: number;
+};
+export type SortState = {
+  column: string,
+  order: string,
+}
 
 // TODO: update to fetch the latest ID number from the database
 let currentId: number = 1;
 
 export function MainPage() {
-  const { books, loading } = useTableData();
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = React.useState(false); // tracks input modal state
   // const [loading, setLoading] = React.useState(true); // tracks the loading state of the application
-
+  const [sortState, setSortState] = useState<SortState>({
+    // tracks the current sorted state of the books in the table
+    column: "title",
+    order: "asc",
+  });
+  
   // Record<T, T> is akin to specifying a type of std::unordered_map in C++
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -44,6 +54,14 @@ export function MainPage() {
     }
     loadSafeImages();
   }, [books]); // the books state is in the dependency array, so this effect will execute each time books is updated
+
+
+  // TODO: add another useEffect for updating the books list if the sortState is changed
+  useEffect(() => {
+    
+  });
+
+
   function closeModal() {
     setModalOpen(false);
   }
@@ -83,13 +101,15 @@ export function MainPage() {
           ? "/api/books/genreSortAsc"
           : "/api/books/genreSortDesc";
 
+    // TODO: trigger the call to backend with useTableData
+    useTableData(sortState, books, setBooks);
     fetch(url)
       .then((response) => {
         if (!response.ok)
           throw new Error("Failed to return title sorted Book list.");
         return response.json();
       })
-      .then((sortedList) => setBooks(sortedList))
+      .then((sortedList) => useTableData(sortedList))
       .catch((error) => {
         console.error("Error sorting list.", error);
       });

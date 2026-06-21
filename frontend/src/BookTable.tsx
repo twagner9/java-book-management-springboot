@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
+import {Book} from './MainPage';
+import {SortState} from './MainPage'
 
-type BookTableProps<T> = {
-  bookData: T[]; // This will have type Book; defined in MainPage.tsx
+// Pass the state controlling function so it can be updated from this component and triggered
+// for backend get
+type Props = {
+  bookData: Book[]; // READ/WRITE -- writeable for deletion
+  sortState: SortState, // READ/WRITE
+  onBookChange: (books: Book[]) => void,
+  onSortChange: (s: SortState) => void
 };
 
-export function BookTable() {
-  const [sortState, setSortState] = React.useState({
-    // tracks the current sorted state of the books in the table
-    column: "title",
-    order: "asc",
-  });
+export function BookTable({bookData, sortState, onBookChange, onSortChange}: Props) {
   const [safeImages, setSafeImages] = useState<Record<string, string>>({}); // loads image URLs asynchronously so they can be used in JSX
 
   const columnTitles = [
@@ -21,12 +23,7 @@ export function BookTable() {
     "Number of Copies",
   ];
 
-  function handleSort(column: string) {
-    setSortState((prev) => ({
-      column,
-      order: prev.column === column && prev.order === "asc" ? "desc" : "asc",
-    }));
-  }
+
 
   // TODO: more yet to do on this function
   function handleDeleteClick(bookId: number) {
@@ -35,9 +32,11 @@ export function BookTable() {
     })
       .then((response) => {
         if (response.ok) {
-          setBooks((prevBooks) =>
-            prevBooks.filter((book) => book.id !== bookId),
-          );
+          onBookChange((bookData) => {
+            bookData.filter((book) => book.id !== bookId)
+          })// =>
+          //   prevBooks.filter((book) => book.id !== bookId),
+          // );
         } else {
           console.error("Failed to delete book: ", response.status);
         }

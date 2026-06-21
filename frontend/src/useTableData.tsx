@@ -1,23 +1,17 @@
 import { useState, useEffect } from "react";
+import {Book} from "./MainPage";
+import {SortState} from "./MainPage"
 
-export type Book = {
-  id: number;
-  imagePath: string;
-  authorLast: string;
-  authorFirst: string;
-  title: string;
-  genre: string;
-  numCopies: number;
+type Props = {
+  sortState: SortState
+  books: Book[],
+  updateBooks(newBooks: Book[]): () => void,
 };
 
-export function useTableData() {
-  const [books, setBooks] = useState<Book[]>([]);
+// TODO: sort state has to be passed in from the table itself; so MainPage must manage it
+
+export function useTableData({sortState, books, updateBooks}: Props) {
   const [loading, setLoading] = useState<boolean>(true);
-  const [sortState, setSortState] = useState({
-    // tracks the current sorted state of the books in the table
-    column: "title",
-    order: "asc",
-  });
 
   useEffect(() => {
     let url = "";
@@ -43,7 +37,7 @@ export function useTableData() {
           throw new Error("Failed to return title sorted Book list.");
         return response.json();
       })
-      .then((sortedList) => setBooks(sortedList))
+      .then((sortedList) => updateBooks(sortedList))
       .catch((error) => {
         console.error("Error sorting list.", error);
       });
@@ -53,7 +47,7 @@ export function useTableData() {
     fetch("/api/books")
       .then((res) => res.json())
       .then((data) => {
-        setBooks(data);
+        updateBooks(data);
         setLoading(false);
       })
       .catch((error) => console.error("Error fetching books:", error))
