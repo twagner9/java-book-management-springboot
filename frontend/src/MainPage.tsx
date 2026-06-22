@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { BookModal } from "./BookModal";
 import { BookInputs } from "./BookInputs";
-import { useTableData } from "./useTableData";
+import { useTableData } from "./RetrieveTableData";
 import { BookTable } from "./BookTable";
 import { ImageUpload } from "./ImageUpload";
 import { EditableText } from "./EditableText";
+import { TableLoadProps } from "./RetrieveTableData";
 
 export type Book = {
   id: number;
@@ -16,9 +17,9 @@ export type Book = {
   numCopies: number;
 };
 export type SortState = {
-  column: string,
-  order: string,
-}
+  column: string;
+  order: boolean;
+};
 
 // TODO: update to fetch the latest ID number from the database
 let currentId: number = 1;
@@ -28,12 +29,12 @@ export function MainPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = React.useState(false); // tracks input modal state
   // const [loading, setLoading] = React.useState(true); // tracks the loading state of the application
-  const [sortState, setSortState] = useState<SortState>({
+  const [curSortState, setSortState] = useState<SortState>({
     // tracks the current sorted state of the books in the table
     column: "title",
-    order: "asc",
+    order: true, // true means ascending, false descending
   });
-  
+
   // Record<T, T> is akin to specifying a type of std::unordered_map in C++
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -55,12 +56,10 @@ export function MainPage() {
     loadSafeImages();
   }, [books]); // the books state is in the dependency array, so this effect will execute each time books is updated
 
-
-  // TODO: add another useEffect for updating the books list if the sortState is changed
+  // TODO: add another useEffect for updating the books list if the curSortState is changed
   useEffect(() => {
-    
-  });
-
+    useTableData({ sortState: curSortState, books, updateBooks: setBooks });
+  }, [curSortState]);
 
   function closeModal() {
     setModalOpen(false);
@@ -80,66 +79,6 @@ export function MainPage() {
     }
   }
 
-  /**
-   * Determine the current sort state of the table. Default is title sort.
-   */
-  useEffect(() => {
-    let url = "";
-    if (sortState.column === "title")
-      url =
-        sortState.order === "asc"
-          ? "/api/books/titleSortAsc"
-          : "/api/books/titleSortDesc";
-    else if (sortState.column === "authorLast")
-      url =
-        sortState.order === "asc"
-          ? "/api/books/authorLastSortAsc"
-          : "/api/books/authorLastSortDesc";
-    else if (sortState.column === "genre")
-      url =
-        sortState.order === "asc"
-          ? "/api/books/genreSortAsc"
-          : "/api/books/genreSortDesc";
-
-    // TODO: trigger the call to backend with useTableData
-    useTableData(sortState, books, setBooks);
-    fetch(url)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error("Failed to return title sorted Book list.");
-        return response.json();
-      })
-      .then((sortedList) => useTableData(sortedList))
-      .catch((error) => {
-        console.error("Error sorting list.", error);
-      });
-  }, [sortState]);
-
-  /**
-   * POST book to the SQL database.
-   * @param newBook The Book object that will be added to the database.
-   */
-  function handleBookAdded(newBook: Book) {
-    fetch("/api/books", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newBook),
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("Failed to add book to database.");
-        return response.json();
-      })
-      .then((idNum) => {
-        newBook.id = idNum;
-        setBooks((prevBooks) => [...prevBooks, newBook]);
-        setModalOpen(false);
-      })
-      .catch((error) => {
-        alert("Error adding book to the database/GUI");
-        console.error(error);
-      });
-  }
-
   function handleBookEdited(id: number, updatedText: string) {
     fetch("/api/books", {
       method: "POST",
@@ -149,13 +88,6 @@ export function MainPage() {
       if (!response.ok) throw new Error("Failed to update book.");
       return response.json();
     });
-  }
-
-  function handleSort(column: string) {
-    setSortState((prev) => ({
-      column,
-      order: prev.column === column && prev.order === "asc" ? "desc" : "asc",
-    }));
   }
 
   return (
@@ -185,7 +117,12 @@ export function MainPage() {
         <h3 className="modal-heading">Add Book</h3>
         {<BookInputs currentId={currentId} onBookAdded={handleBookAdded} />}
       </BookModal>
-      <BookTable bookData={books}></BookTable>
+      <BookTable
+        bookData={books}
+        sortState={curSortState}
+        onBookChange={setBooks}
+        onSortChange={setSortState}
+      ></BookTable>
       {selectedImage && (
         <div className="modal" onClick={() => setSelectedImage(null)}>
           <img src={selectedImage}></img>

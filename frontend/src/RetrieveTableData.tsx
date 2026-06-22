@@ -1,33 +1,39 @@
 import { useState, useEffect } from "react";
-import {Book} from "./MainPage";
-import {SortState} from "./MainPage"
+import { Book } from "./MainPage";
+import { SortState } from "./MainPage";
 
-type Props = {
-  sortState: SortState
-  books: Book[],
-  updateBooks(newBooks: Book[]): () => void,
-};
+export interface TableLoadProps {
+  sortState: SortState;
+  books: Book[];
+  updateBooks: React.Dispatch<React.SetStateAction<Book[]>>;
+}
+
+type Props = {};
 
 // TODO: sort state has to be passed in from the table itself; so MainPage must manage it
 
-export function useTableData({sortState, books, updateBooks}: Props) {
+export function useTableData({
+  sortState,
+  books,
+  updateBooks,
+}: TableLoadProps) {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     let url = "";
     if (sortState.column === "title")
       url =
-        sortState.order === "asc"
+        sortState.order === true // ASC
           ? "/api/books/titleSortAsc"
           : "/api/books/titleSortDesc";
     else if (sortState.column === "authorLast")
       url =
-        sortState.order === "asc"
+        sortState.order === true // ASC
           ? "/api/books/authorLastSortAsc"
           : "/api/books/authorLastSortDesc";
     else if (sortState.column === "genre")
       url =
-        sortState.order === "asc"
+        sortState.order === true // ASC
           ? "/api/books/genreSortAsc"
           : "/api/books/genreSortDesc";
 

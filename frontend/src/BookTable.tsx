@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react";
-import {Book} from './MainPage';
-import {SortState} from './MainPage'
+import { Book } from "./MainPage";
+import { SortState } from "./MainPage";
 
 // Pass the state controlling function so it can be updated from this component and triggered
 // for backend get
 type Props = {
   bookData: Book[]; // READ/WRITE -- writeable for deletion
-  sortState: SortState, // READ/WRITE
-  onBookChange: (books: Book[]) => void,
-  onSortChange: (s: SortState) => void
+  sortState: SortState; // READ/WRITE
+  onBookChange: (books: Book[]) => void;
+  onSortChange: (s: SortState) => void;
 };
 
-export function BookTable({bookData, sortState, onBookChange, onSortChange}: Props) {
+export function BookTable({
+  bookData,
+  sortState,
+  onBookChange,
+  onSortChange,
+}: Props) {
   const [safeImages, setSafeImages] = useState<Record<string, string>>({}); // loads image URLs asynchronously so they can be used in JSX
 
   const columnTitles = [
@@ -23,7 +28,30 @@ export function BookTable({bookData, sortState, onBookChange, onSortChange}: Pro
     "Number of Copies",
   ];
 
-
+  /**
+   * POST book to the SQL database.
+   * @param newBook The Book object that will be added to the database.
+   */
+  function handleBookAdded(newBook: Book) {
+    fetch("/api/books", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newBook),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to add book to database.");
+        return response.json();
+      })
+      .then((idNum) => {
+        newBook.id = idNum;
+        onBookChange((prevBooks: Book[]) => [...prevBooks, newBook]);
+        // setModalOpen(false);
+      })
+      .catch((error) => {
+        alert("Error adding book to the database/GUI");
+        console.error(error);
+      });
+  }
 
   // TODO: more yet to do on this function
   function handleDeleteClick(bookId: number) {
@@ -33,8 +61,8 @@ export function BookTable({bookData, sortState, onBookChange, onSortChange}: Pro
       .then((response) => {
         if (response.ok) {
           onBookChange((bookData) => {
-            bookData.filter((book) => book.id !== bookId)
-          })// =>
+            bookData.filter((book) => book.id !== bookId);
+          }); // =>
           //   prevBooks.filter((book) => book.id !== bookId),
           // );
         } else {
@@ -45,6 +73,12 @@ export function BookTable({bookData, sortState, onBookChange, onSortChange}: Pro
         console.error("Network or server error during delete.", error);
       });
   }
+
+  const handleSort = (column: string) => {
+    if (column !== sortState.column) {
+      onSortChange({ column, order: sortState.order });
+    }
+  };
 
   return (
     <table className="book-table">
@@ -65,7 +99,7 @@ export function BookTable({bookData, sortState, onBookChange, onSortChange}: Pro
         </tr>
       </thead>
       <tbody>
-        {books.map((book) => (
+        {bookData.map((book) => (
           <tr key={book.id}>
             <td>
               {book.imagePath ? (
