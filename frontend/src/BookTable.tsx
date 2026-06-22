@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Book } from "./MainPage";
 import { SortState } from "./MainPage";
+import * as ApiService from "./bookAPI";
 
 // Pass the state controlling function so it can be updated from this component and triggered
 // for backend get
@@ -9,74 +10,56 @@ type Props = {
   sortState: SortState; // READ/WRITE
   onBookChange: (books: Book[]) => void;
   onSortChange: (s: SortState) => void;
+  onImageClick: (path: string) => void;
+};
+
+type EditableColumns = "title" | "author_last" | "author_first";
+export type CellEditingData = {
+  id: number;
+  column: EditableColumns;
+  newData: string;
 };
 
 export function BookTable({
   bookData,
   sortState,
   onBookChange,
-  onSortChange,
+  onSortChange, // TODO: must update the sortState each time a sort option is selected.
+  onImageClick,
 }: Props) {
   const [safeImages, setSafeImages] = useState<Record<string, string>>({}); // loads image URLs asynchronously so they can be used in JSX
 
-  const columnTitles = [
-    "Image",
-    "Title",
-    "Last",
-    "First",
-    "Genre",
-    "Number of Copies",
-  ];
-
-  /**
-   * POST book to the SQL database.
-   * @param newBook The Book object that will be added to the database.
-   */
-  function handleBookAdded(newBook: Book) {
-    fetch("/api/books", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newBook),
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("Failed to add book to database.");
-        return response.json();
-      })
-      .then((idNum) => {
-        newBook.id = idNum;
-        onBookChange((prevBooks: Book[]) => [...prevBooks, newBook]);
-        // setModalOpen(false);
-      })
-      .catch((error) => {
-        alert("Error adding book to the database/GUI");
-        console.error(error);
-      });
-  }
-
+  useEffect(() => {
+    async function loadSafeImages() {
+      // Creates hashmap associating the book ID with the safe URL; then, in JSX below, I can directly access the correct
+      // image path based on the book ID number
+      const mapping: Record<string, string> = {};
+      for (const book of bookData) {
+        if (book.imagePath !== "")
+          mapping[book.id] = window.electronAPI.toSafeFile(book.imagePath);
+      }
+      setSafeImages(mapping);
+    }
+    loadSafeImages();
+  }, [bookData]); // the books state is in the dependency array, so this effect will execute each time books is updated
   // TODO: more yet to do on this function
-  function handleDeleteClick(bookId: number) {
-    fetch(`/api/books/delete/${bookId}`, {
-      method: "DELETE",
-    })
-      .then((response) => {
-        if (response.ok) {
-          onBookChange((bookData) => {
-            bookData.filter((book) => book.id !== bookId);
-          }); // =>
-          //   prevBooks.filter((book) => book.id !== bookId),
-          // );
-        } else {
-          console.error("Failed to delete book: ", response.status);
-        }
-      })
-      .catch((error) => {
-        console.error("Network or server error during delete.", error);
-      });
-  }
+  const handleDeleteClick = async (bookId: number) => {
+    try {
+      await ApiService.deleteBook(bookId);
+    } catch (error) {
+      console.error("Error deleting book from database:", error);
+    }
+  };
 
-  const handleSort = (column: string) => {
-    if (column !== sortState.column) {
-      onSortChange({ column, order: sortState.order });
+  const handleSort = async (sortingInfo: SortState) => {
+    try {
+      const result = await ApiService.getSortedBooks(sortingInfo);
+      onBookChange(result);
+    } catch (error) {
+      console.error(
+        `Sorting of books based on column ${sortingInfo.column} failed:`,
+        error,
+      );
     }
   };
 
@@ -85,14 +68,38 @@ export function BookTable({
       <thead>
         <tr>
           <th>Image</th>
-          <th className="sortHeader" onClick={() => handleSort("title")}>
+          <th
+            className="sortHeader"
+            onClick={() =>
+              handleSort({
+                column: "title",
+                order: !sortState.order, // Negate to toggle order between asc and desc
+              })
+            }
+          >
             Title
           </th>
-          <th className="sortHeader" onClick={() => handleSort("authorLast")}>
+          <th
+            className="sortHeader"
+            onClick={() =>
+              handleSort({
+                column: "author_last",
+                order: !sortState.order,
+              })
+            }
+          >
             Last
           </th>
           <th>First</th>
-          <th className="sortHeader" onClick={() => handleSort("genre")}>
+          <th
+            className="sortHeader"
+            onClick={() =>
+              handleSort({
+                column: "genre",
+                order: !sortState.order,
+              })
+            }
+          >
             Genre
           </th>
           <th>Number of Copies</th>
@@ -108,7 +115,7 @@ export function BookTable({
                   key={book.id}
                   src={safeImages[book.id] ? safeImages[book.id] : ""}
                   alt={`Book cover to: ${window.electronAPI.toSafeFile(book.imagePath)}`}
-                  onClick={() => setSelectedImage(safeImages[book.id])}
+                  onClick={() => onImageClick(safeImages[book.id])}
                 ></img>
               ) : (
                 <p>No image uploaded</p>

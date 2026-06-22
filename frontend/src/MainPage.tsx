@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { BookModal } from "./BookModal";
 import { BookInputs } from "./BookInputs";
-import { useTableData } from "./RetrieveTableData";
 import { BookTable } from "./BookTable";
 import { ImageUpload } from "./ImageUpload";
 import { EditableText } from "./EditableText";
-import { TableLoadProps } from "./RetrieveTableData";
+import * as ApiService from "./bookAPI";
 
 export type Book = {
   id: number;
@@ -16,13 +15,17 @@ export type Book = {
   genre: string;
   numCopies: number;
 };
+
+type SortColumn = "title" | "author_last" | "genre";
+
 export type SortState = {
-  column: string;
+  column: SortColumn;
   order: boolean;
 };
-
-// TODO: update to fetch the latest ID number from the database
-let currentId: number = 1;
+export type TableOperation =
+  | { type: "add"; row: Book }
+  | { type: "edit"; row: Book }
+  | { type: "delete"; row: Book };
 
 export function MainPage() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -37,30 +40,13 @@ export function MainPage() {
 
   // Record<T, T> is akin to specifying a type of std::unordered_map in C++
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [pendingOperation, setPendingOperation] =
+    useState<TableOperation | null>(null);
 
   /**
    * Supposed to load images in safely by mapping the safe-file URLs to a React state so that it can be done async, which is required
    * when using the ipcMain handle method for the custom toSafeFile function in the exposed electron API.
    */
-  useEffect(() => {
-    async function loadSafeImages() {
-      // Creates hashmap associating the book ID with the safe URL; then, in JSX below, I can directly access the correct
-      // image path based on the book ID number
-      const mapping: Record<string, string> = {};
-      for (const book of books) {
-        if (book.imagePath !== "")
-          mapping[book.id] = window.electronAPI.toSafeFile(book.imagePath);
-      }
-      setSafeImages(mapping);
-    }
-    loadSafeImages();
-  }, [books]); // the books state is in the dependency array, so this effect will execute each time books is updated
-
-  // TODO: add another useEffect for updating the books list if the curSortState is changed
-  useEffect(() => {
-    useTableData({ sortState: curSortState, books, updateBooks: setBooks });
-  }, [curSortState]);
-
   function closeModal() {
     setModalOpen(false);
   }
@@ -68,6 +54,40 @@ export function MainPage() {
   function handleAddClick() {
     setModalOpen(true);
   }
+
+  /**
+   * POST book to the SQL database.
+   * @param newBook The Book object that will be added to the database.
+   */
+  const handleBookAdded = async (newBook: Book) => {
+    // fetch("/api/books", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(newBook),
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) throw new Error("Failed to add book to database.");
+    //     return response.json();
+    //   })
+    //   .then((idNum) => {
+    //     newBook.id = idNum;
+    //     onBookChange((prevBooks: Book[]) => [...prevBooks, newBook]);
+    //     // setModalOpen(false);
+    //   })
+    //   .catch((error) => {
+    //     alert("Error adding book to the database/GUI");
+    //     console.error(error);
+    //   });
+    try {
+      const result = await ApiService.getBooks();
+      setBooks(result);
+    } catch (error) {
+      console.error(
+        "Error attempting to add book data to the database:",
+        error,
+      );
+    }
+  };
 
   function editText(selectedText: string): void {}
 
@@ -115,14 +135,17 @@ export function MainPage() {
         overlayClassName="modal-overlay"
       >
         <h3 className="modal-heading">Add Book</h3>
-        {<BookInputs currentId={currentId} onBookAdded={handleBookAdded} />}
+        {<BookInputs onBookAdded={handleBookAdded} />}
       </BookModal>
       <BookTable
         bookData={books}
         sortState={curSortState}
         onBookChange={setBooks}
         onSortChange={setSortState}
+        onImageClick={setSelectedImage}
       ></BookTable>
+      {/* selectedImage and the accompanying modal are meant to display a full-size image of one of the thumbnails displayed in the
+          table. This needs to present on MainPage.tsx, which means the state of the image must be updated by the BookTable */}
       {selectedImage && (
         <div className="modal" onClick={() => setSelectedImage(null)}>
           <img src={selectedImage}></img>

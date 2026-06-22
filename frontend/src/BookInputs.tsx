@@ -2,10 +2,7 @@ import { useState, useRef } from "react";
 import type { Book } from "./MainPage";
 import { ImageUpload } from "./ImageUpload";
 
-export function BookInputs(props: {
-  currentId: number;
-  onBookAdded: (book: Book) => void;
-}) {
+export function BookInputs(props: { onBookAdded: (book: Book) => void }) {
   // UseState sets the initial default value of the state, and ties a hook
   // that change the state when users interact with the frontend
   const [newBook, setBook] = useState<Book>({
