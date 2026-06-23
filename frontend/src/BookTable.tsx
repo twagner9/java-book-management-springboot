@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Book } from "./MainPage";
 import { SortState } from "./MainPage";
 import * as ApiService from "./bookAPI";
+import { EditableText } from "./EditableText";
 
 // Pass the state controlling function so it can be updated from this component and triggered
 // for backend get
@@ -13,7 +14,7 @@ type Props = {
   onImageClick: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-type EditableColumns = "title" | "author_last" | "author_first";
+export type EditableColumns = "title" | "author_last" | "author_first";
 export type CellEditingData = {
   id: number;
   column: EditableColumns;
@@ -65,6 +66,16 @@ export function BookTable({
         error,
       );
     }
+  };
+
+  const handleEditedData = async (newValue: string): Promise<boolean> => {
+    try {
+      const result = await ApiService.editBook({
+        id: bookId,
+        column: columnToEdit,
+        newData: newValue,
+      });
+    } catch (error) {}
   };
 
   return (
@@ -125,11 +136,24 @@ export function BookTable({
                 <p>No image uploaded</p>
               )}
             </td>
-            <td>{book.title}</td>
-            <td>{book.authorLast}</td>
-            <td>{book.authorFirst}</td>
-            <td>{book.genre}</td>
-            <td>{book.numCopies}</td>
+            <td>
+              <EditableText
+                currentData={book.title}
+                onFinishedEditing={handleEditedData}
+              ></EditableText>
+            </td>
+            <td>
+              <EditableText currentData={book.authorLast} />
+            </td>
+            <td>
+              <EditableText currentData={book.authorFirst} />
+            </td>
+            <td>
+              <p>{book.genre}</p>
+            </td>
+            <td>
+              <p>{book.numCopies} </p>
+            </td>
             <td>
               <button
                 className="tableDeleteButton"

@@ -139,7 +139,6 @@ export function MainPage() {
           <img src={selectedImage}></img>
         </div>
       )}
-      <EditableText></EditableText>
     </div>
   );
 }
