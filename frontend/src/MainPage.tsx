@@ -55,6 +55,19 @@ export function MainPage() {
     setModalOpen(true);
   }
 
+  useEffect(() => {
+    const initialLoad = async () => {
+      try {
+        const initBooks = await ApiService.getBooks();
+        setBooks(initBooks);
+      } catch (error) {
+        console.error("Cannot retrieve list of books from database.", error);
+      }
+    };
+
+    initialLoad();
+  }, []);
+
   /**
    * POST book to the SQL database.
    * @param newBook The Book object that will be added to the database.
