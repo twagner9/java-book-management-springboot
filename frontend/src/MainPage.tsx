@@ -60,27 +60,12 @@ export function MainPage() {
    * @param newBook The Book object that will be added to the database.
    */
   const handleBookAdded = async (newBook: Book) => {
-    // fetch("/api/books", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(newBook),
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) throw new Error("Failed to add book to database.");
-    //     return response.json();
-    //   })
-    //   .then((idNum) => {
-    //     newBook.id = idNum;
-    //     onBookChange((prevBooks: Book[]) => [...prevBooks, newBook]);
-    //     // setModalOpen(false);
-    //   })
-    //   .catch((error) => {
-    //     alert("Error adding book to the database/GUI");
-    //     console.error(error);
-    //   });
     try {
-      const result = await ApiService.getBooks();
-      setBooks(result);
+      const result = await ApiService.addBook(newBook);
+      newBook.id = result;
+      setBooks((prevBooks) => [...prevBooks, newBook]);
+      console.log("Successfully updated books state");
+      closeModal();
     } catch (error) {
       console.error(
         "Error attempting to add book data to the database:",
@@ -88,16 +73,6 @@ export function MainPage() {
       );
     }
   };
-
-  function editText(selectedText: string): void {}
-
-  function updateDatabase(column: string): void {
-    // TODO: update the appropriate column based on the name passed
-    if (column == "title") {
-    } else if (column === "author_last") {
-    } else if (column === "author_first") {
-    }
-  }
 
   function handleBookEdited(id: number, updatedText: string) {
     fetch("/api/books", {

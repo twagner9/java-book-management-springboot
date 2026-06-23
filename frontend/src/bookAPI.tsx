@@ -3,6 +3,7 @@ import { CellEditingData } from "./BookTable";
 import { SortState } from "./MainPage";
 
 export async function getBooks(): Promise<Book[]> {
+  console.log("Triggered fetch of all books.");
   const response = await fetch("/api/books");
 
   if (!response.ok) {
@@ -32,6 +33,7 @@ export async function getSortedBooks(sorting: SortState): Promise<Book[]> {
 }
 
 export async function addBook(book: Book): Promise<number> {
+  console.log("Triggered async function addBook");
   const response = await fetch("/api/books", {
     method: "POST",
     headers: {
@@ -66,6 +68,7 @@ export async function editBook(data: CellEditingData) {
 }
 
 export async function deleteBook(id: number) {
+  console.log("Triggered deletion of book.");
   const response = await fetch(`/api/books/delete/${id}`, {
     method: "DELETE",
   });

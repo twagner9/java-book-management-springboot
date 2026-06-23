@@ -1,2 +1,5 @@
 PostgreSQL commands to know:
-psql -U bookuser -d bookdb -- Access the project database as bookuser, who should be the owner of the database, and is the user the application uses for CRUD.
+psql -U bookuser -d bookdb -- Access the bookdb database as bookuser, who should be the owner of the database, and is the user the application uses for CRUD.
+GRANT ALL PRIVILEGES ON DATABASE bookdb TO bookuser;
+CREATE DATABASE db_name;
+ALTER USER bookuser WITH PASSWORD 'testpassword';
