@@ -59,7 +59,10 @@ export async function editBook(data: CellEditingData) {
   const endpoint = editingEndpoints[data.column];
   const response = await fetch(`/api/books/${endpoint}/${data.id}`, {
     method: "PUT",
-    body: data.newData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ value: data.newData }),
   });
 
   if (!response.ok) {

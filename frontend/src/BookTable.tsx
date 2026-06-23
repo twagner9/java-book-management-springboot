@@ -68,14 +68,36 @@ export function BookTable({
     }
   };
 
-  const handleEditedData = async (newValue: string): Promise<boolean> => {
+  const handleEditedData = async (
+    bookId: number,
+    columnToEdit: EditableColumns,
+    newValue: string,
+  ): Promise<boolean> => {
     try {
-      const result = await ApiService.editBook({
+      await ApiService.editBook({
         id: bookId,
         column: columnToEdit,
         newData: newValue,
       });
-    } catch (error) {}
+
+      onBookChange((prevBooks) =>
+        prevBooks.map((book) =>
+          book.id === bookId
+            ? {
+                ...book,
+                [columnToEdit]: newValue,
+              }
+            : book,
+        ),
+      );
+      return true;
+    } catch (error) {
+      console.error(
+        `Failed to update column ${columnToEdit} to ${newValue}:`,
+        error,
+      );
+      return false;
+    }
   };
 
   return (
@@ -139,14 +161,26 @@ export function BookTable({
             <td>
               <EditableText
                 currentData={book.title}
-                onFinishedEditing={handleEditedData}
-              ></EditableText>
+                onFinishedEditing={(newValue) =>
+                  handleEditedData(book.id, "title", newValue)
+                }
+              />
             </td>
             <td>
-              <EditableText currentData={book.authorLast} />
+              <EditableText
+                currentData={book.authorLast}
+                onFinishedEditing={(newValue) =>
+                  handleEditedData(book.id, "author_last", newValue)
+                }
+              />
             </td>
             <td>
-              <EditableText currentData={book.authorFirst} />
+              <EditableText
+                currentData={book.authorFirst}
+                onFinishedEditing={(newValue) =>
+                  handleEditedData(book.id, "author_first", newValue)
+                }
+              />
             </td>
             <td>
               <p>{book.genre}</p>

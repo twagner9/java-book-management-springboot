@@ -25,7 +25,11 @@ import com.twag.book_management_app.repository.BookDatabase;
 public class BookController {
     private final BookDatabase bookDb;
 
-    @Autowired
+    // record keyword creates immutable data-holder classes without having to write code for the entire class.
+    // So this creates an edit request which will have a member called value, and a function value that returns
+    // the specific data member.
+    public record EditRequest(String value) {}
+
     public BookController(BookDatabase bookRepository) {
         this.bookDb = bookRepository;
     }
@@ -51,23 +55,23 @@ public class BookController {
 
     // Always tag data that must be sent with the function with RequestParam
     @PutMapping("/books/updateTitle/{id}")
-    public ResponseEntity<Integer> updateTitle(@PathVariable Integer id, @RequestParam String newTitle) {
+    public ResponseEntity<Integer> updateTitle(@PathVariable Integer id, @RequestBody EditRequest newTitle) {
         System.out.println("Updating book title to: " + newTitle);
-        int updatedId = bookDb.updateTitle(id, newTitle);
+        int updatedId = bookDb.updateTitle(id, newTitle.value());
         return ResponseEntity.status(HttpStatus.OK).body(updatedId);
     }
 
     @PutMapping("/books/updateAuthorLast/{id}")
-    public ResponseEntity<Integer> updateAuthorLast(@PathVariable Integer id, @RequestParam String newLast) {
+    public ResponseEntity<Integer> updateAuthorLast(@PathVariable Integer id, @RequestBody EditRequest newLast) {
         System.out.println("Updating book author_last to: " + newLast);
-        int updatedId = bookDb.updateAuthorLast(id, newLast);
+        int updatedId = bookDb.updateAuthorLast(id, newLast.value());
         return ResponseEntity.status(HttpStatus.OK).body(updatedId);
     }
 
     @PutMapping("/books/updateAuthorFirst/{id}")
-    public ResponseEntity<Integer> updateFirstName(@PathVariable Integer id, @RequestParam String newFirst) {
+    public ResponseEntity<Integer> updateFirstName(@PathVariable Integer id, @RequestBody EditRequest newFirst) {
         System.out.println("Updating book author_first to: " + newFirst);
-        int updatedId = bookDb.updateauthorFirst(id, newFirst);
+        int updatedId = bookDb.updateauthorFirst(id, newFirst.value());
         return ResponseEntity.status(HttpStatus.OK).body(updatedId);
     }
 

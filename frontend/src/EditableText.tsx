@@ -3,7 +3,7 @@ import { EditableColumns } from "./BookTable";
 
 type EditableTextProps = {
   currentData: string;
-  onFinishedEditing: (newValue: string) => boolean;
+  onFinishedEditing: (newValue: string) => Promise<boolean>;
   // onUpdateText: () => string;
   // className?: string;
 };
@@ -44,16 +44,19 @@ export function EditableText({
     setEditing(true);
   };
 
-  function triggerSaveAndUpdateDatabase() {
-    const successfulDatabaseUpdate = onFinishedEditing(currentText);
-    if (successfulDatabaseUpdate) setSavedText(currentText);
-    else
+  const triggerSaveAndUpdateDatabase = async () => {
+    const oldText = savedText;
+    const successfulDatabaseUpdate = await onFinishedEditing(currentText);
+    if (successfulDatabaseUpdate) {
+      setSavedText(currentText);
+    } else {
       console.error(
         `Failed to transmit update to database so table will not be updated with ${currentText}`,
       );
+      setSavedText(oldText);
+    }
     setEditing(false);
-    // TODO: trigger DB update -- this should be passed from the parent as a prop, and triggered when save occurs
-  }
+  };
 
   return (
     <div>
