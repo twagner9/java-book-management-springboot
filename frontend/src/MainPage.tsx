@@ -16,7 +16,7 @@ export type Book = {
   numCopies: number;
 };
 
-type SortColumn = "title" | "author_last" | "genre";
+type SortColumn = "title" | "author_last" | "genre"; // For now, the only sortable columns are title, author's last name, and genre
 
 export type SortState = {
   column: SortColumn;

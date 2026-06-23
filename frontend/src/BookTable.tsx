@@ -8,9 +8,9 @@ import * as ApiService from "./bookAPI";
 type Props = {
   bookData: Book[]; // READ/WRITE -- writeable for deletion
   sortState: SortState; // READ/WRITE
-  onBookChange: (books: Book[]) => void;
-  onSortChange: (s: SortState) => void;
-  onImageClick: (path: string) => void;
+  onBookChange: React.Dispatch<React.SetStateAction<Book[]>>;
+  onSortChange: React.Dispatch<React.SetStateAction<SortState>>;
+  onImageClick: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 type EditableColumns = "title" | "author_last" | "author_first";
@@ -44,11 +44,15 @@ export function BookTable({
   }, [bookData]); // the books state is in the dependency array, so this effect will execute each time books is updated
   // TODO: more yet to do on this function
   const handleDeleteClick = async (bookId: number) => {
+    // Delete in backend
     try {
       await ApiService.deleteBook(bookId);
     } catch (error) {
       console.error("Error deleting book from database:", error);
     }
+
+    // Delete the row from the user's view
+    onBookChange((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
   };
 
   const handleSort = async (sortingInfo: SortState) => {
