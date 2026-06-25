@@ -35,12 +35,10 @@ export function BookInputs(props: { onBookAdded: (book: Book) => void }) {
    */
   const changeNumCopies = (numCopiesInterval: number) => {
     setBook((b) => {
-      console.log("There is an attempt to update the book state");
       const updatedCopies = Math.min(
         99,
         Math.max(1, b.numCopies + numCopiesInterval),
       );
-      console.log("updatedCopies:", updatedCopies);
       return { ...b, numCopies: updatedCopies };
     });
   };
@@ -51,7 +49,6 @@ export function BookInputs(props: { onBookAdded: (book: Book) => void }) {
    * @param num 1 or -1, based on whether the increment or decrement button is clicked, respectively.
    */
   const handleMouseDown = (num: number) => {
-    console.log("handleMouseDown is being called.");
     changeNumCopies(num);
     intervalRef.current = window.setInterval(() => {
       changeNumCopies(num);
@@ -62,7 +59,6 @@ export function BookInputs(props: { onBookAdded: (book: Book) => void }) {
    * Sets the interval reference to 0; still a bit unclear about what refererences do in React.
    */
   const clearIntervalRef = () => {
-    console.log("clearIntervalRef is being called on mouseUp/mouseLeave");
     if (intervalRef.current !== null) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -72,7 +68,6 @@ export function BookInputs(props: { onBookAdded: (book: Book) => void }) {
   async function handleSubmitClick() {
     // First get the image name, then
     // Create book
-    console.log(newBook);
     props.onBookAdded(newBook);
     // // Generate a JSON transmission of the data from the frontend to the /api/books endpoint
     // try {

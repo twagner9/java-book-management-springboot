@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Book } from "./MainPage";
+import { SortableColumn } from "./MainPage";
 import { SortState } from "./MainPage";
 import * as ApiService from "./bookAPI";
 import { EditableText } from "./EditableText";
@@ -56,13 +57,21 @@ export function BookTable({
     onBookChange((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
   };
 
-  const handleSort = async (sortingInfo: SortState) => {
+  const handleSort = async (columnToSort: SortableColumn) => {
+    // 1. See if a new column was selected; if so, by default sort by ascending. Otherwise, invert current sort order.
+    const updatedSortState: SortState = {
+      column: columnToSort,
+      order: columnToSort === sortState.column ? !sortState.order : true,
+    };
+
+    // 2. Use the frontend API service to get the sorted books.
     try {
-      const result = await ApiService.getSortedBooks(sortingInfo);
+      const result = await ApiService.getSortedBooks(updatedSortState);
       onBookChange(result);
+      onSortChange(updatedSortState);
     } catch (error) {
       console.error(
-        `Sorting of books based on column ${sortingInfo.column} failed:`,
+        `Sorting of books based on column ${sortState.column} failed:`,
         error,
       );
     }
@@ -105,38 +114,14 @@ export function BookTable({
       <thead>
         <tr>
           <th>Image</th>
-          <th
-            className="sortHeader"
-            onClick={() =>
-              handleSort({
-                column: "title",
-                order: !sortState.order, // Negate to toggle order between asc and desc
-              })
-            }
-          >
+          <th className="sortHeader" onClick={() => handleSort("title")}>
             Title
           </th>
-          <th
-            className="sortHeader"
-            onClick={() =>
-              handleSort({
-                column: "author_last",
-                order: !sortState.order,
-              })
-            }
-          >
+          <th className="sortHeader" onClick={() => handleSort("author_last")}>
             Last
           </th>
           <th>First</th>
-          <th
-            className="sortHeader"
-            onClick={() =>
-              handleSort({
-                column: "genre",
-                order: !sortState.order,
-              })
-            }
-          >
+          <th className="sortHeader" onClick={() => handleSort("genre")}>
             Genre
           </th>
           <th>Number of Copies</th>

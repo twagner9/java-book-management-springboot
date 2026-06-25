@@ -16,10 +16,10 @@ export type Book = {
   numCopies: number;
 };
 
-type SortColumn = "title" | "author_last" | "genre"; // For now, the only sortable columns are title, author's last name, and genre
+export type SortableColumn = "title" | "author_last" | "genre"; // For now, the only sortable columns are title, author's last name, and genre
 
 export type SortState = {
-  column: SortColumn;
+  column: SortableColumn;
   order: boolean;
 };
 export type TableOperation =
@@ -77,7 +77,6 @@ export function MainPage() {
       const result = await ApiService.addBook(newBook);
       newBook.id = result;
       setBooks((prevBooks) => [...prevBooks, newBook]);
-      console.log("Successfully updated books state");
       closeModal();
     } catch (error) {
       console.error(
