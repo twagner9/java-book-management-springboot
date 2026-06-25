@@ -31,20 +31,30 @@ export function BookTable({
 }: Props) {
   const [safeImages, setSafeImages] = useState<Record<string, string>>({}); // loads image URLs asynchronously so they can be used in JSX
 
+  /**
+   * Load images from the user's filesystem using the file path saved in the database.
+   */
   useEffect(() => {
     async function loadSafeImages() {
       // Creates hashmap associating the book ID with the safe URL; then, in JSX below, I can directly access the correct
       // image path based on the book ID number
       const mapping: Record<string, string> = {};
       for (const book of bookData) {
-        if (book.imagePath !== "")
-          mapping[book.id] = window.electronAPI.toSafeFile(book.imagePath);
+        if (book.imagePath !== null) {
+          mapping[book.id] = await window.electronAPI.toSafeFile(
+            book.imagePath,
+          );
+        }
       }
       setSafeImages(mapping);
     }
     loadSafeImages();
   }, [bookData]); // the books state is in the dependency array, so this effect will execute each time books is updated
-  // TODO: more yet to do on this function
+
+  /**
+   * Perform a database deletion of the book and update the state of the books array.
+   * @param bookId ID number of book being deleted.
+   */
   const handleDeleteClick = async (bookId: number) => {
     // Delete in backend
     try {
@@ -57,6 +67,11 @@ export function BookTable({
     onBookChange((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
   };
 
+  /**
+   * Sorts all books in the table by the selected column. By default, the sort will occur in ascending
+   * order on first click, and the second click will sort by descending.
+   * @param columnToSort The specific column that all books will be sorted by.
+   */
   const handleSort = async (columnToSort: SortableColumn) => {
     // 1. See if a new column was selected; if so, by default sort by ascending. Otherwise, invert current sort order.
     const updatedSortState: SortState = {
@@ -77,6 +92,13 @@ export function BookTable({
     }
   };
 
+  /**
+   *
+   * @param bookId ID of book being updated.
+   * @param columnToEdit The specific Book field being updated.
+   * @param newValue The value to which the columnToEdit will be changed.
+   * @returns True when the edit succeeds, false when it fails.
+   */
   const handleEditedData = async (
     bookId: number,
     columnToEdit: EditableColumns,
@@ -105,8 +127,8 @@ export function BookTable({
         `Failed to update column ${columnToEdit} to ${newValue}:`,
         error,
       );
-      return false;
     }
+    return false;
   };
 
   return (
@@ -135,7 +157,7 @@ export function BookTable({
                 <img
                   className="tableImage"
                   key={book.id}
-                  src={safeImages[book.id] ? safeImages[book.id] : ""}
+                  src={safeImages[book.id] ? safeImages[book.id] : undefined}
                   alt={`Book cover to: ${window.electronAPI.toSafeFile(book.imagePath)}`}
                   onClick={() => onImageClick(safeImages[book.id])}
                 ></img>

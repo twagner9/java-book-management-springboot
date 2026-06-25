@@ -8,8 +8,8 @@ export function ImageUpload({
   setImagePath: (val: string) => void;
 }) {
   // useRef hook takes generic, which must have type specified so compiler knows what to expect
-  const [filename, setFilename] = useState("");
-  const [uploadError, setUploadError] = useState("");
+  const [filename, setFilename] = useState<string | null>("");
+  const [uploadError, setUploadError] = useState<string>("");
   // const uploadRef = useRef<HTMLInputElement>(null);
 
   const handleSelectFile = async () => {
@@ -29,7 +29,7 @@ export function ImageUpload({
       }
     } else {
       setUploadError("The image could not be uploaded; try again.");
-      setFilename("");
+      setFilename(null);
     }
     // TODO: now have to manually check the file extension and type
     console.log("Select file path: ", filePath);
