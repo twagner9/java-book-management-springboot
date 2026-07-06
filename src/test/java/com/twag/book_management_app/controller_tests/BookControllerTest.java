@@ -21,6 +21,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.twag.book_management_app.controller.BookController.EditRequest;
 import com.twag.book_management_app.model.Book;
 
 import io.restassured.RestAssured;
@@ -178,11 +179,11 @@ public class BookControllerTest {
 		// Insert book list and get IDs from the database for testing the book update
 		ArrayList<Integer> ids = loadBooksForTest(bookList);
 
-        // Test updating title
-        final String newTitle = "Updated Title";
+		// Test updating title
+		final String newTitle = "Updated Title";
 		RestAssured.given()
 				.contentType(ContentType.JSON)
-				.queryParam("newTitle", newTitle)
+				.body(new EditRequest(newTitle))
 				.when()
 				.put("/api/books/updateTitle/{id}", ids.get(0))
 				.then()
@@ -198,41 +199,41 @@ public class BookControllerTest {
 				.path("title");
 		assertEquals(newTitle, titleToCheck);
 
-        // Test updating author last name
-        final String newLastName = "UpdatedLastName";
-        RestAssured.given()
-            .contentType(ContentType.JSON)
-            .queryParam("newLast", newLastName)
-            .when()
-            .put("/api/books/updateAuthorLast/{id}", ids.get(1))
-            .then()
-            .statusCode(200);
+		// Test updating author last name
+		final String newLastName = "UpdatedLastName";
+		RestAssured.given()
+				.contentType(ContentType.JSON)
+				.body(new EditRequest(newLastName))
+				.when()
+				.put("/api/books/updateAuthorLast/{id}", ids.get(1))
+				.then()
+				.statusCode(200);
 
-        String authorLastToCheck = RestAssured.given()
-            .contentType(ContentType.JSON)
-            .get("/api/books/get/{id}", ids.get(1))
-            .then()
-            .statusCode(200)
-            .extract()
-            .path("authorLast");
+		String authorLastToCheck = RestAssured.given()
+				.contentType(ContentType.JSON)
+				.get("/api/books/get/{id}", ids.get(1))
+				.then()
+				.statusCode(200)
+				.extract()
+				.path("authorLast");
 		assertEquals(newLastName, authorLastToCheck);
 
-        final String newFirstName = "UpdatedFirstName";
-        RestAssured.given()
-            .contentType(ContentType.JSON)
-            .queryParam("newFirst", newFirstName)
-            .when()
-            .put("/api/books/updateAuthorFirst/{id}", ids.get(1))
-            .then()
-            .statusCode(200);
+		final String newFirstName = "UpdatedFirstName";
+		RestAssured.given()
+				.contentType(ContentType.JSON)
+				.body(new EditRequest(newFirstName))
+				.when()
+				.put("/api/books/updateAuthorFirst/{id}", ids.get(1))
+				.then()
+				.statusCode(200);
 
-        String authorFirstToCheck = RestAssured.given()
-            .contentType(ContentType.JSON)
-            .get("/api/books/get/{id}", ids.get(1))
-            .then()
-            .statusCode(200)
-            .extract()
-            .path("authorFirst");
+		String authorFirstToCheck = RestAssured.given()
+				.contentType(ContentType.JSON)
+				.get("/api/books/get/{id}", ids.get(1))
+				.then()
+				.statusCode(200)
+				.extract()
+				.path("authorFirst");
 		assertEquals(newFirstName, authorFirstToCheck);
 	}
 }
