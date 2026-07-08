@@ -1,13 +1,16 @@
 package com.twag.book_management_app.controller_tests;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.theInstance;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.WebProperties.Resources.Chain.Strategy.Content;
 // import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -170,6 +173,8 @@ public class BookControllerTest {
 		// .andExpect(jsonPath("$").isEmpty());
 	}
 
+	// TODO: Add the books and then update the test to simply pull the book and test the various updates instead of
+	// repeatedly using the API unnecessarily
 	@Test
 	public void testBookUpdate() throws Exception {
 		List<Book> bookList = List.of(
@@ -235,5 +240,23 @@ public class BookControllerTest {
 				.extract()
 				.path("authorFirst");
 		assertEquals(newFirstName, authorFirstToCheck);
+
+		final String newImagePath = "/test/path/to/img";
+		RestAssured.given()
+			.contentType(ContentType.JSON)
+			.body(new EditRequest(newImagePath))
+			.when()
+			.put("/api/books/updateImagePath/{id}", ids.get(1))
+			.then()
+			.statusCode(200);
+		
+			String updatedPathCheck = RestAssured.given()
+			.contentType(ContentType.JSON)
+			.get("/api/books/get/{id}", ids.get(1))
+			.then()
+			.statusCode(200)
+			.extract()
+			.path("imagePath");
+		assertEquals(newImagePath, updatedPathCheck);
 	}
 }

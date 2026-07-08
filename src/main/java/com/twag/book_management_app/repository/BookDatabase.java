@@ -224,16 +224,28 @@ public class BookDatabase {
 		return jdbc.update("UPDATE all_books SET author_last = ? WHERE id = ?", updatedAuthorLast, id);
 	}
 
-    	/**
+	/**
 	 * Update the database's stored value at the given ID
 	 * 
 	 * @param id
 	 * @param updatedText
 	 * @return
 	 */
-	public int updateauthorFirst(int id, String updatedAuthorFirst) {
+	public int updateAuthorFirst(int id, String updatedAuthorFirst) {
 		return jdbc.update("UPDATE all_books SET author_first = ? WHERE id = ?", updatedAuthorFirst, id);
 	}
+
+	/**
+	 * Update the database's stored value at the given ID
+	 * 
+	 * @param id
+	 * @param updatedText
+	 * @return
+	 */
+	public int updateImagePath(int id, String updatedImagePath) {
+		return jdbc.update("UPDATE all_books SET image = ? WHERE id = ?", updatedImagePath, id);
+	}
+	
 
 	// /**
 	// * Execute the passed SQL query on the database.

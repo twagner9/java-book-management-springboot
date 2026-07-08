@@ -15,7 +15,11 @@ type Props = {
   onImageClick: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-export type EditableColumns = "title" | "author_last" | "author_first";
+export type EditableColumns =
+  | "title"
+  | "author_last"
+  | "author_first"
+  | "imagePath";
 export type CellEditingData = {
   id: number;
   column: EditableColumns;
@@ -93,6 +97,39 @@ export function BookTable({
   };
 
   /**
+   * Open image selection dialog for
+   */
+  const handleImageRightClick = async (
+    e: React.MouseEvent<HTMLDivElement>,
+    b: Book,
+  ) => {
+    // 0. Prevent default behavior of right click
+    e.preventDefault();
+    // 1. Register mouse right click. ALready done by using onContextMenu for the element in question
+
+    // 2. Trigger opening the dialog for selecting an image
+    const filePath: string | null = await window.electronAPI.openFileDialog();
+    if (filePath) {
+      if (
+        !filePath.endsWith(".jpg") &&
+        !filePath.endsWith(".jpeg") &&
+        !filePath.endsWith(".png")
+      ) {
+        alert("Must upload an image as .jpg, .jpeg, or .png.");
+      } else {
+        // Check if this filename differs from current. If it does, then modify what's in the database, and what's
+        // currently loaded into the table.
+        if (b.imagePath !== filePath) {
+          handleEditedData(b.id, "imagePath", filePath);
+        }
+      }
+    } else {
+      console.log("No image was selected; making no change.");
+    }
+    // 3. Save the path and update the database for this book with said image. Should trigger automatic re-render and the image should just appear
+  };
+
+  /**
    *
    * @param bookId ID of book being updated.
    * @param columnToEdit The specific Book field being updated.
@@ -160,9 +197,12 @@ export function BookTable({
                   src={safeImages[book.id] ? safeImages[book.id] : undefined}
                   alt={`Book cover to: ${window.electronAPI.toSafeFile(book.imagePath)}`}
                   onClick={() => onImageClick(safeImages[book.id])}
+                  onContextMenu={(e) => handleImageRightClick(e, book)}
                 ></img>
               ) : (
-                <p>No image uploaded</p>
+                <p onContextMenu={(e) => handleImageRightClick(e, book)}>
+                  No image uploaded
+                </p>
               )}
             </td>
             <td>

@@ -37,9 +37,9 @@ public class BookDatabaseTests {
     @Value("${spring.datasource.password")
     String password = "testpassword";
     private final BookDatabase db;
-    private Book sampleBook1 = new Book("Hello", "World", "Help", "Fantasy", 1);
-	private Book sampleBook2 = new Book("Zero", "Help", "Came", "Non-fiction", 100);
-	private Book sampleBook3 = new Book("Ascent", "Definitely", "Plagiarized", "Romance", 4);
+		private Book sampleBook1 = new Book("Hello", "World", "Help", "Fantasy", 1);
+		private Book sampleBook2 = new Book("Zero", "Help", "Came", "Non-fiction", 100);
+		private Book sampleBook3 = new Book("Ascent", "Definitely", "Plagiarized", "Romance", 4);
 
     @Autowired
     BookDatabaseTests(BookDatabase db) {
@@ -89,12 +89,24 @@ public class BookDatabaseTests {
 
 	@Test
 	boolean testDatabaseUpdate() {
-		db.insertAndReturnId(sampleBook1);
-		// 1. Test title column
-		
-		// 2. Test author_last column
+		int bookId = db.insertAndReturnId(sampleBook1);
+		// 1. Do all updates
+		final String newTitle = "new title";
+		final String newAuthorLast = "updated last name";
+		final String newAuthorFirst = "updated first name";
+		final String newImagePath = "/updated/image";
 
-		// 3. Test author_first column
+		db.updateTitle(bookId, newTitle);
+		db.updateAuthorLast(bookId, newAuthorLast);
+		db.updateAuthorFirst(bookId, newAuthorFirst);
+		db.updateImagePath(bookId, newImagePath);
+
+		// 2. Test all book params that can be updated
+		Book bookWithUpdates = db.getBookById(bookId);
+		assertEquals(bookWithUpdates.getTitle(), newTitle);
+		assertEquals(bookWithUpdates.getAuthorLast(), newAuthorLast);
+		assertEquals(bookWithUpdates.getAuthorFirst(), newAuthorFirst);
+		assertEquals(bookWithUpdates.getImagePath(), newImagePath);
 
 		return true;
 	}

@@ -54,6 +54,7 @@ export async function editBook(data: CellEditingData) {
     title: "updateTitle",
     author_last: "updateAuthorLast",
     author_first: "updateAuthorFirst",
+    imagePath: "updateImagePath",
   };
   const endpoint = editingEndpoints[data.column];
   const response = await fetch(`/api/books/${endpoint}/${data.id}`, {

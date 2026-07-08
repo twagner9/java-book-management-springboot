@@ -56,22 +56,25 @@ public class BookController {
     // Always tag data that must be sent with the function with RequestParam
     @PutMapping("/books/updateTitle/{id}")
     public ResponseEntity<Integer> updateTitle(@PathVariable Integer id, @RequestBody EditRequest newTitle) {
-        System.out.println("Updating book title to: " + newTitle);
         int updatedId = bookDb.updateTitle(id, newTitle.value());
         return ResponseEntity.status(HttpStatus.OK).body(updatedId);
     }
 
     @PutMapping("/books/updateAuthorLast/{id}")
     public ResponseEntity<Integer> updateAuthorLast(@PathVariable Integer id, @RequestBody EditRequest newLast) {
-        System.out.println("Updating book author_last to: " + newLast);
         int updatedId = bookDb.updateAuthorLast(id, newLast.value());
         return ResponseEntity.status(HttpStatus.OK).body(updatedId);
     }
 
     @PutMapping("/books/updateAuthorFirst/{id}")
     public ResponseEntity<Integer> updateFirstName(@PathVariable Integer id, @RequestBody EditRequest newFirst) {
-        System.out.println("Updating book author_first to: " + newFirst);
-        int updatedId = bookDb.updateauthorFirst(id, newFirst.value());
+        int updatedId = bookDb.updateAuthorFirst(id, newFirst.value());
+        return ResponseEntity.status(HttpStatus.OK).body(updatedId);
+    }
+
+		@PutMapping("/books/updateImagePath/{id}")
+    public ResponseEntity<Integer> updateImagePath(@PathVariable Integer id, @RequestBody EditRequest newImagePath) {
+        int updatedId = bookDb.updateImagePath(id, newImagePath.value());
         return ResponseEntity.status(HttpStatus.OK).body(updatedId);
     }
 
