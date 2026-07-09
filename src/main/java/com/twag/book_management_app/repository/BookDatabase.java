@@ -1,6 +1,7 @@
 package com.twag.book_management_app.repository;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -103,6 +104,11 @@ public class BookDatabase {
 
 	public Book getBookById(int idVal) {
 		return jdbc.queryForObject("SELECT * FROM all_books WHERE id = ?", rowMapper, idVal);
+	}
+
+	public List<Book> getBookPage(int offset, int size, String order) {
+		// return jdbc.query("SELECT * FROM all_books WHERE ")
+		return new ArrayList<Book>();
 	}
 
 	/**

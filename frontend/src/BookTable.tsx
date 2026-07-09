@@ -34,6 +34,13 @@ export function BookTable({
   onImageClick,
 }: Props) {
   const [safeImages, setSafeImages] = useState<Record<string, string>>({}); // loads image URLs asynchronously so they can be used in JSX
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [booksPerPage, setBooksPerPage] = useState<number>(5); // TODO: add a dropdown to allow user selection of num per page
+
+  const offset = currentPage * booksPerPage;
+  const totalNumPages = Math.ceil(bookData.length / booksPerPage);
+  const prevDisabled = currentPage === 0;
+  const nextDisabled = currentPage >= totalNumPages - 1;
 
   /**
    * Load images from the user's filesystem using the file path saved in the database.
@@ -119,7 +126,7 @@ export function BookTable({
       } else {
         // Check if this filename differs from current. If it does, then modify what's in the database, and what's
         // currently loaded into the table.
-        if (b.imagePath !== filePath) {
+        if (b.imagePath !== filePath && filePath.length !== 0) {
           handleEditedData(b.id, "imagePath", filePath);
         }
       }
@@ -168,84 +175,122 @@ export function BookTable({
     return false;
   };
 
+  const updateBooksPerPage = async (
+    evt: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const stringVal = evt.target.value;
+    const numericVal = Number(stringVal);
+    if (numericVal !== booksPerPage) setBooksPerPage(numericVal);
+  };
+
   return (
-    <table className="book-table">
-      <thead>
-        <tr>
-          <th>Image</th>
-          <th className="sortHeader" onClick={() => handleSort("title")}>
-            Title
-          </th>
-          <th className="sortHeader" onClick={() => handleSort("author_last")}>
-            Last
-          </th>
-          <th>First</th>
-          <th className="sortHeader" onClick={() => handleSort("genre")}>
-            Genre
-          </th>
-          <th>Number of Copies</th>
-        </tr>
-      </thead>
-      <tbody>
-        {bookData.map((book) => (
-          <tr key={book.id}>
-            <td>
-              {book.imagePath ? (
-                <img
-                  className="tableImage"
-                  key={book.id}
-                  src={safeImages[book.id] ? safeImages[book.id] : undefined}
-                  alt={`Book cover to: ${window.electronAPI.toSafeFile(book.imagePath)}`}
-                  onClick={() => onImageClick(safeImages[book.id])}
-                  onContextMenu={(e) => handleImageRightClick(e, book)}
-                ></img>
-              ) : (
-                <p onContextMenu={(e) => handleImageRightClick(e, book)}>
-                  No image uploaded
-                </p>
-              )}
-            </td>
-            <td>
-              <EditableText
-                currentData={book.title}
-                onFinishedEditing={(newValue) =>
-                  handleEditedData(book.id, "title", newValue)
-                }
-              />
-            </td>
-            <td>
-              <EditableText
-                currentData={book.authorLast}
-                onFinishedEditing={(newValue) =>
-                  handleEditedData(book.id, "author_last", newValue)
-                }
-              />
-            </td>
-            <td>
-              <EditableText
-                currentData={book.authorFirst}
-                onFinishedEditing={(newValue) =>
-                  handleEditedData(book.id, "author_first", newValue)
-                }
-              />
-            </td>
-            <td>
-              <p>{book.genre}</p>
-            </td>
-            <td>
-              <p>{book.numCopies} </p>
-            </td>
-            <td>
-              <button
-                className="tableDeleteButton"
-                onClick={() => handleDeleteClick(book.id)}
-              >
-                Delete
-              </button>
-            </td>
+    <div>
+      <label>Books per page: </label>
+      <select
+        id="num-books-displayed-select"
+        value={booksPerPage}
+        onChange={updateBooksPerPage}
+      >
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
+      <table className="book-table">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th className="sortHeader" onClick={() => handleSort("title")}>
+              Title
+            </th>
+            <th
+              className="sortHeader"
+              onClick={() => handleSort("author_last")}
+            >
+              Last
+            </th>
+            <th>First</th>
+            <th className="sortHeader" onClick={() => handleSort("genre")}>
+              Genre
+            </th>
+            <th>Number of Copies</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {bookData.slice(offset, offset + booksPerPage).map((book) => (
+            <tr key={book.id}>
+              <td>
+                {book.imagePath ? (
+                  <img
+                    className="tableImage"
+                    key={book.id}
+                    src={safeImages[book.id] ? safeImages[book.id] : undefined}
+                    alt={`Book cover to: ${window.electronAPI.toSafeFile(book.imagePath)}`}
+                    onClick={() => onImageClick(safeImages[book.id])}
+                    onContextMenu={(e) => handleImageRightClick(e, book)}
+                  ></img>
+                ) : (
+                  <p onContextMenu={(e) => handleImageRightClick(e, book)}>
+                    No image uploaded
+                  </p>
+                )}
+              </td>
+              <td>
+                <EditableText
+                  currentData={book.title}
+                  onFinishedEditing={(newValue) =>
+                    handleEditedData(book.id, "title", newValue)
+                  }
+                />
+              </td>
+              <td>
+                <EditableText
+                  currentData={book.authorLast}
+                  onFinishedEditing={(newValue) =>
+                    handleEditedData(book.id, "author_last", newValue)
+                  }
+                />
+              </td>
+              <td>
+                <EditableText
+                  currentData={book.authorFirst}
+                  onFinishedEditing={(newValue) =>
+                    handleEditedData(book.id, "author_first", newValue)
+                  }
+                />
+              </td>
+              <td>
+                <p>{book.genre}</p>
+              </td>
+              <td>
+                <p>{book.numCopies} </p>
+              </td>
+              <td>
+                <button
+                  className="tableDeleteButton"
+                  onClick={() => handleDeleteClick(book.id)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div>
+        <button
+          disabled={prevDisabled}
+          onClick={() => setCurrentPage((p) => p - 1)}
+        >
+          Prev
+        </button>
+        <button
+          disabled={nextDisabled}
+          onClick={() => setCurrentPage((p) => p + 1)}
+        >
+          Next
+        </button>
+      </div>
+    </div>
   );
 }

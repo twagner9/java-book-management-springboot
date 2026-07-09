@@ -46,6 +46,11 @@ public class BookController {
         return bookDb.getBookById(id);
     }
 
+		@GetMapping("/books/get/loadPage/{offset}/{size}")
+		public List<Book> getBookPage(int offset, int size, String order) {
+			return bookDb.getBookPage(offset, size, order);
+		}
+
     @PostMapping("/books")
     public ResponseEntity<Integer> insert(@RequestBody Book newBook) {
         System.out.println("Executing addition of newBook...");
