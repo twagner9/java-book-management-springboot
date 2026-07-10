@@ -63,6 +63,31 @@ code {
   font-size: 16px;
 }
 
+.books-per-page-items {
+  margin: auto;
+  margin-top: 30px;
+  margin-left: 80%;
+}
+
+.page-scroll-button {
+  width: 80px;
+  height: 30px;
+  border-radius: 10px;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  border-color: var(--color--border);
+  margin: 5px;
+  margin-bottom: 50px;
+}
+
+.page-scroll-button:disabled,
+.page-scroll-button[disabled] {
+  background-color: #d3d3d3;
+  color: #888888;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -136,16 +161,27 @@ input[type="number"]::-webkit-outer-spin-button {
   color: red;
 }
 
+/* For spacing the inputs/labels from one another on the modal
+Also to hopefully be used for aligning the modal content better */
 .form-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: max-content 230px;
+  column-gap: 12px;
+  row-gap: 16px;
+
+  justify-content: center; /* centers the whole form */
   align-items: center;
 }
 
-/* For spacing the inputs/labels from one another on the modal
-Also to hopefully be used for aligning the modal content better */
-.form-label-and-input {
-  padding: 10px;
+.form-container label {
+  text-align: right;
+}
+
+.modalInputContent,
+.form-container select,
+.copies-control {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .sortHeader {
@@ -173,8 +209,8 @@ table {
   overflow: hidden;
   box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.25);
   margin: auto;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .tableDeleteButton {

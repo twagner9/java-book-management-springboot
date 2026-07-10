@@ -185,17 +185,19 @@ export function BookTable({
 
   return (
     <div>
-      <label>Books per page: </label>
-      <select
-        id="num-books-displayed-select"
-        value={booksPerPage}
-        onChange={updateBooksPerPage}
-      >
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="20">20</option>
-        <option value="50">50</option>
-      </select>
+      <div className="books-per-page-items">
+        <label>Books per page: </label>
+        <select
+          id="num-books-displayed-select"
+          value={booksPerPage}
+          onChange={updateBooksPerPage}
+        >
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+      </div>
       <table className="book-table">
         <thead>
           <tr>
@@ -281,12 +283,14 @@ export function BookTable({
         <button
           disabled={prevDisabled}
           onClick={() => setCurrentPage((p) => p - 1)}
+          className="page-scroll-button"
         >
           Prev
         </button>
         <button
           disabled={nextDisabled}
           onClick={() => setCurrentPage((p) => p + 1)}
+          className="page-scroll-button"
         >
           Next
         </button>
