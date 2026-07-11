@@ -36,7 +36,7 @@ export function ImageUpload({
   };
 
   return (
-    <>
+    <div className="image-upload-container">
       <button
         type="button"
         className="imageUploadButton"
@@ -46,6 +46,6 @@ export function ImageUpload({
       </button>
       {uploadError ? <p className="uploadError">{uploadError}</p> : null}
       {filename ? <p className="filename">{filename}</p> : null}
-    </>
+    </div>
   );
 }

@@ -88,97 +88,91 @@ export function BookInputs(props: { onBookAdded: (book: Book) => void }) {
   }
 
   return (
-    <div className="modal-container">
-      <div className="form-container">
-        <label className="modalInputContent" htmlFor="bookTitle">
-          Title:{" "}
-        </label>
-        <input
-          className="modalInputContent"
-          id="bookTitle"
-          placeholder="Enter a title..."
-          onChange={(e) => setBook((b) => ({ ...b, title: e.target.value }))}
-        ></input>
-      </div>
-      <div className="form-label-and-input">
-        <label className="modalInputContent" htmlFor="bookAuthorLast">
-          Author last:{" "}
-        </label>
-        <input
-          className="modalInputContent"
-          id="bookAuthorLast"
-          placeholder="Enter author last name..."
-          onChange={(e) =>
-            setBook((b) => ({ ...b, authorLast: e.target.value }))
-          }
-        ></input>
-      </div>
-      <div className="form-label-and-input">
-        <label className="modalInputContent" htmlFor="bookAuthorFirst">
-          Author first:{" "}
-        </label>
-        <input
-          className="modalInputContent"
-          id="bookAuthorFirst"
-          placeholder="Enter author first name..."
-          onChange={(e) =>
-            setBook((b) => ({ ...b, authorFirst: e.target.value }))
-          }
-        ></input>
-      </div>
-      <div className="form-label-and-input">
-        <label className="modalInputContent" htmlFor="bookGenre">
-          Genre:{" "}
-        </label>
-        <select
-          className="modalInputContent"
-          name="genres"
-          onChange={(e) => setBook((b) => ({ ...b, genre: e.target.value }))}
-        >
-          <option value="Action">Action</option>
-          <option value="Adventure">Adventure</option>
-          <option value="Autobiography">Autobiography</option>
-          <option value="Biography">Biography</option>
-          <option value="Children's">Children's</option>
-          <option value="Comic">Comic</option>
-          <option value="Cookbook">Cookbook</option>
-          <option value="Crime">Crime</option>
-          <option value="Dark fantasy">Dark Fantasy</option>
-          <option value="Dystopian">Dystopian</option>
-          <option value="Drama">Drama</option>
-          <option value="Erotica">Erotica</option>
-          <option value="Essay">Essay</option>
-          <option value="Fairy tale">Fairy Tale</option>
-          <option value="Fantasy">Fantasy</option>
-          <option value="Graphic novel">Graphic Novel</option>
-          <option value="Historical fiction">Historical Fiction</option>
-          <option value="Horror">Horror</option>
-          <option value="Lgbtq+">LGBTQ+</option>
-          <option value="Manga">Manga</option>
-          <option value="Memoir">Memoir</option>
-          <option value="Military fiction">Military Fiction</option>
-          <option value="Mystery">Mystery</option>
-          <option value="Mythology">Mythology</option>
-          <option value="Non-fiction">Non-ficiton</option>
-          <option value="Philosophy">Philosophy</option>
-          <option value="Picture book">Picture Book</option>
-          <option value="Poetry">Poetry</option>
-          <option value="Religious">Religious</option>
-          <option value="Romance">Romance</option>
-          <option value="Satire">Satire</option>
-          <option value="Science fiction">Science Fiction</option>
-          <option value="Self-help">Self-Help</option>
-          <option value="Short story">Short Story</option>"
-          <option value="Sports">Sports</option>
-          <option value="Tragedy">Tragedy</option>
-          <option value="Western">Western</option>
-          <option value="Young adult">Young Adult</option>
-        </select>
-      </div>
-      <div className="form-label-and-input">
-        <label className="modalInputContent" htmlFor="bookCopies">
-          Number of Copies:{" "}
-        </label>
+    <div className="form-container">
+      <label className="modalInputContent" htmlFor="bookTitle">
+        Title:{" "}
+      </label>
+      <input
+        className="modalInputContent"
+        id="bookTitle"
+        placeholder="Enter a title..."
+        onChange={(e) => setBook((b) => ({ ...b, title: e.target.value }))}
+      ></input>
+
+      <label className="modalInputContent" htmlFor="bookAuthorLast">
+        Author last:{" "}
+      </label>
+      <input
+        className="modalInputContent"
+        id="bookAuthorLast"
+        placeholder="Enter author last name..."
+        onChange={(e) => setBook((b) => ({ ...b, authorLast: e.target.value }))}
+      ></input>
+
+      <label className="modalInputContent" htmlFor="bookAuthorFirst">
+        Author first:{" "}
+      </label>
+      <input
+        className="modalInputContent"
+        id="bookAuthorFirst"
+        placeholder="Enter author first name..."
+        onChange={(e) =>
+          setBook((b) => ({ ...b, authorFirst: e.target.value }))
+        }
+      ></input>
+
+      <label className="modalInputContent" htmlFor="bookGenre">
+        Genre:{" "}
+      </label>
+      <select
+        className="modalInputContent"
+        name="genres"
+        onChange={(e) => setBook((b) => ({ ...b, genre: e.target.value }))}
+      >
+        <option value="Action">Action</option>
+        <option value="Adventure">Adventure</option>
+        <option value="Autobiography">Autobiography</option>
+        <option value="Biography">Biography</option>
+        <option value="Children's">Children's</option>
+        <option value="Comic">Comic</option>
+        <option value="Cookbook">Cookbook</option>
+        <option value="Crime">Crime</option>
+        <option value="Dark fantasy">Dark Fantasy</option>
+        <option value="Dystopian">Dystopian</option>
+        <option value="Drama">Drama</option>
+        <option value="Erotica">Erotica</option>
+        <option value="Essay">Essay</option>
+        <option value="Fairy tale">Fairy Tale</option>
+        <option value="Fantasy">Fantasy</option>
+        <option value="Graphic novel">Graphic Novel</option>
+        <option value="Historical fiction">Historical Fiction</option>
+        <option value="Horror">Horror</option>
+        <option value="Lgbtq+">LGBTQ+</option>
+        <option value="Manga">Manga</option>
+        <option value="Memoir">Memoir</option>
+        <option value="Military fiction">Military Fiction</option>
+        <option value="Mystery">Mystery</option>
+        <option value="Mythology">Mythology</option>
+        <option value="Non-fiction">Non-ficiton</option>
+        <option value="Philosophy">Philosophy</option>
+        <option value="Picture book">Picture Book</option>
+        <option value="Poetry">Poetry</option>
+        <option value="Religious">Religious</option>
+        <option value="Romance">Romance</option>
+        <option value="Satire">Satire</option>
+        <option value="Science fiction">Science Fiction</option>
+        <option value="Self-help">Self-Help</option>
+        <option value="Short story">Short Story</option>"
+        <option value="Sports">Sports</option>
+        <option value="Tragedy">Tragedy</option>
+        <option value="Western">Western</option>
+        <option value="Young adult">Young Adult</option>
+      </select>
+
+      <label className="modalInputContent" htmlFor="bookCopies">
+        Number of Copies:{" "}
+      </label>
+      <div className="number-control">
         <button
           className="valueControl"
           onMouseDown={() => handleMouseDown(-1)}
@@ -190,9 +184,8 @@ export function BookInputs(props: { onBookAdded: (book: Book) => void }) {
           -
         </button>
         <input
-          className="modalInputContent"
+          className="modalInputContent bookCopiesInput"
           type="number"
-          id="bookCopiesInput"
           name="bookCopiesInput"
           min="1"
           max="99"
@@ -220,19 +213,21 @@ export function BookInputs(props: { onBookAdded: (book: Book) => void }) {
           +
         </button>
       </div>
-      <div className="form-label-and-input">
+      <div className="image-row">
         <ImageUpload
           setImagePath={setImagePath}
           imagePath={newBook.imagePath}
         />
       </div>
-      <button
-        className="modalInputContent"
-        onClick={handleSubmitClick}
-        disabled={!(isTitleValid && isAuthorValid && isNumCopiesValid)}
-      >
-        Submit
-      </button>
+      <div className="submit-container">
+        <button
+          className="modalInputContent modalSubmitButton"
+          onClick={handleSubmitClick}
+          disabled={!(isTitleValid && isAuthorValid && isNumCopiesValid)}
+        >
+          Submit
+        </button>
+      </div>
     </div>
   );
 }

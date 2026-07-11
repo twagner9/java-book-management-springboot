@@ -161,15 +161,10 @@ input[type="number"]::-webkit-outer-spin-button {
   color: red;
 }
 
-/* For spacing the inputs/labels from one another on the modal
-Also to hopefully be used for aligning the modal content better */
 .form-container {
   display: grid;
-  grid-template-columns: max-content 230px;
-  column-gap: 12px;
-  row-gap: 16px;
-
-  justify-content: center; /* centers the whole form */
+  grid-template-columns: max-content 1fr;
+  gap: 16px 12px;
   align-items: center;
 }
 
@@ -178,10 +173,37 @@ Also to hopefully be used for aligning the modal content better */
 }
 
 .modalInputContent,
-.form-container select,
-.copies-control {
+.form-container select {
   width: 100%;
   box-sizing: border-box;
+}
+
+.number-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bookCopiesInput {
+  width: 40px;
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.submit-container {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+}
+
+.modalSubmitButton {
+  width: 100px;
+}
+
+.image-row {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
 }
 
 .sortHeader {
@@ -219,12 +241,6 @@ table {
   border-color: var(--color--border);
 }
 
-.imageUploadButton {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-  border-color: var(--color--border);
-}
-
 .tableImage {
   width: 10%;
   height: 10%;
@@ -250,4 +266,17 @@ table {
   object-fit: contain; /* preserve aspect ratio */
   border-radius: 8px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+}
+
+.image-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.imageUploadButton {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  border-color: var(--color--border);
+  width: 100px;
 }
