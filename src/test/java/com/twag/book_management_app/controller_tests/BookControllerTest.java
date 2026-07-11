@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 // import org.springframework.test.web.servlet.MockMvc;
@@ -43,6 +44,7 @@ import java.util.List;
 // @AutoConfigureMockMvc
 // @Transactional // Ensures tests run in isolation and clean up after
 // themselves
+@ActiveProfiles("deployment")
 @Testcontainers
 public class BookControllerTest {
 	// @Autowired
