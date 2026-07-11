@@ -86,6 +86,7 @@ Desktop.ini
 *.pid
 *.seed
 *.pid.lock
+*.db
 node_modules
 data/
 

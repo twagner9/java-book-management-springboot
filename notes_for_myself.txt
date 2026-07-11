@@ -3,3 +3,8 @@ psql -U bookuser -d bookdb -- Access the bookdb database as bookuser, who should
 GRANT ALL PRIVILEGES ON DATABASE bookdb TO bookuser;
 CREATE DATABASE db_name;
 ALTER USER bookuser WITH PASSWORD 'testpassword';
+
+
+Starting the application in deployment mode:
+
+mvn spring-boot:run -Dspring-boot.run.profiles=deployment

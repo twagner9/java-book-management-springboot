@@ -1,17 +1,13 @@
 package com.twag.book_management_app.controller_tests;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.theInstance;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.WebProperties.Resources.Chain.Strategy.Content;
-// import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -19,8 +15,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-// import org.springframework.test.web.servlet.MockMvc;
-// import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -32,24 +26,13 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 import java.util.ArrayList;
-
-// import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-// import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import java.util.List;
-// import java.util.Map;
 
 // SpringBootTest and AutoConfigureMockMvc provide application context, allow HTTP requests to endpoints.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-// @AutoConfigureMockMvc
-// @Transactional // Ensures tests run in isolation and clean up after
-// themselves
-@ActiveProfiles("deployment")
+@ActiveProfiles("dev")
 @Testcontainers
 public class BookControllerTest {
-	// @Autowired
-	// private MockMvc mockMvc;
-
 	@LocalServerPort
 	private Integer port;
 
@@ -59,8 +42,6 @@ public class BookControllerTest {
 	@Container
 	@ServiceConnection
 	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine");
-
-	// private int id;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -103,20 +84,6 @@ public class BookControllerTest {
 		return ids;
 	}
 
-	// @BeforeEach
-	// public void setup() throws Exception {
-	// MvcResult result = mockMvc.perform(post("/api/books")
-	// .contentType(MediaType.APPLICATION_JSON)
-	// .content(newBookJson))
-	// .andExpect(status().isOk())
-	// .andReturn();
-
-	// String responseContent = result.getResponse().getContentAsString();
-	// ObjectMapper objectMapper = new ObjectMapper();
-	// JsonNode root = objectMapper.readTree(responseContent);
-	// id = root.path("id").asInt();
-	// }
-
 	@Autowired
 	private JdbcTemplate jdbc;
 
@@ -126,11 +93,7 @@ public class BookControllerTest {
 	}
 
 	@Test
-	// @Sql("/insert_books.sql")
 	public void testBookRetrieval() throws Exception {
-		// mockMvc.perform(get("/api/books"))
-		// .andExpect(status().isOk())
-		// .andExpect(jsonPath("$[0].title").value("Test Book"));
 
 		List<Book> bookList = List.of(
 				new Book("Test Book", "lastname", "firstname", "Fantasy", 3),
@@ -150,10 +113,7 @@ public class BookControllerTest {
 	}
 
 	@Test
-	// @Sql("/insert_books.sql")
 	public void testBookDeletion() throws Exception {
-		// mockMvc.perform(delete("/api/books/" + id))
-		// .andExpect(status().isNoContent());
 		List<Book> bookList = List.of(
 				new Book("Test Book", "lastname", "firstname", "Fantasy", 3),
 				new Book("Test Two", "last", "first", "Fable", 1));
@@ -170,9 +130,6 @@ public class BookControllerTest {
 				.then()
 				.statusCode(200)
 				.body(".", hasSize(1));
-		// mockMvc.perform(get("/api/books"))
-		// .andExpect(status().isOk())
-		// .andExpect(jsonPath("$").isEmpty());
 	}
 
 	// TODO: Add the books and then update the test to simply pull the book and test the various updates instead of
