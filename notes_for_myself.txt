@@ -8,3 +8,6 @@ ALTER USER bookuser WITH PASSWORD 'testpassword';
 Starting the application in deployment mode:
 
 mvn spring-boot:run -Dspring-boot.run.profiles=deployment
+
+For development mode:
+mvn spring-boot:run -Dspring-boot.run.profiles=dev

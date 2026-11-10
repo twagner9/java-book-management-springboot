@@ -30,7 +30,6 @@ import java.util.List;
 
 // SpringBootTest and AutoConfigureMockMvc provide application context, allow HTTP requests to endpoints.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("dev")
 @Testcontainers
 public class BookControllerTest {
 	@LocalServerPort
